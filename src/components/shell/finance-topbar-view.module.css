@@ -1,0 +1,60 @@
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--noki-space-2);
+  max-inline-size: 16rem;
+  min-inline-size: 0;
+}
+
+.initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--noki-radius-full);
+  background: var(--noki-color-semantic-brand-accent);
+  color: var(--noki-color-primitive-yellow-ink);
+  font-weight: 700;
+  font-size: var(--noki-font-size-sm);
+}
+
+.identityText {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.displayName,
+.email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.displayName {
+  font-weight: 600;
+  font-size: var(--noki-font-size-sm);
+  color: var(--noki-color-semantic-text-primary);
+}
+
+.email {
+  font-size: var(--noki-font-size-xs);
+  color: var(--noki-color-semantic-text-secondary);
+}
+
+@media (max-width: 767px) {
+  .identity {
+    max-inline-size: 2rem;
+  }
+
+  .identityText {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}

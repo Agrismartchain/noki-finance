@@ -1,0 +1,17 @@
+.git
+.github
+.claude
+node_modules
+.next
+coverage
+playwright-report
+test-results
+screenshots
+*.tgz
+!vendor/*.tgz
+.env
+.env.*
+Dockerfile*
+README*
+docs
+Zone.Identifier

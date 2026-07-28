@@ -1,0 +1,443 @@
+{
+  "metadata": {
+    "title": "NOKI Finance",
+    "description": "Backoffice interne Finance NOKI : COD, remises de cash, sessions de caisse, écarts et rapprochements."
+  },
+  "common": {
+    "brand": "NOKI Finance",
+    "brandOrganization": "NOKI — Finance interne",
+    "actions": {
+      "saving": "Enregistrement..."
+    },
+    "pagination": {
+      "ariaLabel": "Pagination",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "rowsPerPage": "Lignes par page"
+    },
+    "filters": {
+      "all": "Tous",
+      "clearAll": "Effacer les filtres",
+      "toggle": "Filtres"
+    }
+  },
+  "locale": {
+    "switcherLabel": "Langue"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "switcherLabel": "Thème"
+  },
+  "shell": {
+    "openMenu": "Ouvrir le menu"
+  },
+  "navigation": {
+    "landmarkLabel": "Navigation principale",
+    "scopeNotice": "Accès Finance interne NOKI uniquement",
+    "dashboard": "Vue d'ensemble",
+    "cod": "Encaissements COD",
+    "cashHandovers": "Remises de cash",
+    "cashSessions": "Sessions de caisse",
+    "cashVariances": "Écarts",
+    "reconciliations": "Rapprochements",
+    "obligations": "Obligations",
+    "fees": "Frais",
+    "documents": "Documents",
+    "adjustments": "Ajustements",
+    "disputes": "Litiges",
+    "payouts": "Payouts",
+    "approvals": "Approbations",
+    "paymentMethods": "Méthodes de paiement",
+    "reports": "Rapports",
+    "audit": "Audit"
+  },
+  "errors": {
+    "forbiddenTitle": "Accès refusé",
+    "forbiddenDescription": "Votre compte n'a pas les autorisations Finance nécessaires pour accéder à cette page."
+  },
+  "session": {
+    "expiredNotice": "Votre session a expiré. Veuillez vous reconnecter."
+  },
+  "auth": {
+    "branding": {
+      "eyebrow": "NOKI Finance",
+      "headline": "Le backoffice Finance du réseau NOKI",
+      "subtext": "COD, remises de cash, sessions de caisse, écarts et rapprochements — réservé au personnel Finance interne NOKI autorisé."
+    },
+    "login": {
+      "welcomeTitle": "Connexion",
+      "subtitle": "Connectez-vous avec votre compte interne NOKI Finance.",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "submit": "Se connecter",
+      "submitPending": "Connexion...",
+      "errorTitle": "Connexion impossible",
+      "validation": {
+        "emailRequired": "L'e-mail est requis.",
+        "passwordRequired": "Le mot de passe est requis."
+      },
+      "errors": {
+        "invalidCredentials": "E-mail ou mot de passe incorrect.",
+        "configurationMissing": "Configuration du service indisponible. Contactez un administrateur.",
+        "serviceUnavailable": "Service momentanément indisponible. Réessayez.",
+        "timeout": "Le service met trop de temps à répondre. Réessayez.",
+        "rateLimited": "Trop de tentatives. Réessayez dans quelques instants.",
+        "unexpected": "Une erreur inattendue est survenue."
+      }
+    },
+    "logout": {
+      "action": "Se déconnecter"
+    }
+  },
+  "mutations": {
+    "successTitle": "Opération réussie",
+    "errorTitle": "Échec de l'opération",
+    "correlationId": "Référence",
+    "saved": "Modifications enregistrées.",
+    "errors": {
+      "validation": "Certains champs sont invalides.",
+      "forbidden": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+      "conflict": "Cette action entre en conflit avec l'état actuel de la ressource.",
+      "rateLimited": "Trop de tentatives. Réessayez dans quelques instants.",
+      "unavailable": "Le service NOKI API est momentanément indisponible.",
+      "unexpected": "Une erreur inattendue est survenue."
+    }
+  },
+  "dashboard": {
+    "title": "Vue d'ensemble",
+    "description": "KPIs Finance en temps réel : COD, cash, sessions, écarts et payouts.",
+    "states": {
+      "emptyTitle": "Aucune donnée disponible",
+      "emptyDescription": "Aucune métrique Finance n'est disponible pour votre périmètre actuel.",
+      "errorTitle": "Erreur de chargement",
+      "errorDescription": "Impossible de charger les données Finance depuis NOKI API. Réessayez ou contactez le support avec la référence ci-dessous.",
+      "retry": "Réessayer",
+      "partialNotice": "{block} indisponible",
+      "bucketCount": "{count} éléments",
+      "periodRange": "{start} — {end}",
+      "sessionStatusNote": "Seul le nombre de sessions ouvertes est agrégé par cet indicateur. Consultez Sessions de caisse pour le détail complet.",
+      "varianceNote": "Agrégat des écarts ouverts uniquement. Consultez Écarts pour une liste priorisée.",
+      "currencySection": "Devise : {currency}"
+    },
+    "metrics": {
+      "open_cash_sessions": "Sessions ouvertes",
+      "open_variances": "Écarts ouverts",
+      "cod_expected": "COD attendu",
+      "cod_declared": "COD déclaré",
+      "cash_handed_over": "Cash remis",
+      "cash_received": "Cash reçu",
+      "cash_reconciled": "Cash rapproché",
+      "unreconciled_amount": "Montant non rapproché",
+      "payouts_proposed": "Payouts proposés",
+      "payouts_pending_first_approval": "En attente 1ère approbation",
+      "payouts_pending_final_approval": "En attente approbation finale",
+      "payouts_approved": "Payouts approuvés",
+      "payouts_sent": "Payouts envoyés",
+      "payouts_paid": "Payouts payés",
+      "payouts_failed": "Payouts échoués",
+      "payouts_on_hold": "Payouts en attente (hold)",
+      "net_platform": "Net plateforme"
+    },
+    "sections": {
+      "codPipeline": "Pipeline COD",
+      "aging": "Ancienneté des comptes",
+      "cashflow": "Cashflow opérationnel",
+      "sessionStatus": "État des sessions",
+      "priorityVariances": "Écarts prioritaires",
+      "payoutsByStatus": "Payouts par statut"
+    },
+    "agingSections": {
+      "open_obligations": "Obligations ouvertes",
+      "unpaid_invoices": "Factures impayées",
+      "pending_payouts": "Payouts en attente",
+      "unreconciled_cod": "COD non rapproché"
+    }
+  },
+  "cod": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Encaissements COD",
+      "description": "Collectes COD réelles, filtrables par pays, devise, statut et recherche.",
+      "searchLabel": "Rechercher une commande"
+    },
+    "table": {
+      "ariaLabel": "Liste des encaissements COD"
+    },
+    "columns": {
+      "orderNumber": "Commande",
+      "organization": "Organisation",
+      "country": "Pays",
+      "currency": "Devise",
+      "expected": "Attendu",
+      "declared": "Déclaré",
+      "status": "Statut",
+      "declaredAt": "Déclaré le"
+    },
+    "status": {
+      "DECLARED": "Déclaré",
+      "VOIDED": "Annulé",
+      "REMITTED": "Remis",
+      "RECONCILED": "Rapproché"
+    },
+    "empty": {
+      "title": "Aucune collecte COD",
+      "description": "Aucune collecte COD ne correspond à ces critères."
+    },
+    "detail": {
+      "eyebrow": "Encaissement COD",
+      "title": "Détail de la collecte COD",
+      "description": "Cycle complet de la collecte, du montant attendu au rapprochement.",
+      "orderId": "Commande",
+      "organizationId": "Organisation",
+      "countryId": "Pays",
+      "cycleTitle": "Cycle de la collecte",
+      "stepExpected": "Attendu",
+      "stepDeclared": "Déclaré",
+      "stepHandedOver": "Remis",
+      "stepReceived": "Reçu",
+      "stepReconciled": "Rapproché",
+      "unresolvedStep": "Non disponible ici — voir la remise de cash associée",
+      "reachedNoAmount": "Atteint (montant non disponible sur cette fiche)"
+    }
+  },
+  "cashHandovers": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Remises de cash",
+      "description": "Remises de cash COD réelles pour votre périmètre organisation/pays.",
+      "createAction": "Nouvelle remise",
+      "dateFrom": "Du",
+      "dateTo": "Au"
+    },
+    "table": {
+      "ariaLabel": "Liste des remises de cash"
+    },
+    "columns": {
+      "reference": "Référence",
+      "organization": "Organisation",
+      "session": "Session",
+      "lineCount": "Lignes",
+      "totalHandedOver": "Total remis",
+      "totalReceived": "Total reçu",
+      "createdAt": "Créée le"
+    },
+    "status": {
+      "DRAFT": "Brouillon",
+      "SUBMITTED": "Soumise",
+      "RECEIVED": "Reçue",
+      "REJECTED": "Rejetée",
+      "CANCELLED": "Annulée"
+    },
+    "empty": {
+      "title": "Aucune remise de cash",
+      "description": "Aucune remise de cash ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "detail": {
+      "eyebrow": "Remise de cash",
+      "title": "Détail de la remise",
+      "description": "Lignes, montants et actions disponibles pour cette remise de cash.",
+      "summaryTitle": "Résumé",
+      "submittedAt": "Soumise le",
+      "receivedAt": "Reçue le",
+      "itemsTitle": "Lignes",
+      "colCollection": "Collecte COD",
+      "colDeclared": "Déclaré",
+      "colHandedOver": "Remis",
+      "colReceived": "Reçu",
+      "colReconciled": "Rapproché",
+      "notAvailable": "Non disponible",
+      "actionsTitle": "Actions"
+    },
+    "actions": {
+      "submit": "Soumettre",
+      "cancel": "Annuler",
+      "reject": "Rejeter",
+      "reasonLabel": "Motif",
+      "reasonRequired": "Le motif est obligatoire.",
+      "confirm": "Confirmer",
+      "dismiss": "Fermer"
+    },
+    "receive": {
+      "title": "Réceptionner la remise",
+      "trigger": "Réceptionner",
+      "session": "Session de caisse",
+      "lineReceived": "Montant reçu",
+      "noOpenSession": "Aucune session de caisse ouverte compatible n'est disponible."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Nouvelle remise de cash",
+      "description": "Sélectionnez les collectes COD éligibles et saisissez le montant remis pour chacune.",
+      "tableAriaLabel": "Collectes COD éligibles",
+      "colSelect": "Sélection",
+      "noEligible": "Aucune collecte COD éligible (statut Déclaré) n'est disponible actuellement.",
+      "submit": "Créer la remise",
+      "validationError": "Sélectionnez au moins une collecte COD."
+    }
+  },
+  "cashSessions": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Sessions de caisse",
+      "description": "Sessions de caisse réelles pour votre périmètre organisation/pays.",
+      "openAction": "Ouvrir une session"
+    },
+    "table": {
+      "ariaLabel": "Liste des sessions de caisse"
+    },
+    "columns": {
+      "reference": "Référence",
+      "cashier": "Caissier",
+      "openingAmount": "Fond initial",
+      "variance": "Écart",
+      "openedAt": "Ouverte le"
+    },
+    "status": {
+      "OPEN": "Ouverte",
+      "CLOSED": "Clôturée",
+      "RECONCILED": "Rapprochée"
+    },
+    "empty": {
+      "title": "Aucune session de caisse",
+      "description": "Aucune session de caisse ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "detail": {
+      "eyebrow": "Session de caisse",
+      "title": "Détail de la session",
+      "description": "Montants, écart et actions disponibles pour cette session de caisse.",
+      "summaryTitle": "Résumé",
+      "expectedAmount": "Montant attendu (système)",
+      "countedAmount": "Montant compté",
+      "closedAt": "Clôturée le",
+      "handoversNote": "Les remises de cash reçues dans cette session sont consultables depuis la page Remises de cash."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Ouvrir une session de caisse",
+      "description": "Sélectionnez la devise et saisissez le fond de caisse initial.",
+      "openingAmountLabel": "Fond de caisse initial",
+      "submit": "Ouvrir la session",
+      "validationError": "Sélectionnez une devise et saisissez un montant."
+    },
+    "close": {
+      "title": "Clôturer la session",
+      "countedLabel": "Montant compté",
+      "previewLabel": "Écart indicatif",
+      "previewWarning": "Le serveur reste la source de vérité — l'écart réel est calculé à la soumission.",
+      "submit": "Clôturer la session"
+    }
+  },
+  "cashVariances": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Écarts",
+      "description": "Écarts de caisse réels pour votre périmètre organisation/pays."
+    },
+    "table": {
+      "ariaLabel": "Liste des écarts"
+    },
+    "columns": {
+      "type": "Type",
+      "source": "Source",
+      "actual": "Réel",
+      "variance": "Écart"
+    },
+    "type": {
+      "DECLARATION": "Déclaration",
+      "HANDOVER": "Remise",
+      "SESSION": "Session",
+      "RECONCILIATION": "Rapprochement"
+    },
+    "status": {
+      "OPEN": "Ouvert",
+      "RESOLVED": "Résolu",
+      "WAIVED": "Levé"
+    },
+    "badge": {
+      "shortfall": "Manque",
+      "excess": "Excédent",
+      "resolved": "Résolu",
+      "waived": "Levé",
+      "balanced": "Équilibré"
+    },
+    "empty": {
+      "title": "Aucun écart",
+      "description": "Aucun écart ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "detail": {
+      "eyebrow": "Écart",
+      "title": "Détail de l'écart",
+      "description": "Montants, statut et résolution disponibles pour cet écart.",
+      "summaryTitle": "Résumé",
+      "resolvedAt": "Résolu le"
+    },
+    "resolution": {
+      "title": "Résolution",
+      "unavailableNote": "Vous n'avez pas l'autorisation de résoudre cet écart.",
+      "decisionLabel": "Décision",
+      "resolvedOption": "Résoudre",
+      "waivedOption": "Lever (waiver)",
+      "decisionRequired": "Une décision est requise.",
+      "confirmTitle": "Confirmer la résolution",
+      "confirmDescription": "Cette action est définitive. Confirmez-vous la décision et le motif saisis ?",
+      "submit": "Continuer"
+    }
+  },
+  "reconciliations": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Rapprochements",
+      "description": "Rapprochements réels pour votre périmètre organisation/pays.",
+      "createAction": "Nouveau rapprochement"
+    },
+    "table": {
+      "ariaLabel": "Liste des rapprochements"
+    },
+    "columns": {
+      "received": "Reçu"
+    },
+    "status": {
+      "DRAFT": "Brouillon",
+      "SUBMITTED": "Soumis",
+      "APPROVED": "Approuvé",
+      "REJECTED": "Rejeté"
+    },
+    "empty": {
+      "title": "Aucun rapprochement",
+      "description": "Aucun rapprochement ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "detail": {
+      "eyebrow": "Rapprochement",
+      "title": "Détail du rapprochement",
+      "description": "Montants, statut et actions disponibles pour ce rapprochement.",
+      "summaryTitle": "Résumé",
+      "approvedAt": "Approuvé le",
+      "preparerNotExposed": "Préparateur : non exposé par l'API",
+      "approverNotExposed": "Approbateur : non exposé par l'API",
+      "linkedVariancesNote": "Les écarts liés à ce rapprochement sont consultables depuis la page Écarts.",
+      "makerCheckerNote": "La séparation préparateur/approbateur (maker/checker) est imposée par le serveur : la personne qui soumet ne peut pas approuver.",
+      "noActionAvailable": "Aucune action n'est disponible pour ce rapprochement dans son statut actuel."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Nouveau rapprochement",
+      "description": "Sélectionnez une session de caisse clôturée à rapprocher.",
+      "submit": "Créer le rapprochement",
+      "noEligible": "Aucune session de caisse clôturée éligible n'est disponible actuellement.",
+      "validationError": "Sélectionnez une session de caisse."
+    },
+    "actions": {
+      "approve": "Approuver"
+    }
+  },
+  "comingSoon": {
+    "eyebrow": "Bientôt disponible",
+    "title": "Ce module arrive dans une prochaine livraison",
+    "description": "Cette page est planifiée pour la Phase 4B de NOKI Finance. Les actions correspondantes existent déjà côté NOKI API et seront reliées à cette interface."
+  }
+}

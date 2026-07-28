@@ -1,0 +1,443 @@
+{
+  "metadata": {
+    "title": "NOKI Finance",
+    "description": "NOKI internal Finance backoffice: COD, cash handovers, cash sessions, variances and reconciliations."
+  },
+  "common": {
+    "brand": "NOKI Finance",
+    "brandOrganization": "NOKI — Internal Finance",
+    "actions": {
+      "saving": "Saving..."
+    },
+    "pagination": {
+      "ariaLabel": "Pagination",
+      "next": "Next",
+      "previous": "Previous",
+      "rowsPerPage": "Rows per page"
+    },
+    "filters": {
+      "all": "All",
+      "clearAll": "Clear filters",
+      "toggle": "Filters"
+    }
+  },
+  "locale": {
+    "switcherLabel": "Language"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "switcherLabel": "Theme"
+  },
+  "shell": {
+    "openMenu": "Open menu"
+  },
+  "navigation": {
+    "landmarkLabel": "Main navigation",
+    "scopeNotice": "NOKI internal Finance access only",
+    "dashboard": "Overview",
+    "cod": "COD collections",
+    "cashHandovers": "Cash handovers",
+    "cashSessions": "Cash sessions",
+    "cashVariances": "Variances",
+    "reconciliations": "Reconciliations",
+    "obligations": "Obligations",
+    "fees": "Fees",
+    "documents": "Documents",
+    "adjustments": "Adjustments",
+    "disputes": "Disputes",
+    "payouts": "Payouts",
+    "approvals": "Approvals",
+    "paymentMethods": "Payment methods",
+    "reports": "Reports",
+    "audit": "Audit"
+  },
+  "errors": {
+    "forbiddenTitle": "Access denied",
+    "forbiddenDescription": "Your account does not have the Finance permissions required to access this page."
+  },
+  "session": {
+    "expiredNotice": "Your session has expired. Please sign in again."
+  },
+  "auth": {
+    "branding": {
+      "eyebrow": "NOKI Finance",
+      "headline": "The NOKI network's Finance backoffice",
+      "subtext": "COD, cash handovers, cash sessions, variances and reconciliations — for authorized NOKI internal Finance staff only."
+    },
+    "login": {
+      "welcomeTitle": "Sign in",
+      "subtitle": "Sign in with your internal NOKI Finance account.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitPending": "Signing in...",
+      "errorTitle": "Sign-in failed",
+      "validation": {
+        "emailRequired": "Email is required.",
+        "passwordRequired": "Password is required."
+      },
+      "errors": {
+        "invalidCredentials": "Incorrect email or password.",
+        "configurationMissing": "Service configuration unavailable. Contact an administrator.",
+        "serviceUnavailable": "Service temporarily unavailable. Please try again.",
+        "timeout": "The service is taking too long to respond. Please try again.",
+        "rateLimited": "Too many attempts. Please try again shortly.",
+        "unexpected": "An unexpected error occurred."
+      }
+    },
+    "logout": {
+      "action": "Sign out"
+    }
+  },
+  "mutations": {
+    "successTitle": "Success",
+    "errorTitle": "Action failed",
+    "correlationId": "Reference",
+    "saved": "Changes saved.",
+    "errors": {
+      "validation": "Some fields are invalid.",
+      "forbidden": "You are not allowed to perform this action.",
+      "conflict": "This action conflicts with the resource's current state.",
+      "rateLimited": "Too many attempts. Please try again shortly.",
+      "unavailable": "NOKI API is temporarily unavailable.",
+      "unexpected": "An unexpected error occurred."
+    }
+  },
+  "dashboard": {
+    "title": "Overview",
+    "description": "Real-time Finance KPIs: COD, cash, sessions, variances and payouts.",
+    "states": {
+      "emptyTitle": "No data available",
+      "emptyDescription": "No Finance metrics are available for your current scope.",
+      "errorTitle": "Loading error",
+      "errorDescription": "Unable to load Finance data from NOKI API. Retry or contact support with the reference below.",
+      "retry": "Retry",
+      "partialNotice": "{block} unavailable",
+      "bucketCount": "{count} items",
+      "periodRange": "{start} — {end}",
+      "sessionStatusNote": "Only the open session count is aggregated by this metric. See Cash sessions for the full detail.",
+      "varianceNote": "Aggregate of open variances only. See Variances for a prioritized list.",
+      "currencySection": "Currency: {currency}"
+    },
+    "metrics": {
+      "open_cash_sessions": "Open sessions",
+      "open_variances": "Open variances",
+      "cod_expected": "COD expected",
+      "cod_declared": "COD declared",
+      "cash_handed_over": "Cash handed over",
+      "cash_received": "Cash received",
+      "cash_reconciled": "Cash reconciled",
+      "unreconciled_amount": "Unreconciled amount",
+      "payouts_proposed": "Payouts proposed",
+      "payouts_pending_first_approval": "Pending 1st approval",
+      "payouts_pending_final_approval": "Pending final approval",
+      "payouts_approved": "Payouts approved",
+      "payouts_sent": "Payouts sent",
+      "payouts_paid": "Payouts paid",
+      "payouts_failed": "Payouts failed",
+      "payouts_on_hold": "Payouts on hold",
+      "net_platform": "Net platform"
+    },
+    "sections": {
+      "codPipeline": "COD pipeline",
+      "aging": "Aging",
+      "cashflow": "Operational cashflow",
+      "sessionStatus": "Session status",
+      "priorityVariances": "Priority variances",
+      "payoutsByStatus": "Payouts by status"
+    },
+    "agingSections": {
+      "open_obligations": "Open obligations",
+      "unpaid_invoices": "Unpaid invoices",
+      "pending_payouts": "Pending payouts",
+      "unreconciled_cod": "Unreconciled COD"
+    }
+  },
+  "cod": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "COD collections",
+      "description": "Real COD collections, filterable by country, currency, status and search.",
+      "searchLabel": "Search an order"
+    },
+    "table": {
+      "ariaLabel": "COD collections list"
+    },
+    "columns": {
+      "orderNumber": "Order",
+      "organization": "Organization",
+      "country": "Country",
+      "currency": "Currency",
+      "expected": "Expected",
+      "declared": "Declared",
+      "status": "Status",
+      "declaredAt": "Declared on"
+    },
+    "status": {
+      "DECLARED": "Declared",
+      "VOIDED": "Voided",
+      "REMITTED": "Remitted",
+      "RECONCILED": "Reconciled"
+    },
+    "empty": {
+      "title": "No COD collection",
+      "description": "No COD collection matches these filters."
+    },
+    "detail": {
+      "eyebrow": "COD collection",
+      "title": "COD collection detail",
+      "description": "Full collection cycle, from expected amount to reconciliation.",
+      "orderId": "Order",
+      "organizationId": "Organization",
+      "countryId": "Country",
+      "cycleTitle": "Collection cycle",
+      "stepExpected": "Expected",
+      "stepDeclared": "Declared",
+      "stepHandedOver": "Handed over",
+      "stepReceived": "Received",
+      "stepReconciled": "Reconciled",
+      "unresolvedStep": "Not available here — see the related cash handover",
+      "reachedNoAmount": "Reached (amount not available on this record)"
+    }
+  },
+  "cashHandovers": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Cash handovers",
+      "description": "Real COD cash handovers for your organization/country scope.",
+      "createAction": "New handover",
+      "dateFrom": "From",
+      "dateTo": "To"
+    },
+    "table": {
+      "ariaLabel": "Cash handovers list"
+    },
+    "columns": {
+      "reference": "Reference",
+      "organization": "Organization",
+      "session": "Session",
+      "lineCount": "Lines",
+      "totalHandedOver": "Total handed over",
+      "totalReceived": "Total received",
+      "createdAt": "Created on"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Submitted",
+      "RECEIVED": "Received",
+      "REJECTED": "Rejected",
+      "CANCELLED": "Cancelled"
+    },
+    "empty": {
+      "title": "No cash handover",
+      "description": "No cash handover matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available on your account."
+    },
+    "detail": {
+      "eyebrow": "Cash handover",
+      "title": "Handover detail",
+      "description": "Lines, amounts, and available actions for this cash handover.",
+      "summaryTitle": "Summary",
+      "submittedAt": "Submitted on",
+      "receivedAt": "Received on",
+      "itemsTitle": "Lines",
+      "colCollection": "COD collection",
+      "colDeclared": "Declared",
+      "colHandedOver": "Handed over",
+      "colReceived": "Received",
+      "colReconciled": "Reconciled",
+      "notAvailable": "Not available",
+      "actionsTitle": "Actions"
+    },
+    "actions": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "reject": "Reject",
+      "reasonLabel": "Reason",
+      "reasonRequired": "A reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Close"
+    },
+    "receive": {
+      "title": "Receive handover",
+      "trigger": "Receive",
+      "session": "Cash session",
+      "lineReceived": "Received amount",
+      "noOpenSession": "No compatible open cash session is available."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "New cash handover",
+      "description": "Select the eligible COD collections and enter the handed-over amount for each.",
+      "tableAriaLabel": "Eligible COD collections",
+      "colSelect": "Select",
+      "noEligible": "No eligible COD collection (Declared status) is currently available.",
+      "submit": "Create handover",
+      "validationError": "Select at least one COD collection."
+    }
+  },
+  "cashSessions": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Cash sessions",
+      "description": "Real cash sessions for your organization/country scope.",
+      "openAction": "Open a session"
+    },
+    "table": {
+      "ariaLabel": "Cash sessions list"
+    },
+    "columns": {
+      "reference": "Reference",
+      "cashier": "Cashier",
+      "openingAmount": "Opening float",
+      "variance": "Variance",
+      "openedAt": "Opened on"
+    },
+    "status": {
+      "OPEN": "Open",
+      "CLOSED": "Closed",
+      "RECONCILED": "Reconciled"
+    },
+    "empty": {
+      "title": "No cash session",
+      "description": "No cash session matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available on your account."
+    },
+    "detail": {
+      "eyebrow": "Cash session",
+      "title": "Session detail",
+      "description": "Amounts, variance, and available actions for this cash session.",
+      "summaryTitle": "Summary",
+      "expectedAmount": "Expected amount (system)",
+      "countedAmount": "Counted amount",
+      "closedAt": "Closed on",
+      "handoversNote": "Cash handovers received into this session can be reviewed from the Cash handovers page."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Open a cash session",
+      "description": "Select the currency and enter the opening cash float.",
+      "openingAmountLabel": "Opening cash float",
+      "submit": "Open session",
+      "validationError": "Select a currency and enter an amount."
+    },
+    "close": {
+      "title": "Close session",
+      "countedLabel": "Counted amount",
+      "previewLabel": "Indicative variance",
+      "previewWarning": "The server remains the source of truth — the actual variance is computed on submit.",
+      "submit": "Close session"
+    }
+  },
+  "cashVariances": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Variances",
+      "description": "Real cash variances for your organization/country scope."
+    },
+    "table": {
+      "ariaLabel": "Variances list"
+    },
+    "columns": {
+      "type": "Type",
+      "source": "Source",
+      "actual": "Actual",
+      "variance": "Variance"
+    },
+    "type": {
+      "DECLARATION": "Declaration",
+      "HANDOVER": "Handover",
+      "SESSION": "Session",
+      "RECONCILIATION": "Reconciliation"
+    },
+    "status": {
+      "OPEN": "Open",
+      "RESOLVED": "Resolved",
+      "WAIVED": "Waived"
+    },
+    "badge": {
+      "shortfall": "Shortfall",
+      "excess": "Excess",
+      "resolved": "Resolved",
+      "waived": "Waived",
+      "balanced": "Balanced"
+    },
+    "empty": {
+      "title": "No variance",
+      "description": "No variance matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available on your account."
+    },
+    "detail": {
+      "eyebrow": "Variance",
+      "title": "Variance detail",
+      "description": "Amounts, status, and resolution available for this variance.",
+      "summaryTitle": "Summary",
+      "resolvedAt": "Resolved on"
+    },
+    "resolution": {
+      "title": "Resolution",
+      "unavailableNote": "You are not allowed to resolve this variance.",
+      "decisionLabel": "Decision",
+      "resolvedOption": "Resolve",
+      "waivedOption": "Waive",
+      "decisionRequired": "A decision is required.",
+      "confirmTitle": "Confirm resolution",
+      "confirmDescription": "This action is final. Do you confirm the decision and reason entered?",
+      "submit": "Continue"
+    }
+  },
+  "reconciliations": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Reconciliations",
+      "description": "Real reconciliations for your organization/country scope.",
+      "createAction": "New reconciliation"
+    },
+    "table": {
+      "ariaLabel": "Reconciliations list"
+    },
+    "columns": {
+      "received": "Received"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Submitted",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "empty": {
+      "title": "No reconciliation",
+      "description": "No reconciliation matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available on your account."
+    },
+    "detail": {
+      "eyebrow": "Reconciliation",
+      "title": "Reconciliation detail",
+      "description": "Amounts, status, and available actions for this reconciliation.",
+      "summaryTitle": "Summary",
+      "approvedAt": "Approved on",
+      "preparerNotExposed": "Preparer: not exposed by the API",
+      "approverNotExposed": "Approver: not exposed by the API",
+      "linkedVariancesNote": "Variances linked to this reconciliation can be reviewed from the Variances page.",
+      "makerCheckerNote": "The maker/checker separation is enforced server-side: the submitter cannot also approve.",
+      "noActionAvailable": "No action is available for this reconciliation in its current status."
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "New reconciliation",
+      "description": "Select a closed cash session to reconcile.",
+      "submit": "Create reconciliation",
+      "noEligible": "No eligible closed cash session is currently available.",
+      "validationError": "Select a cash session."
+    },
+    "actions": {
+      "approve": "Approve"
+    }
+  },
+  "comingSoon": {
+    "eyebrow": "Coming soon",
+    "title": "This module is coming in a future release",
+    "description": "This page is planned for NOKI Finance Phase 4B. The corresponding actions already exist on NOKI API and will be wired to this interface."
+  }
+}

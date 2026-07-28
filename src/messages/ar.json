@@ -1,0 +1,443 @@
+{
+  "metadata": {
+    "title": "NOKI Finance",
+    "description": "النظام الداخلي للمالية في NOKI: تحصيل الدفع عند الاستلام، تسليم النقد، جلسات الصندوق، الفروقات والتسويات."
+  },
+  "common": {
+    "brand": "NOKI Finance",
+    "brandOrganization": "NOKI — المالية الداخلية",
+    "actions": {
+      "saving": "جارٍ الحفظ..."
+    },
+    "pagination": {
+      "ariaLabel": "ترقيم الصفحات",
+      "next": "التالي",
+      "previous": "السابق",
+      "rowsPerPage": "عدد الصفوف في الصفحة"
+    },
+    "filters": {
+      "all": "الكل",
+      "clearAll": "مسح الفلاتر",
+      "toggle": "الفلاتر"
+    }
+  },
+  "locale": {
+    "switcherLabel": "اللغة"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن",
+    "switcherLabel": "المظهر"
+  },
+  "shell": {
+    "openMenu": "فتح القائمة"
+  },
+  "navigation": {
+    "landmarkLabel": "التنقل الرئيسي",
+    "scopeNotice": "الوصول الداخلي لقسم المالية في NOKI فقط",
+    "dashboard": "نظرة عامة",
+    "cod": "تحصيلات الدفع عند الاستلام",
+    "cashHandovers": "تسليم النقد",
+    "cashSessions": "جلسات الصندوق",
+    "cashVariances": "الفروقات",
+    "reconciliations": "التسويات",
+    "obligations": "الالتزامات",
+    "fees": "الرسوم",
+    "documents": "المستندات",
+    "adjustments": "التعديلات",
+    "disputes": "النزاعات",
+    "payouts": "المدفوعات",
+    "approvals": "الموافقات",
+    "paymentMethods": "طرق الدفع",
+    "reports": "التقارير",
+    "audit": "التدقيق"
+  },
+  "errors": {
+    "forbiddenTitle": "الوصول مرفوض",
+    "forbiddenDescription": "لا يملك حسابك صلاحيات المالية اللازمة للوصول إلى هذه الصفحة."
+  },
+  "session": {
+    "expiredNotice": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مجددًا."
+  },
+  "auth": {
+    "branding": {
+      "eyebrow": "NOKI Finance",
+      "headline": "النظام الداخلي للمالية في شبكة NOKI",
+      "subtext": "تحصيل الدفع عند الاستلام، تسليم النقد، جلسات الصندوق، الفروقات والتسويات — مخصص لموظفي المالية الداخليين المصرح لهم فقط في NOKI."
+    },
+    "login": {
+      "welcomeTitle": "تسجيل الدخول",
+      "subtitle": "سجّل الدخول باستخدام حساب NOKI Finance الداخلي الخاص بك.",
+      "emailLabel": "البريد الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "submitPending": "جارٍ تسجيل الدخول...",
+      "errorTitle": "تعذّر تسجيل الدخول",
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "passwordRequired": "كلمة المرور مطلوبة."
+      },
+      "errors": {
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+        "configurationMissing": "إعدادات الخدمة غير متاحة. يرجى التواصل مع مسؤول النظام.",
+        "serviceUnavailable": "الخدمة غير متاحة مؤقتًا. يرجى إعادة المحاولة.",
+        "timeout": "استغرقت الخدمة وقتًا طويلاً للاستجابة. يرجى إعادة المحاولة.",
+        "rateLimited": "عدد كبير جدًا من المحاولات. يرجى إعادة المحاولة بعد قليل.",
+        "unexpected": "حدث خطأ غير متوقع."
+      }
+    },
+    "logout": {
+      "action": "تسجيل الخروج"
+    }
+  },
+  "mutations": {
+    "successTitle": "تم بنجاح",
+    "errorTitle": "فشلت العملية",
+    "correlationId": "المرجع",
+    "saved": "تم حفظ التعديلات.",
+    "errors": {
+      "validation": "بعض الحقول غير صالحة.",
+      "forbidden": "لا تملك صلاحية تنفيذ هذا الإجراء.",
+      "conflict": "يتعارض هذا الإجراء مع الحالة الحالية للمورد.",
+      "rateLimited": "عدد كبير جدًا من المحاولات. يرجى إعادة المحاولة بعد قليل.",
+      "unavailable": "واجهة NOKI API غير متاحة مؤقتًا.",
+      "unexpected": "حدث خطأ غير متوقع."
+    }
+  },
+  "dashboard": {
+    "title": "نظرة عامة",
+    "description": "مؤشرات الأداء المالية في الوقت الفعلي: الدفع عند الاستلام، النقد، الجلسات، الفروقات والمدفوعات.",
+    "states": {
+      "emptyTitle": "لا توجد بيانات متاحة",
+      "emptyDescription": "لا تتوفر أي مؤشرات مالية ضمن نطاقك الحالي.",
+      "errorTitle": "خطأ في التحميل",
+      "errorDescription": "تعذّر تحميل بيانات المالية من NOKI API. أعد المحاولة أو تواصل مع الدعم مع ذكر المرجع أدناه.",
+      "retry": "إعادة المحاولة",
+      "partialNotice": "{block} غير متاح",
+      "bucketCount": "{count} عنصر",
+      "periodRange": "{start} — {end}",
+      "sessionStatusNote": "يجمّع هذا المؤشر عدد الجلسات المفتوحة فقط. راجع جلسات الصندوق للتفاصيل الكاملة.",
+      "varianceNote": "إجمالي الفروقات المفتوحة فقط. راجع الفروقات للحصول على قائمة مرتبة حسب الأولوية.",
+      "currencySection": "العملة: {currency}"
+    },
+    "metrics": {
+      "open_cash_sessions": "الجلسات المفتوحة",
+      "open_variances": "الفروقات المفتوحة",
+      "cod_expected": "الدفع عند الاستلام المتوقع",
+      "cod_declared": "الدفع عند الاستلام المصرح به",
+      "cash_handed_over": "النقد المسلَّم",
+      "cash_received": "النقد المستلم",
+      "cash_reconciled": "النقد المسوّى",
+      "unreconciled_amount": "المبلغ غير المسوّى",
+      "payouts_proposed": "المدفوعات المقترحة",
+      "payouts_pending_first_approval": "بانتظار الموافقة الأولى",
+      "payouts_pending_final_approval": "بانتظار الموافقة النهائية",
+      "payouts_approved": "المدفوعات المعتمدة",
+      "payouts_sent": "المدفوعات المرسلة",
+      "payouts_paid": "المدفوعات المسددة",
+      "payouts_failed": "المدفوعات الفاشلة",
+      "payouts_on_hold": "المدفوعات المعلّقة",
+      "net_platform": "صافي المنصة"
+    },
+    "sections": {
+      "codPipeline": "مسار الدفع عند الاستلام",
+      "aging": "تقادم المستحقات",
+      "cashflow": "التدفق النقدي التشغيلي",
+      "sessionStatus": "حالة الجلسات",
+      "priorityVariances": "الفروقات ذات الأولوية",
+      "payoutsByStatus": "المدفوعات حسب الحالة"
+    },
+    "agingSections": {
+      "open_obligations": "الالتزامات المفتوحة",
+      "unpaid_invoices": "الفواتير غير المسددة",
+      "pending_payouts": "المدفوعات المعلّقة",
+      "unreconciled_cod": "الدفع عند الاستلام غير المسوّى"
+    }
+  },
+  "cod": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "تحصيلات الدفع عند الاستلام",
+      "description": "تحصيلات حقيقية للدفع عند الاستلام، قابلة للتصفية حسب البلد والعملة والحالة والبحث.",
+      "searchLabel": "البحث عن طلب"
+    },
+    "table": {
+      "ariaLabel": "قائمة تحصيلات الدفع عند الاستلام"
+    },
+    "columns": {
+      "orderNumber": "الطلب",
+      "organization": "المؤسسة",
+      "country": "البلد",
+      "currency": "العملة",
+      "expected": "المتوقع",
+      "declared": "المصرح به",
+      "status": "الحالة",
+      "declaredAt": "تاريخ التصريح"
+    },
+    "status": {
+      "DECLARED": "مصرح به",
+      "VOIDED": "ملغى",
+      "REMITTED": "مسلَّم",
+      "RECONCILED": "مسوّى"
+    },
+    "empty": {
+      "title": "لا توجد تحصيلات",
+      "description": "لا توجد تحصيلة دفع عند الاستلام مطابقة لهذه المعايير."
+    },
+    "detail": {
+      "eyebrow": "تحصيل الدفع عند الاستلام",
+      "title": "تفاصيل تحصيل الدفع عند الاستلام",
+      "description": "الدورة الكاملة للتحصيل، من المبلغ المتوقع إلى التسوية.",
+      "orderId": "الطلب",
+      "organizationId": "المؤسسة",
+      "countryId": "البلد",
+      "cycleTitle": "دورة التحصيل",
+      "stepExpected": "المتوقع",
+      "stepDeclared": "المصرح به",
+      "stepHandedOver": "المسلَّم",
+      "stepReceived": "المستلم",
+      "stepReconciled": "المسوّى",
+      "unresolvedStep": "غير متاح هنا — راجع تسليم النقد المرتبط",
+      "reachedNoAmount": "تم الوصول (المبلغ غير متاح في هذا السجل)"
+    }
+  },
+  "cashHandovers": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "تسليم النقد",
+      "description": "تسليمات نقد حقيقية للدفع عند الاستلام ضمن نطاق المؤسسة/البلد الخاص بك.",
+      "createAction": "تسليم جديد",
+      "dateFrom": "من",
+      "dateTo": "إلى"
+    },
+    "table": {
+      "ariaLabel": "قائمة تسليمات النقد"
+    },
+    "columns": {
+      "reference": "المرجع",
+      "organization": "المؤسسة",
+      "session": "الجلسة",
+      "lineCount": "السطور",
+      "totalHandedOver": "إجمالي المسلَّم",
+      "totalReceived": "إجمالي المستلم",
+      "createdAt": "أنشئت في"
+    },
+    "status": {
+      "DRAFT": "مسودة",
+      "SUBMITTED": "مُرسلة",
+      "RECEIVED": "مستلمة",
+      "REJECTED": "مرفوضة",
+      "CANCELLED": "ملغاة"
+    },
+    "empty": {
+      "title": "لا يوجد تسليم نقد",
+      "description": "لا يوجد تسليم نقد مطابق لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر نطاق مؤسسة/بلد مالي على حسابك."
+    },
+    "detail": {
+      "eyebrow": "تسليم النقد",
+      "title": "تفاصيل التسليم",
+      "description": "السطور والمبالغ والإجراءات المتاحة لتسليم النقد هذا.",
+      "summaryTitle": "ملخص",
+      "submittedAt": "أُرسلت في",
+      "receivedAt": "استُلمت في",
+      "itemsTitle": "السطور",
+      "colCollection": "تحصيل الدفع عند الاستلام",
+      "colDeclared": "المصرح به",
+      "colHandedOver": "المسلَّم",
+      "colReceived": "المستلم",
+      "colReconciled": "المسوّى",
+      "notAvailable": "غير متاح",
+      "actionsTitle": "الإجراءات"
+    },
+    "actions": {
+      "submit": "إرسال",
+      "cancel": "إلغاء",
+      "reject": "رفض",
+      "reasonLabel": "السبب",
+      "reasonRequired": "السبب مطلوب.",
+      "confirm": "تأكيد",
+      "dismiss": "إغلاق"
+    },
+    "receive": {
+      "title": "استلام التسليم",
+      "trigger": "استلام",
+      "session": "جلسة الصندوق",
+      "lineReceived": "المبلغ المستلم",
+      "noOpenSession": "لا تتوفر جلسة صندوق مفتوحة متوافقة."
+    },
+    "create": {
+      "eyebrow": "المالية",
+      "title": "تسليم نقد جديد",
+      "description": "اختر تحصيلات الدفع عند الاستلام المؤهلة وأدخل المبلغ المسلَّم لكل منها.",
+      "tableAriaLabel": "تحصيلات الدفع عند الاستلام المؤهلة",
+      "colSelect": "تحديد",
+      "noEligible": "لا توجد تحصيلة دفع عند الاستلام مؤهلة (بحالة مصرح به) حاليًا.",
+      "submit": "إنشاء التسليم",
+      "validationError": "اختر تحصيلة دفع عند استلام واحدة على الأقل."
+    }
+  },
+  "cashSessions": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "جلسات الصندوق",
+      "description": "جلسات صندوق حقيقية ضمن نطاق المؤسسة/البلد الخاص بك.",
+      "openAction": "فتح جلسة"
+    },
+    "table": {
+      "ariaLabel": "قائمة جلسات الصندوق"
+    },
+    "columns": {
+      "reference": "المرجع",
+      "cashier": "أمين الصندوق",
+      "openingAmount": "الرصيد الافتتاحي",
+      "variance": "الفرق",
+      "openedAt": "فُتحت في"
+    },
+    "status": {
+      "OPEN": "مفتوحة",
+      "CLOSED": "مغلقة",
+      "RECONCILED": "مسوّاة"
+    },
+    "empty": {
+      "title": "لا توجد جلسة صندوق",
+      "description": "لا توجد جلسة صندوق مطابقة لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر نطاق مؤسسة/بلد مالي على حسابك."
+    },
+    "detail": {
+      "eyebrow": "جلسة الصندوق",
+      "title": "تفاصيل الجلسة",
+      "description": "المبالغ والفرق والإجراءات المتاحة لهذه الجلسة.",
+      "summaryTitle": "ملخص",
+      "expectedAmount": "المبلغ المتوقع (النظام)",
+      "countedAmount": "المبلغ المعدود",
+      "closedAt": "أُغلقت في",
+      "handoversNote": "يمكن مراجعة تسليمات النقد المستلمة في هذه الجلسة من صفحة تسليم النقد."
+    },
+    "create": {
+      "eyebrow": "المالية",
+      "title": "فتح جلسة صندوق",
+      "description": "اختر العملة وأدخل الرصيد النقدي الافتتاحي.",
+      "openingAmountLabel": "الرصيد النقدي الافتتاحي",
+      "submit": "فتح الجلسة",
+      "validationError": "اختر عملة وأدخل مبلغًا."
+    },
+    "close": {
+      "title": "إغلاق الجلسة",
+      "countedLabel": "المبلغ المعدود",
+      "previewLabel": "الفرق الإرشادي",
+      "previewWarning": "يبقى الخادم مصدر الحقيقة — يُحسب الفرق الفعلي عند الإرسال.",
+      "submit": "إغلاق الجلسة"
+    }
+  },
+  "cashVariances": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "الفروقات",
+      "description": "فروقات نقدية حقيقية ضمن نطاق المؤسسة/البلد الخاص بك."
+    },
+    "table": {
+      "ariaLabel": "قائمة الفروقات"
+    },
+    "columns": {
+      "type": "النوع",
+      "source": "المصدر",
+      "actual": "الفعلي",
+      "variance": "الفرق"
+    },
+    "type": {
+      "DECLARATION": "تصريح",
+      "HANDOVER": "تسليم",
+      "SESSION": "جلسة",
+      "RECONCILIATION": "تسوية"
+    },
+    "status": {
+      "OPEN": "مفتوح",
+      "RESOLVED": "محلول",
+      "WAIVED": "متنازل عنه"
+    },
+    "badge": {
+      "shortfall": "نقص",
+      "excess": "فائض",
+      "resolved": "محلول",
+      "waived": "متنازل عنه",
+      "balanced": "متوازن"
+    },
+    "empty": {
+      "title": "لا يوجد فرق",
+      "description": "لا يوجد فرق مطابق لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر نطاق مؤسسة/بلد مالي على حسابك."
+    },
+    "detail": {
+      "eyebrow": "الفرق",
+      "title": "تفاصيل الفرق",
+      "description": "المبالغ والحالة والحل المتاح لهذا الفرق.",
+      "summaryTitle": "ملخص",
+      "resolvedAt": "حُلّ في"
+    },
+    "resolution": {
+      "title": "الحل",
+      "unavailableNote": "لا تملك صلاحية حل هذا الفرق.",
+      "decisionLabel": "القرار",
+      "resolvedOption": "حل",
+      "waivedOption": "تنازل",
+      "decisionRequired": "القرار مطلوب.",
+      "confirmTitle": "تأكيد الحل",
+      "confirmDescription": "هذا الإجراء نهائي. هل تؤكد القرار والسبب المدخلين؟",
+      "submit": "متابعة"
+    }
+  },
+  "reconciliations": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "التسويات",
+      "description": "تسويات حقيقية ضمن نطاق المؤسسة/البلد الخاص بك.",
+      "createAction": "تسوية جديدة"
+    },
+    "table": {
+      "ariaLabel": "قائمة التسويات"
+    },
+    "columns": {
+      "received": "المستلم"
+    },
+    "status": {
+      "DRAFT": "مسودة",
+      "SUBMITTED": "مُرسلة",
+      "APPROVED": "معتمدة",
+      "REJECTED": "مرفوضة"
+    },
+    "empty": {
+      "title": "لا توجد تسوية",
+      "description": "لا توجد تسوية مطابقة لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر نطاق مؤسسة/بلد مالي على حسابك."
+    },
+    "detail": {
+      "eyebrow": "التسوية",
+      "title": "تفاصيل التسوية",
+      "description": "المبالغ والحالة والإجراءات المتاحة لهذه التسوية.",
+      "summaryTitle": "ملخص",
+      "approvedAt": "اعتُمدت في",
+      "preparerNotExposed": "المُعِد: غير متاح في API",
+      "approverNotExposed": "المعتمِد: غير متاح في API",
+      "linkedVariancesNote": "يمكن مراجعة الفروقات المرتبطة بهذه التسوية من صفحة الفروقات.",
+      "makerCheckerNote": "الفصل بين المُعِد والمعتمِد مفروض من جهة الخادم: لا يمكن لمن أرسل التسوية اعتمادها.",
+      "noActionAvailable": "لا يتوفر أي إجراء لهذه التسوية في حالتها الحالية."
+    },
+    "create": {
+      "eyebrow": "المالية",
+      "title": "تسوية جديدة",
+      "description": "اختر جلسة صندوق مغلقة لتسويتها.",
+      "submit": "إنشاء التسوية",
+      "noEligible": "لا تتوفر حاليًا أي جلسة صندوق مغلقة مؤهلة.",
+      "validationError": "اختر جلسة صندوق."
+    },
+    "actions": {
+      "approve": "اعتماد"
+    }
+  },
+  "comingSoon": {
+    "eyebrow": "قريبًا",
+    "title": "هذه الوحدة قادمة في إصدار لاحق",
+    "description": "هذه الصفحة مخطط لها في المرحلة 4B من NOKI Finance. الإجراءات المقابلة موجودة بالفعل في NOKI API وسيتم ربطها بهذه الواجهة."
+  }
+}
