@@ -435,9 +435,739 @@
       "approve": "اعتماد"
     }
   },
-  "comingSoon": {
-    "eyebrow": "قريبًا",
-    "title": "هذه الوحدة قادمة في إصدار لاحق",
-    "description": "هذه الصفحة مخطط لها في المرحلة 4B من NOKI Finance. الإجراءات المقابلة موجودة بالفعل في NOKI API وسيتم ربطها بهذه الواجهة."
+  "obligations": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "الالتزامات المالية",
+      "description": "الالتزامات المالية الحقيقية لمؤسستك، مع التخصيصات والأرصدة المحسوبة من الخادم."
+    },
+    "table": {
+      "ariaLabel": "قائمة الالتزامات المالية"
+    },
+    "columns": {
+      "reference": "المرجع",
+      "nature": "الطبيعة",
+      "direction": "الاتجاه",
+      "counterparty": "الطرف المقابل",
+      "source": "المصدر",
+      "original": "المبلغ الأصلي",
+      "allocated": "المخصص",
+      "settled": "المسدد",
+      "remaining": "المتبقي",
+      "status": "الحالة",
+      "effectiveAt": "تاريخ السريان",
+      "dueAt": "تاريخ الاستحقاق",
+      "hold": "الحجز",
+      "holdYes": "محجوز",
+      "holdNo": "—"
+    },
+    "status": {
+      "OPEN": "مفتوحة",
+      "PARTIALLY_ALLOCATED": "مخصصة جزئيًا",
+      "ALLOCATED": "مخصصة",
+      "ON_HOLD": "محجوزة",
+      "PARTIALLY_SETTLED": "مسددة جزئيًا",
+      "SETTLED": "مسددة",
+      "CANCELLED": "ملغاة",
+      "REVERSED": "معكوسة"
+    },
+    "nature": {
+      "COD_PROCEEDS": "عائدات الدفع عند الاستلام",
+      "SERVICE_FEE": "رسوم الخدمة",
+      "COMMISSION": "عمولة",
+      "EXPENSE": "مصروف",
+      "BONUS": "مكافأة",
+      "REFUND": "استرداد",
+      "WITHHOLDING": "اقتطاع",
+      "PENALTY": "غرامة",
+      "PAYOUT": "دفعة",
+      "ADJUSTMENT": "تسوية"
+    },
+    "direction": {
+      "PAYABLE": "مستحق الدفع",
+      "RECEIVABLE": "مستحق القبض"
+    },
+    "empty": {
+      "title": "لا توجد التزامات",
+      "description": "لا يوجد التزام مالي مطابق لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر أي نطاق مؤسسة مالية على حسابك."
+    },
+    "detail": {
+      "eyebrow": "التزام مالي",
+      "title": "تفاصيل الالتزام",
+      "description": "المبالغ والحالة والتخصيصات من الخادم لهذا الالتزام.",
+      "summaryTitle": "ملخص",
+      "holdReason": "سبب الحجز",
+      "version": "الإصدار",
+      "gapNotice": "لا تعرض واجهة البرمجة سجلات التخصيص الفردية (فقط المبلغ المخصص الإجمالي متاح) — يمكن فقط إنشاء تخصيص جديد.",
+      "auditLink": "عرض أحداث التدقيق المرتبطة"
+    },
+    "allocationType": {
+      "DOCUMENT_LINE": "سطر مستند",
+      "STATEMENT": "كشف حساب",
+      "PAYOUT": "دفعة",
+      "REFUND": "استرداد",
+      "WITHHOLDING": "اقتطاع",
+      "ADJUSTMENT": "تسوية"
+    },
+    "allocate": {
+      "title": "تخصيص هذا الالتزام",
+      "allocationType": "نوع التخصيص",
+      "referenceId": "المرجع المرتبط",
+      "referenceIdRequired": "المرجع المرتبط مطلوب.",
+      "amount": "المبلغ",
+      "amountRequired": "المبلغ مطلوب.",
+      "submit": "تخصيص"
+    }
+  },
+  "disputes": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "النزاعات المالية",
+      "description": "ابحث عن نزاع بواسطة المعرف أو افتح نزاعًا جديدًا."
+    },
+    "gapNotice": "لا تتوفر واجهة برمجة للقائمة أو التقرير الخاص بالنزاعات — يتوفر فقط البحث بالمعرف والإنشاء.",
+    "lookup": {
+      "label": "معرف النزاع",
+      "button": "بحث",
+      "notFoundHint": "الصق معرف نزاع موجود."
+    },
+    "status": {
+      "OPEN": "مفتوح",
+      "RESOLVED": "محلول"
+    },
+    "resolution": {
+      "RELEASE": "تحرير",
+      "ADJUSTMENT": "تسوية"
+    },
+    "detail": {
+      "eyebrow": "نزاع مالي",
+      "title": "تفاصيل النزاع",
+      "description": "الآثار والحالة والحل الخاصين بهذا النزاع.",
+      "summaryTitle": "ملخص",
+      "obligationLink": "عرض الالتزام المرتبط",
+      "adjustmentLink": "عرض التسوية الناتجة",
+      "heldNotice": "الالتزام المرتبط محجوز حاليًا طالما هذا النزاع مفتوح.",
+      "releasedNotice": "تم رفع الحجز عن الالتزام المرتبط عند الحل.",
+      "notAvailable": "غير متوفر"
+    },
+    "create": {
+      "eyebrow": "المالية",
+      "title": "فتح نزاع",
+      "description": "فتح نزاع على التزام موجود يؤدي تلقائيًا إلى حجز هذا الالتزام.",
+      "holdNotice": "فتح هذا النزاع سيحجز الالتزام المرتبط حتى يتم حله.",
+      "obligationId": "معرف الالتزام",
+      "reasonCode": "رمز السبب",
+      "reason": "السبب",
+      "submit": "فتح النزاع"
+    },
+    "resolve": {
+      "resolution": "الحل",
+      "reason": "السبب",
+      "continue": "متابعة",
+      "confirmTitle": "تأكيد الحل",
+      "confirm": "تأكيد",
+      "cancel": "إلغاء",
+      "adjustmentIdLabel": "معرف التسوية",
+      "adjustmentIdRequired": "معرف التسوية مطلوب لحل عبر التسوية."
+    }
+  },
+  "paymentMethods": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "طرق الدفع",
+      "description": "طرق الدفع الخاضعة للحوكمة لأطرافك المقابلة.",
+      "createAction": "طريقة جديدة"
+    },
+    "table": {
+      "ariaLabel": "قائمة طرق الدفع"
+    },
+    "columns": {
+      "type": "النوع",
+      "provider": "المزود",
+      "label": "التسمية",
+      "destination": "الوجهة",
+      "status": "الحالة",
+      "version": "الإصدار",
+      "counterparty": "الطرف المقابل",
+      "createdAt": "أُنشئت في"
+    },
+    "status": {
+      "PENDING_VERIFICATION": "بانتظار التحقق",
+      "ACTIVE": "نشطة",
+      "SUSPENDED": "موقوفة",
+      "REVOKED": "ملغاة"
+    },
+    "type": {
+      "BANK_ACCOUNT": "حساب بنكي",
+      "MOBILE_MONEY": "محفظة إلكترونية"
+    },
+    "detail": {
+      "eyebrow": "طريقة دفع",
+      "title": "تفاصيل طريقة الدفع",
+      "description": "الحالة والإصدار والإجراءات المتاحة لهذه الطريقة.",
+      "summaryTitle": "ملخص",
+      "approvedAt": "اعتُمدت في",
+      "suspendedAt": "أُوقفت في",
+      "revokedAt": "أُلغيت في"
+    },
+    "create": {
+      "eyebrow": "المالية",
+      "title": "طريقة دفع جديدة",
+      "description": "إنشاء إصدار جديد من طريقة الدفع اعتمادًا على مرجع معتم مخزَّن مسبقًا.",
+      "counterpartyType": "نوع الطرف المقابل",
+      "counterpartyId": "معرف الطرف المقابل",
+      "type": "النوع",
+      "providerCode": "رمز المزود",
+      "displayLabel": "التسمية المعروضة",
+      "destinationMasked": "الوجهة المقنّعة",
+      "destinationMaskedHint": "يجب أن تكون سلسلة مقنّعة بالفعل (مثل **** 4242) — وليست IBAN أو رقم حساب خام.",
+      "sensitiveReference": "مرجع حساس معتم",
+      "sensitiveReferenceHint": "يجب أن يكون مرجعًا معتمًا مثل vault:... أو token:... أو pmref:... — وليس IBAN أو رقم حساب أو هاتف خام.",
+      "submit": "إنشاء"
+    },
+    "actions": {
+      "approve": "اعتماد",
+      "suspend": "إيقاف",
+      "revoke": "إلغاء",
+      "reasonLabel": "السبب",
+      "reasonRequired": "السبب مطلوب.",
+      "confirm": "تأكيد",
+      "dismiss": "إغلاق"
+    },
+    "sensitive": {
+      "reveal": "كشف المرجع الحساس",
+      "revealedLabel": "أكد الخادم الوصول؛ لا يتم عرض المرجع الخام.",
+      "hide": "إخفاء"
+    },
+    "empty": {
+      "title": "لا توجد طرق دفع",
+      "description": "لا توجد طريقة دفع مطابقة لهذه المعايير.",
+      "noScopeDescription": "لا يتوفر أي نطاق مؤسسة مالية على حسابك."
+    }
+  },
+  "fees": {
+    "gapNotice": "يمكن إنشاء قواعد الرسوم وفتحها بالمعرف؛ لا تعرض API قائمة قواعد.",
+    "empty": {
+      "title": "لا توجد رسوم",
+      "description": "لا توجد تقييمات رسوم تطابق هذه المرشحات.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "rules": {
+      "list": {
+        "eyebrow": "المالية",
+        "title": "قواعد الرسوم",
+        "description": "إنشاء قاعدة رسوم أو فتح قاعدة موجودة بالمعرف."
+      },
+      "lookup": {
+        "label": "معرف قاعدة الرسوم",
+        "button": "بحث",
+        "notFoundHint": "ألصق معرف قاعدة موجودة."
+      },
+      "create": {
+        "eyebrow": "المالية",
+        "title": "قاعدة رسوم جديدة",
+        "description": "إنشاء مسودة قاعدة بالحقول المدعومة من الخادم فقط.",
+        "submit": "إنشاء القاعدة"
+      },
+      "detail": {
+        "eyebrow": "قاعدة رسوم",
+        "title": "تفاصيل قاعدة الرسوم",
+        "description": "النطاق والحساب والحالة والإصدار.",
+        "summaryTitle": "الملخص"
+      },
+      "columns": {
+        "type": "Type",
+        "scopeType": "Scope",
+        "calculationType": "Calculation",
+        "sourceDomain": "Source domain",
+        "counterpartyType": "Counterparty type",
+        "serviceCode": "Service",
+        "sellerId": "Seller",
+        "cityId": "City",
+        "zoneId": "Zone",
+        "subZoneId": "Sub-zone",
+        "fixedAmount": "Fixed amount",
+        "percentageRate": "Rate",
+        "percentageBase": "Percentage base",
+        "minimumAmount": "Minimum",
+        "maximumAmount": "Maximum",
+        "priority": "Priority",
+        "validFrom": "Valid from",
+        "validTo": "Valid to",
+        "workflowStatus": "Workflow status"
+      },
+      "workflowStatus": {
+        "DRAFT": "Draft",
+        "PENDING_APPROVAL": "Pending approval",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected",
+        "SUSPENDED": "Suspended"
+      }
+    },
+    "assessments": {
+      "list": {
+        "eyebrow": "المالية",
+        "title": "تقييمات الرسوم",
+        "description": "رسوم مقيمة من نقطة تقارير المالية الحقيقية.",
+        "missingReportCapability": "تتطلب القائمة صلاحية قراءة التقارير.",
+        "missingFeeCapability": "يمكنك معاينة الصفوف لكن لا يمكنك فتح التفاصيل دون صلاحية قراءة الرسوم."
+      },
+      "table": {
+        "ariaLabel": "قائمة تقييمات الرسوم"
+      },
+      "create": {
+        "eyebrow": "المالية",
+        "title": "تقييم رسم",
+        "description": "تقييم رسم على التزام مالي موجود.",
+        "type": "نوع التقييم",
+        "obligationId": "معرف الالتزام",
+        "obligationIdRequired": "معرف الالتزام مطلوب.",
+        "submit": "تقييم الرسم"
+      },
+      "detail": {
+        "eyebrow": "تقييم رسم",
+        "title": "تفاصيل تقييم الرسم",
+        "description": "حقول الحساب من الخادم والالتزام المرتبط.",
+        "summaryTitle": "الملخص",
+        "calculationExplanation": "شرح الحساب",
+        "sourceFeeRuleId": "القاعدة المصدر",
+        "ruleVersion": "إصدار القاعدة"
+      },
+      "columns": {
+        "reference": "Reference",
+        "obligationId": "Obligation",
+        "type": "Type",
+        "amount": "Amount",
+        "sourceDomain": "Source domain",
+        "counterparty": "Counterparty",
+        "status": "Status",
+        "effectiveAt": "Effective date"
+      },
+      "status": {
+        "ASSESSED": "Assessed",
+        "VOIDED": "Voided"
+      }
+    }
+  },
+  "documents": {
+    "gapNotice": "تعرض API تقرير الفواتير والفتح المباشر للكشوفات والإشعارات؛ لا تنشئ هذه الصفحة قائمة غير موجودة.",
+    "statementNotice": "هذا المستند كشف تسوية وليس فاتورة جديدة.",
+    "list": {
+      "eyebrow": "المالية",
+      "title": "المستندات المالية",
+      "description": "فواتير من نقطة التقارير الحقيقية مع بحث مباشر للكشوفات والإشعارات."
+    },
+    "lookup": {
+      "label": "معرف المستند",
+      "button": "بحث"
+    },
+    "table": {
+      "ariaLabel": "قائمة المستندات المالية"
+    },
+    "empty": {
+      "title": "لا توجد مستندات",
+      "description": "لا يوجد مستند يطابق هذه المرشحات.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "type": {
+      "INVOICE": "فاتورة",
+      "STATEMENT": "كشف",
+      "CREDIT_NOTE": "إشعار دائن"
+    },
+    "status": {
+      "DRAFT": "مسودة",
+      "GENERATED": "مولد",
+      "SUBMITTED": "مرسل",
+      "APPROVED": "معتمد",
+      "VOIDED": "ملغى"
+    },
+    "columns": {
+      "documentNumber": "Number",
+      "documentType": "Type",
+      "counterparty": "Counterparty",
+      "period": "Period",
+      "currency": "Currency",
+      "gross": "Gross",
+      "fees": "Fees",
+      "expenses": "Expenses",
+      "bonuses": "Bonuses",
+      "refunds": "Refunds",
+      "withholdings": "Withholdings",
+      "net": "Net",
+      "paid": "Paid",
+      "remaining": "Remaining",
+      "status": "Status",
+      "approvedAt": "Approved at"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Generate document",
+      "description": "Generate an invoice, statement or credit note from API-authorized criteria only.",
+      "documentType": "Document type",
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "periodStart": "Period start",
+      "periodEnd": "Period end",
+      "submit": "Generate"
+    },
+    "detail": {
+      "eyebrow": "Financial document",
+      "title": "Document detail",
+      "description": "Summary, lines, allocations and server totals for this document.",
+      "summaryTitle": "Summary",
+      "linesTitle": "Lines",
+      "voidReason": "Void reason",
+      "voidedAt": "Voided at"
+    },
+    "actions": {
+      "approve": "Approve",
+      "void": "Void",
+      "voidReasonLabel": "Void reason",
+      "voidReasonRequired": "Void reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Close"
+    }
+  },
+  "adjustments": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "التعديلات المالية",
+      "description": "إنشاء تعديل أو فتح تعديل موجود بالمعرف."
+    },
+    "lookup": {
+      "label": "معرف التعديل",
+      "button": "بحث"
+    },
+    "empty": {
+      "title": "لا يوجد سير تعديل",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك.",
+      "createForbiddenDescription": "يمكنك فتح تعديل موجود، لكن لا تملك صلاحية إنشاء تعديل."
+    },
+    "type": {
+      "EXPENSE": "Expense",
+      "BONUS": "Bonus",
+      "REFUND": "Refund",
+      "WITHHOLDING": "Withholding",
+      "PENALTY": "Penalty",
+      "DISPUTE_ADJUSTMENT": "Dispute adjustment",
+      "MANUAL_ADJUSTMENT": "Manual adjustment"
+    },
+    "create": {
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "sourceDomain": "Source domain",
+      "sourceReferenceType": "Source reference type",
+      "sourceReferenceId": "Source reference ID",
+      "type": "Type",
+      "amount": "Amount",
+      "reasonCode": "Reason code",
+      "reason": "Reason",
+      "attachmentReference": "Attachment reference",
+      "submit": "Create adjustment"
+    },
+    "detail": {
+      "eyebrow": "Financial adjustment",
+      "title": "Adjustment detail",
+      "description": "Author, approval state, reason and resulting obligation when exposed by the API.",
+      "summaryTitle": "Summary",
+      "author": "Author",
+      "submitter": "Submitter",
+      "approver": "Approver",
+      "appliedObligation": "Created obligation"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "apply": "Apply",
+      "reasonLabel": "Reason",
+      "reasonRequired": "Reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Close"
+    }
+  },
+  "approvals": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "قائمة الموافقات",
+      "description": "موافقات مالية معلقة مركبة من النقاط الموجودة."
+    },
+    "empty": {
+      "title": "لا توجد موافقات",
+      "description": "لا يوجد عنصر ينتظر في هذا القسم.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "columns": {
+      "resourceType": "Resource",
+      "reference": "Reference",
+      "amount": "Amount",
+      "requester": "Requester",
+      "date": "Date",
+      "stage": "Stage",
+      "action": "Action"
+    },
+    "sections": {
+      "payoutFirstApprove": "Payouts: first approval",
+      "payoutFinalApprove": "Payouts: final approval",
+      "paymentMethods": "Payment methods pending verification",
+      "invoices": "Documents pending approval",
+      "adjustmentsGapNotice": "Adjustments do not expose a list endpoint in the current API; use the adjustment lookup to approve a known item."
+    },
+    "blockedReasons": {
+      "samePreparer": "Blocked if the actor is the preparer.",
+      "sameFirstApprover": "Blocked if the actor already gave the first approval.",
+      "modifiedPaymentMethod": "Blocked if the actor modified the payment method.",
+      "missingPermission": "Blocked when a required permission is missing.",
+      "activeHold": "Blocked while a hold is active.",
+      "incompatibleStatus": "Blocked when the resource status is not approvable."
+    },
+    "viewLink": "فتح"
+  },
+  "payouts": {
+    "makerCheckerNote": "تفرض API قواعد maker/checker؛ تعرض هذه الشاشة سبب الخادم فقط.",
+    "list": {
+      "eyebrow": "المالية",
+      "title": "المدفوعات",
+      "description": "دفعات الدفع من الاقتراح حتى التسوية.",
+      "createAction": "دفعة جديدة",
+      "dateFrom": "من",
+      "dateTo": "إلى"
+    },
+    "table": {
+      "ariaLabel": "قائمة المدفوعات"
+    },
+    "empty": {
+      "title": "لا توجد مدفوعات",
+      "description": "لا توجد دفعة تطابق هذه المرشحات.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "columns": {
+      "reference": "Reference",
+      "counterparty": "Counterparty",
+      "amount": "Amount",
+      "paymentMethod": "Payment method",
+      "status": "Status",
+      "createdAt": "Created at",
+      "updatedAt": "Updated at"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "PROPOSED": "Proposed",
+      "ON_HOLD": "On hold",
+      "PENDING_FIRST_APPROVAL": "Pending first approval",
+      "PENDING_FINAL_APPROVAL": "Pending final approval",
+      "APPROVED": "Approved",
+      "EXPORT_READY": "Export ready",
+      "SENT": "Sent",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "MARKED_PAID": "Marked paid",
+      "CANCELLED": "Cancelled",
+      "RECONCILED": "Reconciled"
+    },
+    "counterpartyType": {
+      "SELLER": "Seller",
+      "AFFILIATE": "Affiliate",
+      "RESTAURANT": "Restaurant",
+      "DRIVER": "Driver",
+      "COURIER": "Courier",
+      "LOGISTICS_PARTNER": "Logistics partner",
+      "CUSTOMER": "Customer",
+      "NOKI_PLATFORM": "NOKI platform",
+      "OTHER": "Other"
+    },
+    "holdType": {
+      "DISPUTE": "Dispute",
+      "COMPLIANCE": "Compliance",
+      "PAYMENT_METHOD": "Payment method",
+      "MANUAL_REVIEW": "Manual review",
+      "VARIANCE": "Variance",
+      "OTHER": "Other"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Propose payout",
+      "description": "Create a payout proposal from existing obligations and a masked payment method.",
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "counterpartyIdRequired": "Counterparty ID is required.",
+      "paymentMethodId": "Payment method ID",
+      "paymentMethodIdRequired": "Payment method ID is required.",
+      "code": "Code",
+      "obligationIds": "Obligation IDs",
+      "obligationIdsHint": "One obligation ID per line.",
+      "obligationIdsRequired": "At least one obligation ID is required.",
+      "submit": "Propose payout"
+    },
+    "actions": {
+      "hold": "Hold",
+      "releaseHold": "Release hold",
+      "firstApprove": "First approval",
+      "finalApprove": "Final approval",
+      "export": "Export ready",
+      "markSent": "Mark sent",
+      "markPaid": "Mark paid",
+      "markFailed": "Mark failed",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "reconcile": "Reconcile"
+    },
+    "dialogs": {
+      "amount": "Amount",
+      "currency": "Currency",
+      "destination": "Destination",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "reasonLabel": "Reason",
+      "reasonRequired": "This field is required.",
+      "typeLabel": "Type",
+      "obligationId": "Obligation",
+      "exportReference": "Export reference",
+      "externalReference": "External reference",
+      "reference": "Reference",
+      "proofReference": "Proof reference",
+      "checksum": "Checksum",
+      "mimeType": "MIME type",
+      "size": "Size",
+      "errorCode": "Error code",
+      "reconciliationReference": "Reconciliation reference"
+    },
+    "detail": {
+      "eyebrow": "Payout",
+      "title": "Payout detail",
+      "description": "Obligations, holds, approvals, attempts and proof for this payout.",
+      "summaryTitle": "Summary",
+      "linesTitle": "Obligations",
+      "holdsTitle": "Holds",
+      "approvalsTitle": "Approvals",
+      "attemptsTitle": "Attempts",
+      "proofsTitle": "Proofs",
+      "failureTitle": "Failure",
+      "failureCode": "Failure code",
+      "failureReason": "Failure reason",
+      "retryCount": "Retries",
+      "nextAttempt": "Next attempt",
+      "notAvailable": "Not available",
+      "code": "Code",
+      "currencyId": "Currency",
+      "paymentMethodStatus": "Payment method status",
+      "paymentMethodVersion": "Payment method version",
+      "noLines": "No obligation line is exposed.",
+      "noHolds": "No hold is active or recorded.",
+      "noApprovals": "No approval is recorded.",
+      "noAttempts": "No attempt is recorded.",
+      "noProofs": "No proof is recorded.",
+      "lineColumns": {
+        "recipient": "Recipient",
+        "order": "Order",
+        "obligation": "Obligation",
+        "settledAt": "Settled at"
+      },
+      "holdColumns": {
+        "releasedAt": "Released at",
+        "releaseReason": "Release reason"
+      },
+      "approvalColumns": {
+        "stage": "Stage",
+        "decision": "Decision",
+        "actor": "Actor"
+      },
+      "attemptColumns": {
+        "attempt": "Attempt"
+      },
+      "proofColumns": {
+        "active": "Active"
+      }
+    }
+  },
+  "reports": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "التقارير",
+      "description": "كتالوج ومعاينة وتصدير CSV من نقاط تقارير المالية الحقيقية."
+    },
+    "empty": {
+      "title": "لا توجد تقارير",
+      "description": "لا يوجد صف يطابق هذه المرشحات.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "filters": {
+      "country": "Country",
+      "currency": "Currency",
+      "status": "Status",
+      "counterpartyType": "Counterparty type",
+      "sourceDomain": "Source domain",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "search": "Search"
+    },
+    "catalogue": {
+      "typeLabel": "Report type",
+      "cod": "COD aging",
+      "cashSessions": "Cash sessions",
+      "variances": "Variances",
+      "reconciliations": "Reconciliations",
+      "fees": "Fees",
+      "invoices": "Invoices",
+      "obligations": "Obligations aging",
+      "payouts": "Payouts",
+      "paymentMethodStatus": "Payment method status",
+      "sellerSettlements": "Seller settlements"
+    },
+    "preview": {
+      "ariaLabel": "Report preview",
+      "empty": "No preview rows"
+    },
+    "export": {
+      "button": "Export CSV",
+      "title": "CSV export",
+      "rowCount": "Rows",
+      "checksum": "Checksum",
+      "generatedAt": "Generated at",
+      "maxRows": "Maximum rows",
+      "filename": "Filename",
+      "downloadCsv": "Download CSV",
+      "generatingLabel": "Generating..."
+    }
+  },
+  "audit": {
+    "list": {
+      "eyebrow": "المالية",
+      "title": "التدقيق",
+      "description": "أحداث تدقيق المالية مع مرشحات حسب الفاعل والمورد ومعرف الارتباط."
+    },
+    "empty": {
+      "title": "لا توجد أحداث تدقيق",
+      "description": "لا يوجد حدث تدقيق يطابق هذه المرشحات.",
+      "noScopeDescription": "لا يوجد نطاق مؤسسة/بلد مالي متاح لحسابك."
+    },
+    "filters": {
+      "actorId": "Actor",
+      "action": "Action",
+      "resourceType": "Resource type",
+      "resourceId": "Resource ID",
+      "country": "Country",
+      "correlationId": "Correlation ID",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "resultNotice": "Result filtering is controlled by the API response."
+    },
+    "columns": {
+      "occurredAt": "Date",
+      "actor": "Actor",
+      "action": "Action",
+      "resourceType": "Resource type",
+      "resourceId": "Resource ID",
+      "correlationId": "Correlation ID",
+      "metadata": "Metadata"
+    },
+    "row": {
+      "hiddenValue": "Hidden",
+      "expand": "Expand",
+      "collapse": "Collapse"
+    },
+    "table": {
+      "ariaLabel": "Finance audit events"
+    }
   }
 }

@@ -85,3 +85,156 @@ export function reconciliationStatusTone(status: string): BadgeTone {
       return "neutral";
   }
 }
+
+/** FinancialObligationStatus (prisma/schema.prisma) */
+export function obligationStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "OPEN":
+      return "info";
+    case "PARTIALLY_ALLOCATED":
+      return "warning";
+    case "ALLOCATED":
+      return "info";
+    case "ON_HOLD":
+      return "danger";
+    case "PARTIALLY_SETTLED":
+      return "warning";
+    case "SETTLED":
+      return "success";
+    case "CANCELLED":
+      return "neutral";
+    case "REVERSED":
+      return "neutral";
+    default:
+      return "neutral";
+  }
+}
+
+/** FeeRuleWorkflowStatus */
+export function feeRuleWorkflowStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "DRAFT":
+      return "neutral";
+    case "PENDING_APPROVAL":
+      return "warning";
+    case "APPROVED":
+      return "success";
+    case "REJECTED":
+      return "danger";
+    case "SUSPENDED":
+      return "neutral";
+    default:
+      return "neutral";
+  }
+}
+
+/** FinanceFeeAssessmentStatus */
+export function feeAssessmentStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "ASSESSED":
+      return "info";
+    case "VOIDED":
+      return "neutral";
+    default:
+      return "neutral";
+  }
+}
+
+/** FinancialDocumentStatus */
+export function documentStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "DRAFT":
+      return "neutral";
+    case "GENERATED":
+      return "info";
+    case "SUBMITTED":
+      return "warning";
+    case "APPROVED":
+      return "success";
+    case "VOIDED":
+      return "danger";
+    default:
+      return "neutral";
+  }
+}
+
+/** FinancialAdjustmentStatus */
+export function adjustmentStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "DRAFT":
+      return "neutral";
+    case "SUBMITTED":
+      return "warning";
+    case "APPROVED":
+      return "info";
+    case "REJECTED":
+      return "danger";
+    case "APPLIED":
+      return "success";
+    case "REVERSED":
+      return "neutral";
+    default:
+      return "neutral";
+  }
+}
+
+/** FinancialDisputeStatus */
+export function disputeStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "OPEN":
+      return "danger";
+    case "RESOLVED":
+      return "success";
+    default:
+      return "neutral";
+  }
+}
+
+/** PayoutBatchStatus (prisma/schema.prisma) */
+export function payoutStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "DRAFT":
+      return "neutral";
+    case "PROPOSED":
+      return "info";
+    case "ON_HOLD":
+      return "danger";
+    case "PENDING_FIRST_APPROVAL":
+      return "warning";
+    case "PENDING_FINAL_APPROVAL":
+      return "warning";
+    case "APPROVED":
+      return "info";
+    case "EXPORT_READY":
+      return "info";
+    case "SENT":
+      return "warning";
+    case "PAID":
+    case "MARKED_PAID":
+      return "success";
+    case "FAILED":
+      return "danger";
+    case "CANCELLED":
+      return "neutral";
+    case "RECONCILED":
+      return "success";
+    default:
+      return "neutral";
+  }
+}
+
+/** PaymentMethodStatus */
+export function paymentMethodStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case "PENDING_VERIFICATION":
+      return "warning";
+    case "ACTIVE":
+      return "success";
+    case "SUSPENDED":
+      return "danger";
+    case "REVOKED":
+      return "neutral";
+    default:
+      return "neutral";
+  }
+}

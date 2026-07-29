@@ -14,6 +14,6 @@ export interface DomainDescriptor {
   href: string;
   /** One or more SYSTEM_PERMISSION_CODES values from noki-api's authorization catalog (OR semantics when an array). */
   capability?: string | string[];
-  /** False for the 10 Phase 4B modules: still routed and capability-gated, but rendered as a "coming soon" placeholder, never mock data. */
+  /** True when the navigation item resolves to a real endpoint-backed or explicitly contract-limited workflow. */
   implemented: boolean;
 }

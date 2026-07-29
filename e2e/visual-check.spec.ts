@@ -2,76 +2,59 @@ import { expect, test } from "@playwright/test";
 
 import { loginAsFinanceUser } from "./support/auth";
 
-/**
- * Captures the design gate screenshot matrix (spec section 33): desktop/mobile
- * x light/dark, plus Arabic RTL desktop/mobile, across the six required pages.
- * This is a manual visual review aid, not automated pixel-diffing -- there is
- * no baseline for a brand-new app yet.
- */
-const PAGES: { path: string; name: string }[] = [
-  { path: "/fr/login", name: "login" },
-  { path: "/fr", name: "dashboard" },
-  { path: "/fr/cash-handovers", name: "handovers-list" },
-];
+const SCREENSHOTS = {
+  obligations: "screenshots/phase-4b/obligations-desktop-light.png",
+  invoice: "screenshots/phase-4b/invoice-detail-desktop-light.png",
+  payout: "screenshots/phase-4b/payout-detail-desktop-light.png",
+  approvals: "screenshots/phase-4b/approvals-desktop-light.png",
+  paymentMethods: "screenshots/phase-4b/payment-methods-desktop-light.png",
+  reports: "screenshots/phase-4b/reports-desktop-light.png",
+  audit: "screenshots/phase-4b/audit-desktop-light.png",
+  payoutMobile: "screenshots/phase-4b/payout-detail-mobile-390.png",
+  reportsMobile: "screenshots/phase-4b/reports-mobile-390.png",
+  payoutArabic: "screenshots/phase-4b/payout-arabic-rtl.png",
+  payoutDark: "screenshots/phase-4b/payout-dark.png",
+} as const;
 
 async function gotoAndSettle(page: import("@playwright/test").Page, path: string) {
   await page.goto(path, { waitUntil: "networkidle" });
+  await expect(page.locator("body")).toBeVisible();
 }
 
 test.describe("visual gate matrix", () => {
-  test("desktop light", async ({ page }) => {
+  test("phase 4B required screenshot set", async ({ page }) => {
     await loginAsFinanceUser(page, "fr");
-    for (const { path, name } of PAGES) {
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/desktop-light-${name}.png`, fullPage: true });
-    }
-  });
+    await gotoAndSettle(page, "/fr/obligations");
+    await page.screenshot({ path: SCREENSHOTS.obligations, fullPage: true });
+    await gotoAndSettle(page, "/fr/documents/document-seed-1");
+    await page.screenshot({ path: SCREENSHOTS.invoice, fullPage: true });
+    await gotoAndSettle(page, "/fr/payouts/payout-seed-1");
+    await page.screenshot({ path: SCREENSHOTS.payout, fullPage: true });
+    await gotoAndSettle(page, "/fr/approvals");
+    await page.screenshot({ path: SCREENSHOTS.approvals, fullPage: true });
+    await gotoAndSettle(page, "/fr/payment-methods");
+    await page.screenshot({ path: SCREENSHOTS.paymentMethods, fullPage: true });
+    await gotoAndSettle(page, "/fr/reports?report=payouts");
+    await page.screenshot({ path: SCREENSHOTS.reports, fullPage: true });
+    await gotoAndSettle(page, "/fr/audit");
+    await page.screenshot({ path: SCREENSHOTS.audit, fullPage: true });
 
-  test("desktop dark", async ({ page }) => {
-    await loginAsFinanceUser(page, "fr");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoAndSettle(page, "/fr/payouts/payout-seed-1");
+    await page.screenshot({ path: SCREENSHOTS.payoutMobile, fullPage: true });
+    await gotoAndSettle(page, "/fr/reports?report=payouts");
+    await page.screenshot({ path: SCREENSHOTS.reportsMobile, fullPage: true });
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await gotoAndSettle(page, "/ar/payouts/payout-seed-1");
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+    await page.screenshot({ path: SCREENSHOTS.payoutArabic, fullPage: true });
+
+    await gotoAndSettle(page, "/fr");
     await page.getByRole("button", { name: /sombre|dark/i }).click();
-    for (const { path, name } of PAGES) {
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/desktop-dark-${name}.png`, fullPage: true });
-    }
-  });
-
-  test("mobile 390 light", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await loginAsFinanceUser(page, "fr");
-    for (const { path, name } of PAGES) {
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/mobile-light-${name}.png`, fullPage: true });
-    }
-  });
-
-  test("mobile 390 dark", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await loginAsFinanceUser(page, "fr");
-    await page.getByRole("button", { name: /sombre|dark/i }).click();
-    for (const { path, name } of PAGES) {
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/mobile-dark-${name}.png`, fullPage: true });
-    }
-  });
-
-  test("arabic RTL desktop", async ({ page }) => {
-    await loginAsFinanceUser(page, "ar");
-    for (const { name } of PAGES) {
-      const path = PAGES.find((p) => p.name === name)!.path.replace("/fr", "/ar");
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/rtl-desktop-${name}.png`, fullPage: true });
-    }
-  });
-
-  test("arabic RTL mobile", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await loginAsFinanceUser(page, "ar");
-    for (const { name } of PAGES) {
-      const path = PAGES.find((p) => p.name === name)!.path.replace("/fr", "/ar");
-      await gotoAndSettle(page, path);
-      await page.screenshot({ path: `screenshots/rtl-mobile-${name}.png`, fullPage: true });
-    }
+    await gotoAndSettle(page, "/fr/payouts/payout-seed-1");
+    await expect(page.locator("html")).toHaveAttribute("data-noki-theme", "dashboard-dark");
+    await page.screenshot({ path: SCREENSHOTS.payoutDark, fullPage: true });
   });
 });
 

@@ -65,7 +65,7 @@ export function OpenSessionForm({ organizationId, countryId, countryCode, curren
     <form onSubmit={handleSubmit} noValidate>
       <Stack gap="md">
         <Field id="open-session-currency" label={labels.currencyLabel}>
-          <Select options={currencyOptions} selectedKey={currencyId ?? undefined} onSelectionChange={(key) => setCurrencyId(String(key))} />
+          <Select label={labels.currencyLabel} options={currencyOptions} selectedKey={currencyId ?? undefined} onSelectionChange={(key) => setCurrencyId(String(key))} />
         </Field>
         <Field id="open-session-amount" label={labels.openingAmountLabel}>
           <Input inputMode="decimal" value={openingAmount} onChange={(event) => setOpeningAmount(event.target.value)} disabled={pending} />

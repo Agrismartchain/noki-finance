@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 
 const port = Number(process.argv[2] ?? process.env.PORT ?? 4701);
@@ -29,14 +29,40 @@ const FINANCE_CAPABILITIES = [
   "finance.reconciliation.submit",
   "finance.reconciliation.approve",
   "finance.obligation.read",
+  "finance.obligation.manage",
   "finance.fee.read",
+  "finance.fee.assess",
+  "finance.fee_rule.read",
+  "finance.fee_rule.manage",
   "finance.document.read",
+  "finance.document.generate",
+  "finance.document.approve",
+  "finance.document.void",
   "finance.adjustment.read",
+  "finance.adjustment.create",
+  "finance.adjustment.approve",
   "finance.dispute.read",
+  "finance.dispute.manage",
   "finance.payout.read",
+  "finance.payout.prepare",
+  "finance.payout.hold",
   "finance.payout.first_approve",
+  "finance.payout.final_approve",
+  "finance.payout.export",
+  "finance.payout.mark_sent",
+  "finance.payout.mark_paid",
+  "finance.payout.mark_failed",
+  "finance.payout.retry",
+  "finance.payout.cancel",
+  "finance.payout.reconcile",
   "finance.payment_method.read",
+  "finance.payment_method.read_sensitive",
+  "finance.payment_method.create",
+  "finance.payment_method.approve",
+  "finance.payment_method.suspend",
+  "finance.payment_method.revoke",
   "finance.report.read",
+  "finance.report.export",
   "finance.audit.read",
 ];
 
@@ -134,6 +160,336 @@ variances.set(seedVarianceId, {
   createdAt: now(),
 });
 
+// ---- Phase 4B finance state --------------------------------------------------
+
+const SELLER_ID = "44444444-4444-4444-4444-444444444444";
+
+const obligations = new Map();
+const feeRules = new Map();
+const feeAssessments = new Map();
+const documents = new Map();
+const adjustments = new Map();
+const disputes = new Map();
+const payouts = new Map();
+const paymentMethods = new Map();
+const auditEntries = [];
+
+function logAudit(action, resourceType, resourceId, metadata) {
+  auditEntries.push({
+    id: `audit-${randomUUID()}`,
+    actorId: "actor-finance-1",
+    membershipId: "membership-1",
+    organizationId: ORG_ID,
+    countryId: COUNTRY_ID,
+    action,
+    resourceType,
+    resourceId,
+    correlationId: randomUUID(),
+    metadata: metadata ?? null,
+    occurredAt: now(),
+  });
+}
+
+const seedObligationId = "obligation-seed-1";
+obligations.set(seedObligationId, {
+  id: seedObligationId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  currencyId: CURRENCY_ID,
+  currency: "MAD",
+  sourceDomain: "COMMERCE",
+  sourceReferenceType: "Order",
+  sourceReferenceId: "order-1",
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  nature: "COMMISSION",
+  direction: "RECEIVABLE",
+  status: "OPEN",
+  originalAmount: "100.00",
+  allocatedAmount: "0.00",
+  settledAmount: "0.00",
+  remainingAmount: "100.00",
+  effectiveAt: now(),
+  dueAt: null,
+  holdReason: null,
+  version: 1,
+  createdAt: now(),
+  updatedAt: now(),
+});
+logAudit("finance.obligation.create", "FinancialObligation", seedObligationId, { nature: "COMMISSION", direction: "RECEIVABLE" });
+
+const seedFeeRuleId = "fee-rule-seed-1";
+feeRules.set(seedFeeRuleId, {
+  id: seedFeeRuleId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  countryCode: "MA",
+  currencyId: CURRENCY_ID,
+  currencyCode: "MAD",
+  type: "CONFIRMATION",
+  scopeType: "COUNTRY",
+  calculationType: "PERCENTAGE",
+  sourceDomain: "COMMERCE",
+  counterpartyType: "SELLER",
+  serviceCode: null,
+  sellerId: null,
+  cityId: null,
+  zoneId: null,
+  subZoneId: null,
+  fixedAmount: null,
+  percentageRate: "2.5000",
+  percentageBase: "amount",
+  minimumAmount: "1.00",
+  maximumAmount: "50.00",
+  priority: 1,
+  version: 1,
+  workflowStatus: "APPROVED",
+  status: "ACTIVE",
+  validFrom: now(),
+  validTo: null,
+});
+logAudit("finance.fee_rule.create", "FeeRule", seedFeeRuleId, { type: "CONFIRMATION" });
+
+const seedFeeAssessmentId = "fee-assessment-seed-1";
+feeAssessments.set(seedFeeAssessmentId, {
+  id: seedFeeAssessmentId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  countryCode: "MA",
+  currencyId: CURRENCY_ID,
+  currency: "MAD",
+  currencyCode: "MAD",
+  financialObligationId: seedObligationId,
+  orderId: "order-1",
+  type: "CONFIRMATION",
+  amount: "2.50",
+  sourceFeeRuleId: seedFeeRuleId,
+  ruleVersion: 1,
+  calculationType: "PERCENTAGE",
+  fixedAmount: null,
+  percentageRate: "2.5000",
+  percentageBase: "amount",
+  minimumAmount: "1.00",
+  maximumAmount: "50.00",
+  sourceDomain: "COMMERCE",
+  sourceReferenceType: "Order",
+  sourceReferenceId: "order-1",
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  status: "ASSESSED",
+  effectiveAt: now(),
+  createdAt: now(),
+});
+logAudit("finance.fee.assess", "FinanceFeeAssessment", seedFeeAssessmentId, { type: "CONFIRMATION" });
+
+const seedDocumentId = "document-seed-1";
+documents.set(seedDocumentId, {
+  id: seedDocumentId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  currencyId: CURRENCY_ID,
+  currency: "MAD",
+  documentNumber: "INV-0001",
+  documentType: "INVOICE",
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  periodStart: now(),
+  periodEnd: now(),
+  status: "GENERATED",
+  grossAmount: "100.00",
+  feeAmount: "2.50",
+  expenseAmount: "0.00",
+  bonusAmount: "0.00",
+  refundAmount: "0.00",
+  withholdingAmount: "0.00",
+  netAmount: "97.50",
+  paidAmount: "0.00",
+  remainingAmount: "97.50",
+  approvedByActorId: null,
+  approvedAt: null,
+  voidedByActorId: null,
+  voidedAt: null,
+  voidReason: null,
+  version: 1,
+  lines: [{ id: "doc-line-1", type: "FEE", descriptionCode: "CONFIRMATION_FEE", sourceDomain: "COMMERCE", sourceReferenceType: "Order", sourceReferenceId: "order-1", obligationId: seedObligationId, feeAssessmentId: seedFeeAssessmentId, adjustmentId: null, amount: "2.50", currency: "MAD" }],
+  createdAt: now(),
+  updatedAt: now(),
+});
+logAudit("finance.document.generate", "FinancialDocument", seedDocumentId, { documentType: "INVOICE" });
+
+const seedStatementId = "document-statement-seed-1";
+documents.set(seedStatementId, {
+  ...documents.get(seedDocumentId),
+  id: seedStatementId,
+  documentNumber: "STMT-0001",
+  documentType: "STATEMENT",
+  status: "APPROVED",
+  approvedByActorId: "actor-finance-1",
+  approvedAt: now(),
+  lines: [{ id: "stmt-line-1", type: "SETTLEMENT", descriptionCode: "SELLER_STATEMENT", sourceDomain: "COMMERCE", sourceReferenceType: "Settlement", sourceReferenceId: "settlement-1", obligationId: seedObligationId, feeAssessmentId: null, adjustmentId: null, amount: "97.50", currency: "MAD" }],
+});
+logAudit("finance.document.generate", "FinancialDocument", seedStatementId, { documentType: "STATEMENT" });
+
+const seedAdjustmentId = "adjustment-seed-1";
+adjustments.set(seedAdjustmentId, {
+  id: seedAdjustmentId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  currencyId: CURRENCY_ID,
+  currency: "MAD",
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  sourceDomain: "COMMERCE",
+  sourceReferenceType: "Order",
+  sourceReferenceId: "order-1",
+  type: "EXPENSE",
+  status: "SUBMITTED",
+  amount: "10.00",
+  reasonCode: "COURIER_FEE",
+  reason: "Courier reimbursement for return shipment",
+  attachmentReference: null,
+  createdByActorId: "actor-finance-1",
+  submittedByActorId: "actor-finance-1",
+  approvedByActorId: null,
+  appliedObligationId: null,
+  createdAt: now(),
+  updatedAt: now(),
+});
+logAudit("finance.adjustment.create", "FinancialAdjustment", seedAdjustmentId, { type: "EXPENSE" });
+
+const seedDisputeId = "dispute-seed-1";
+disputes.set(seedDisputeId, {
+  id: seedDisputeId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  obligationId: seedObligationId,
+  status: "OPEN",
+  reasonCode: "AMOUNT_MISMATCH",
+  reason: "Seller disputes the commission amount",
+  openedByActorId: "actor-finance-1",
+  resolvedByActorId: null,
+  resolution: null,
+  resolutionReason: null,
+  adjustmentId: null,
+  openedAt: now(),
+  resolvedAt: null,
+});
+logAudit("finance.dispute.create", "FinancialDispute", seedDisputeId, { reasonCode: "AMOUNT_MISMATCH" });
+
+const seedPaymentMethodId = "payment-method-seed-1";
+paymentMethods.set(seedPaymentMethodId, {
+  id: seedPaymentMethodId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  currencyId: CURRENCY_ID,
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  type: "BANK_ACCOUNT",
+  providerCode: "DEMO_BANK",
+  displayLabel: "Seller main account",
+  destinationMasked: "IBAN •••• 9012",
+  destinationFingerprint: "fp-seed-not-rendered",
+  sensitiveReference: "vault:seed-reference-123456",
+  status: "PENDING_VERIFICATION",
+  version: 1,
+  createdByActorId: "actor-finance-1",
+  approvedByActorId: null,
+  approvedAt: null,
+  suspendedAt: null,
+  revokedAt: null,
+  createdAt: now(),
+  updatedAt: now(),
+});
+logAudit("finance.payment_method.create", "FinancePaymentMethod", seedPaymentMethodId, { type: "BANK_ACCOUNT", providerCode: "DEMO_BANK" });
+
+const seedPayoutId = "payout-seed-1";
+payouts.set(seedPayoutId, {
+  id: seedPayoutId,
+  organizationId: ORG_ID,
+  countryId: COUNTRY_ID,
+  currencyId: CURRENCY_ID,
+  counterpartyType: "SELLER",
+  counterpartyId: SELLER_ID,
+  paymentMethodId: seedPaymentMethodId,
+  paymentMethodVersion: 1,
+  destinationMasked: "IBAN •••• 9012",
+  code: "PO-0001",
+  status: "PROPOSED",
+  totalAmount: "97.50",
+  createdByActorId: "actor-finance-1",
+  approvedByActorId: null,
+  firstApprovedByActorId: null,
+  finalApprovedByActorId: null,
+  exportedByActorId: null,
+  sentByActorId: null,
+  paidByActorId: null,
+  failedByActorId: null,
+  cancelledByActorId: null,
+  reconciledByActorId: null,
+  approvedAt: null,
+  firstApprovedAt: null,
+  finalApprovedAt: null,
+  exportReadyAt: null,
+  sentAt: null,
+  paidAt: null,
+  failedAt: null,
+  cancelledAt: null,
+  reconciledAt: null,
+  exportChecksum: null,
+  exportLineCount: null,
+  exportReference: null,
+  externalReference: null,
+  proofReference: null,
+  failureCode: null,
+  failureReason: null,
+  retryCount: 0,
+  cancelReason: null,
+  reconciliationReference: null,
+  paymentMethod: { id: seedPaymentMethodId, status: "PENDING_VERIFICATION", version: 1, destinationMasked: "IBAN •••• 9012" },
+  lines: [{ id: "payout-line-1", recipientId: SELLER_ID, orderId: "order-1", financialObligationId: seedObligationId, paymentMethodId: seedPaymentMethodId, paymentMethodVersion: 1, destinationMasked: "IBAN •••• 9012", amount: "97.50", status: "PROPOSED", settledAt: null, createdAt: now() }],
+  holds: [],
+  approvals: [],
+  attempts: [],
+  paymentProofs: [],
+  createdAt: now(),
+  updatedAt: now(),
+});
+logAudit("finance.payout.prepare", "PayoutBatch", seedPayoutId, { status: "PROPOSED" });
+
+function clonePayout(id, status, extra = {}) {
+  const base = payouts.get(seedPayoutId);
+  payouts.set(id, {
+    ...base,
+    id,
+    code: `PO-${id.replace("payout-", "").slice(0, 12)}`,
+    status,
+    holds: [],
+    approvals: [],
+    attempts: [],
+    paymentProofs: [],
+    lines: base.lines.map((line) => ({ ...line, id: `${id}-line-1`, status })),
+    createdAt: now(),
+    updatedAt: now(),
+    ...extra,
+  });
+}
+
+clonePayout("payout-hold-seed-1", "ON_HOLD", {
+  holds: [{ id: "hold-seed-1", financialObligationId: seedObligationId, type: "DISPUTE", status: "ACTIVE", reason: "Seller dispute review", createdByActorId: "actor-finance-1", releasedByActorId: null, releasedAt: null, releaseReason: null, createdAt: now() }],
+});
+clonePayout("payout-first-seed-1", "PENDING_FIRST_APPROVAL");
+clonePayout("payout-final-seed-1", "PENDING_FINAL_APPROVAL", {
+  firstApprovedByActorId: "actor-finance-2",
+  firstApprovedAt: now(),
+  approvals: [{ id: "approval-first-seed-1", stage: "FIRST", decision: "APPROVED", actorId: "actor-finance-2", reason: "First check complete", createdAt: now() }],
+});
+clonePayout("payout-approved-seed-1", "APPROVED");
+clonePayout("payout-export-ready-seed-1", "EXPORT_READY", { exportReadyAt: now(), exportChecksum: "export-ready-checksum", exportLineCount: 1 });
+clonePayout("payout-sent-paid-seed-1", "SENT", { sentAt: now(), externalReference: "bank-sent-1" });
+clonePayout("payout-sent-failed-seed-1", "SENT", { sentAt: now(), externalReference: "bank-sent-2" });
+clonePayout("payout-failed-seed-1", "FAILED", { failedAt: now(), failureCode: "BANK_TIMEOUT", failureReason: "Provider timeout", retryCount: 1 });
+clonePayout("payout-paid-seed-1", "PAID", { paidAt: now(), proofReference: "proof-seed-1" });
+
 // ---- HTTP plumbing ----------------------------------------------------------
 
 function send(res, status, body) {
@@ -167,6 +523,68 @@ function paginated(items, total) {
 
 function metric(key, amounts, count) {
   return { key, amounts, count, statusBreakdown: [], sourceBreakdown: [] };
+}
+
+/**
+ * The 10 report types are all backed by real underlying state (the same
+ * maps the dedicated endpoints use) -- mirrors the real backend's
+ * FinanceConsumerService.report(), which projects each domain's own rows
+ * rather than maintaining a separate report-only dataset. Returns null for
+ * an unsupported reportType, matching the real backend's 400 response.
+ */
+function reportRows(reportType) {
+  const withoutDocumentLines = (doc) => {
+    const rest = { ...doc };
+    delete rest.lines;
+    return rest;
+  };
+  const withoutPayoutDetail = (payout) => {
+    const rest = { ...payout };
+    delete rest.lines;
+    delete rest.holds;
+    delete rest.approvals;
+    delete rest.attempts;
+    delete rest.paymentProofs;
+    delete rest.paymentMethod;
+    return rest;
+  };
+  const withoutSensitivePaymentFields = (paymentMethod) => {
+    const rest = { ...paymentMethod };
+    delete rest.destinationFingerprint;
+    delete rest.sensitiveReference;
+    return rest;
+  };
+
+  switch (reportType) {
+    case "cod":
+      return codCollections;
+    case "cash-sessions":
+      return [...sessions.values()];
+    case "variances":
+      return [...variances.values()];
+    case "reconciliations":
+      return [...reconciliations.values()];
+    case "fees":
+      return [...feeAssessments.values()].map((row) => ({
+        id: row.id, organizationId: row.organizationId, countryId: row.countryId, countryCode: row.countryCode,
+        currencyId: row.currencyId, currencyCode: row.currencyCode, financialObligationId: row.financialObligationId,
+        type: row.type, amount: row.amount, sourceDomain: row.sourceDomain, sourceReferenceType: row.sourceReferenceType,
+        sourceReferenceId: row.sourceReferenceId, counterpartyType: row.counterpartyType, counterpartyId: row.counterpartyId,
+        status: row.status, effectiveAt: row.effectiveAt, createdAt: row.createdAt,
+      }));
+    case "invoices":
+      return [...documents.values()].filter((doc) => doc.documentType === "INVOICE").map(withoutDocumentLines);
+    case "obligations":
+      return [...obligations.values()];
+    case "payouts":
+      return [...payouts.values()].map(withoutPayoutDetail);
+    case "payment-method-status":
+      return [...paymentMethods.values()].map(withoutSensitivePaymentFields);
+    case "seller-settlements":
+      return [...documents.values()].filter((doc) => doc.counterpartyType === "SELLER").map(withoutDocumentLines);
+    default:
+      return null;
+  }
 }
 
 const server = createServer(async (req, res) => {
@@ -486,6 +904,578 @@ const server = createServer(async (req, res) => {
     found.status = "APPROVED";
     found.approvedAt = now();
     return send(res, 200, found);
+  }
+
+  // ---- Obligations -------------------------------------------------------
+  if (method === "GET" && path === "/v1/finance/obligations") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const status = url.searchParams.get("status");
+    const items = [...obligations.values()].filter((item) => !status || item.status === status);
+    return send(res, 200, { items, total: items.length, page: 1, pageSize: 25 });
+  }
+
+  if (method === "POST" && path === "/v1/finance/obligations") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `obligation-${randomUUID()}`;
+    const record = {
+      id,
+      organizationId: body.organizationId,
+      countryId: body.countryId,
+      currencyId: body.currencyId,
+      currency: "MAD",
+      sourceDomain: body.sourceDomain,
+      sourceReferenceType: body.sourceReferenceType,
+      sourceReferenceId: body.sourceReferenceId,
+      counterpartyType: body.counterpartyType,
+      counterpartyId: body.counterpartyId,
+      nature: body.nature,
+      direction: body.direction,
+      status: "OPEN",
+      originalAmount: body.originalAmount,
+      allocatedAmount: "0.00",
+      settledAmount: "0.00",
+      remainingAmount: body.originalAmount,
+      effectiveAt: body.effectiveAt ?? now(),
+      dueAt: body.dueAt ?? null,
+      holdReason: null,
+      version: 1,
+      createdAt: now(),
+      updatedAt: now(),
+    };
+    obligations.set(id, record);
+    logAudit("finance.obligation.create", "FinancialObligation", id, { nature: body.nature });
+    return send(res, 201, record);
+  }
+
+  const obligationDetailMatch = path.match(/^\/v1\/finance\/obligations\/([^/]+)$/);
+  if (method === "GET" && obligationDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = obligations.get(obligationDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const obligationAllocateMatch = path.match(/^\/v1\/finance\/obligations\/([^/]+)\/allocations$/);
+  if (method === "POST" && obligationAllocateMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = obligations.get(obligationAllocateMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    const allocated = (Number(found.allocatedAmount) + Number(body.amount)).toFixed(2);
+    const remaining = (Number(found.originalAmount) - Number(allocated)).toFixed(2);
+    found.allocatedAmount = allocated;
+    found.remainingAmount = remaining;
+    found.status = Number(remaining) <= 0 ? "ALLOCATED" : "PARTIALLY_ALLOCATED";
+    found.version += 1;
+    found.updatedAt = now();
+    logAudit("finance.obligation.allocate", "FinancialObligationAllocation", found.id, { allocationType: body.allocationType, amount: body.amount });
+    return send(res, 201, found);
+  }
+
+  // ---- Fee rules & fee assessments ----------------------------------------
+  if (method === "POST" && path === "/v1/finance/fee-rules") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `fee-rule-${randomUUID()}`;
+    const record = { id, organizationId: body.organizationId, countryId: body.countryId, countryCode: body.countryCode, currencyId: body.currencyId, currencyCode: "MAD", type: body.type, scopeType: body.scopeType, calculationType: body.calculationType, sourceDomain: body.sourceDomain ?? null, counterpartyType: body.counterpartyType ?? null, serviceCode: body.serviceCode ?? null, sellerId: body.sellerId ?? null, cityId: body.cityId ?? null, zoneId: body.zoneId ?? null, subZoneId: body.subZoneId ?? null, fixedAmount: body.fixedAmount ?? null, percentageRate: body.percentageRate ?? null, percentageBase: body.percentageBase ?? null, minimumAmount: body.minimumAmount ?? null, maximumAmount: body.maximumAmount ?? null, priority: body.priority ?? 0, version: 1, workflowStatus: "DRAFT", status: "ACTIVE", validFrom: body.validFrom ?? now(), validTo: body.validTo ?? null };
+    feeRules.set(id, record);
+    logAudit("finance.fee_rule.create", "FeeRule", id, { type: body.type });
+    return send(res, 201, record);
+  }
+
+  const feeRuleDetailMatch = path.match(/^\/v1\/finance\/fee-rules\/([^/]+)$/);
+  if (method === "GET" && feeRuleDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = feeRules.get(feeRuleDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  if (method === "POST" && path === "/v1/finance/fee-assessments") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const obligation = obligations.get(body.obligationId);
+    const id = `fee-assessment-${randomUUID()}`;
+    const record = { id, organizationId: obligation?.organizationId ?? ORG_ID, countryId: obligation?.countryId ?? COUNTRY_ID, countryCode: "MA", currencyId: obligation?.currencyId ?? CURRENCY_ID, currency: "MAD", currencyCode: "MAD", financialObligationId: body.obligationId, orderId: "order-1", type: body.type, amount: "1.00", sourceFeeRuleId: seedFeeRuleId, ruleVersion: 1, calculationType: "FIXED", fixedAmount: "1.00", percentageRate: null, percentageBase: body.percentageBase ?? null, minimumAmount: null, maximumAmount: null, sourceDomain: obligation?.sourceDomain ?? "COMMERCE", sourceReferenceType: obligation?.sourceReferenceType ?? "Order", sourceReferenceId: obligation?.sourceReferenceId ?? "order-1", counterpartyType: obligation?.counterpartyType ?? "SELLER", counterpartyId: obligation?.counterpartyId ?? SELLER_ID, status: "ASSESSED", effectiveAt: now(), createdAt: now() };
+    feeAssessments.set(id, record);
+    logAudit("finance.fee.assess", "FinanceFeeAssessment", id, { type: body.type });
+    return send(res, 201, record);
+  }
+
+  const feeAssessmentDetailMatch = path.match(/^\/v1\/finance\/fee-assessments\/([^/]+)$/);
+  if (method === "GET" && feeAssessmentDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = feeAssessments.get(feeAssessmentDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  // ---- Documents -----------------------------------------------------------
+  if (method === "POST" && path === "/v1/finance/documents") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `document-${randomUUID()}`;
+    const record = { id, organizationId: body.organizationId, countryId: body.countryId, currencyId: body.currencyId, currency: "MAD", documentNumber: `INV-${String(documents.size + 1).padStart(4, "0")}`, documentType: body.documentType, counterpartyType: body.counterpartyType, counterpartyId: body.counterpartyId, periodStart: body.periodStart, periodEnd: body.periodEnd, status: "GENERATED", grossAmount: "0.00", feeAmount: "0.00", expenseAmount: "0.00", bonusAmount: "0.00", refundAmount: "0.00", withholdingAmount: "0.00", netAmount: "0.00", paidAmount: "0.00", remainingAmount: "0.00", approvedByActorId: null, approvedAt: null, voidedByActorId: null, voidedAt: null, voidReason: null, version: 1, lines: [], createdAt: now(), updatedAt: now() };
+    documents.set(id, record);
+    logAudit("finance.document.generate", "FinancialDocument", id, { documentType: body.documentType });
+    return send(res, 201, record);
+  }
+
+  const documentDetailMatch = path.match(/^\/v1\/finance\/documents\/([^/]+)$/);
+  if (method === "GET" && documentDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = documents.get(documentDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const documentApproveMatch = path.match(/^\/v1\/finance\/documents\/([^/]+)\/approve$/);
+  if (method === "POST" && documentApproveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = documents.get(documentApproveMatch[1]);
+    if (!found) return notFound(res);
+    found.status = "APPROVED";
+    found.approvedByActorId = "actor-finance-1";
+    found.approvedAt = now();
+    logAudit("finance.document.approve", "FinancialDocument", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const documentVoidMatch = path.match(/^\/v1\/finance\/documents\/([^/]+)\/void$/);
+  if (method === "POST" && documentVoidMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = documents.get(documentVoidMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "VOIDED";
+    found.voidedByActorId = "actor-finance-1";
+    found.voidedAt = now();
+    found.voidReason = body.reason;
+    logAudit("finance.document.void", "FinancialDocument", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  // ---- Adjustments -----------------------------------------------------------
+  if (method === "POST" && path === "/v1/finance/adjustments") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `adjustment-${randomUUID()}`;
+    const record = { id, organizationId: body.organizationId, countryId: body.countryId, currencyId: body.currencyId, currency: "MAD", counterpartyType: body.counterpartyType, counterpartyId: body.counterpartyId, sourceDomain: body.sourceDomain, sourceReferenceType: body.sourceReferenceType, sourceReferenceId: body.sourceReferenceId, type: body.type, status: "SUBMITTED", amount: body.amount, reasonCode: body.reasonCode, reason: body.reason, attachmentReference: body.attachmentReference ?? null, createdByActorId: "actor-finance-1", submittedByActorId: "actor-finance-1", approvedByActorId: null, appliedObligationId: null, createdAt: now(), updatedAt: now() };
+    adjustments.set(id, record);
+    logAudit("finance.adjustment.create", "FinancialAdjustment", id, { type: body.type });
+    return send(res, 201, record);
+  }
+
+  const adjustmentDetailMatch = path.match(/^\/v1\/finance\/adjustments\/([^/]+)$/);
+  if (method === "GET" && adjustmentDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = adjustments.get(adjustmentDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const adjustmentApproveMatch = path.match(/^\/v1\/finance\/adjustments\/([^/]+)\/approve$/);
+  if (method === "POST" && adjustmentApproveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = adjustments.get(adjustmentApproveMatch[1]);
+    if (!found) return notFound(res);
+    found.status = "APPROVED";
+    found.approvedByActorId = "actor-finance-1";
+    logAudit("finance.adjustment.approve", "FinancialAdjustment", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const adjustmentRejectMatch = path.match(/^\/v1\/finance\/adjustments\/([^/]+)\/reject$/);
+  if (method === "POST" && adjustmentRejectMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = adjustments.get(adjustmentRejectMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "REJECTED";
+    logAudit("finance.adjustment.reject", "FinancialAdjustment", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  const adjustmentApplyMatch = path.match(/^\/v1\/finance\/adjustments\/([^/]+)\/apply$/);
+  if (method === "POST" && adjustmentApplyMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = adjustments.get(adjustmentApplyMatch[1]);
+    if (!found) return notFound(res);
+    found.status = "APPLIED";
+    found.appliedObligationId = `obligation-${randomUUID()}`;
+    logAudit("finance.adjustment.apply", "FinancialAdjustment", found.id, {});
+    return send(res, 200, found);
+  }
+
+  // ---- Disputes --------------------------------------------------------------
+  if (method === "POST" && path === "/v1/finance/disputes") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const obligation = obligations.get(body.obligationId);
+    const id = `dispute-${randomUUID()}`;
+    const record = { id, organizationId: obligation?.organizationId ?? ORG_ID, countryId: obligation?.countryId ?? COUNTRY_ID, obligationId: body.obligationId, status: "OPEN", reasonCode: body.reasonCode, reason: body.reason, openedByActorId: "actor-finance-1", resolvedByActorId: null, resolution: null, resolutionReason: null, adjustmentId: null, openedAt: now(), resolvedAt: null };
+    disputes.set(id, record);
+    if (obligation) {
+      obligation.status = "ON_HOLD";
+      obligation.holdReason = body.reasonCode;
+    }
+    logAudit("finance.dispute.create", "FinancialDispute", id, { reasonCode: body.reasonCode });
+    return send(res, 201, record);
+  }
+
+  const disputeDetailMatch = path.match(/^\/v1\/finance\/disputes\/([^/]+)$/);
+  if (method === "GET" && disputeDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = disputes.get(disputeDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const disputeResolveMatch = path.match(/^\/v1\/finance\/disputes\/([^/]+)\/resolve$/);
+  if (method === "POST" && disputeResolveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = disputes.get(disputeResolveMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "RESOLVED";
+    found.resolution = body.resolution;
+    found.resolutionReason = body.reason;
+    found.resolvedByActorId = "actor-finance-1";
+    found.adjustmentId = body.adjustmentId ?? null;
+    found.resolvedAt = now();
+    const obligation = obligations.get(found.obligationId);
+    if (obligation && obligation.status === "ON_HOLD") {
+      obligation.status = "OPEN";
+      obligation.holdReason = null;
+    }
+    logAudit("finance.dispute.resolve", "FinancialDispute", found.id, { resolution: body.resolution });
+    return send(res, 200, found);
+  }
+
+  // ---- Payment methods ---------------------------------------------------
+  if (method === "GET" && path === "/v1/finance/payment-methods") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const status = url.searchParams.get("status");
+    const items = [...paymentMethods.values()].filter((item) => !status || item.status === status);
+    return send(res, 200, { items, total: items.length, page: 1, pageSize: 25 });
+  }
+
+  if (method === "POST" && path === "/v1/finance/payment-methods") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `payment-method-${randomUUID()}`;
+    const record = { id, organizationId: body.organizationId, countryId: body.countryId, currencyId: body.currencyId, counterpartyType: body.counterpartyType, counterpartyId: body.counterpartyId, type: body.type, providerCode: body.providerCode, displayLabel: body.displayLabel, destinationMasked: body.destinationMasked, destinationFingerprint: `fp-${randomUUID()}`, sensitiveReference: body.sensitiveReference, status: "PENDING_VERIFICATION", version: 1, createdByActorId: "actor-finance-1", approvedByActorId: null, approvedAt: null, suspendedAt: null, revokedAt: null, createdAt: now(), updatedAt: now() };
+    paymentMethods.set(id, record);
+    logAudit("finance.payment_method.create", "FinancePaymentMethod", id, { type: body.type, providerCode: body.providerCode });
+    return send(res, 201, record);
+  }
+
+  const paymentMethodSensitiveMatch = path.match(/^\/v1\/finance\/payment-methods\/([^/]+)\/sensitive-reference$/);
+  if (method === "GET" && paymentMethodSensitiveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = paymentMethods.get(paymentMethodSensitiveMatch[1]);
+    if (!found) return notFound(res);
+    logAudit("finance.payment_method.sensitive_reference.read", "FinancePaymentMethod", found.id, { counterpartyType: found.counterpartyType, version: found.version });
+    return send(res, 200, { id: found.id, sensitiveReference: found.sensitiveReference, status: found.status, version: found.version });
+  }
+
+  const paymentMethodDetailMatch = path.match(/^\/v1\/finance\/payment-methods\/([^/]+)$/);
+  if (method === "GET" && paymentMethodDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = paymentMethods.get(paymentMethodDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const paymentMethodApproveMatch = path.match(/^\/v1\/finance\/payment-methods\/([^/]+)\/approve$/);
+  if (method === "POST" && paymentMethodApproveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = paymentMethods.get(paymentMethodApproveMatch[1]);
+    if (!found) return notFound(res);
+    found.status = "ACTIVE";
+    found.approvedByActorId = "actor-finance-1";
+    found.approvedAt = now();
+    found.version += 1;
+    logAudit("finance.payment_method.approve", "FinancePaymentMethod", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const paymentMethodSuspendMatch = path.match(/^\/v1\/finance\/payment-methods\/([^/]+)\/suspend$/);
+  if (method === "POST" && paymentMethodSuspendMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = paymentMethods.get(paymentMethodSuspendMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "SUSPENDED";
+    found.suspendedAt = now();
+    logAudit("finance.payment_method.suspend", "FinancePaymentMethod", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  const paymentMethodRevokeMatch = path.match(/^\/v1\/finance\/payment-methods\/([^/]+)\/revoke$/);
+  if (method === "POST" && paymentMethodRevokeMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = paymentMethods.get(paymentMethodRevokeMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "REVOKED";
+    found.revokedAt = now();
+    logAudit("finance.payment_method.revoke", "FinancePaymentMethod", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  // ---- Payouts ---------------------------------------------------------------
+  if (method === "POST" && path === "/v1/finance/payouts") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const body = await readBody(req);
+    const id = `payout-${randomUUID()}`;
+    const paymentMethod = paymentMethods.get(body.paymentMethodId);
+    const record = {
+      id, organizationId: body.organizationId, countryId: body.countryId, currencyId: body.currencyId,
+      counterpartyType: body.counterpartyType, counterpartyId: body.counterpartyId,
+      paymentMethodId: body.paymentMethodId, paymentMethodVersion: paymentMethod?.version ?? 1,
+      destinationMasked: paymentMethod?.destinationMasked ?? "—",
+      code: body.code ?? `PO-${String(payouts.size + 1).padStart(4, "0")}`,
+      status: "PROPOSED", totalAmount: "0.00",
+      createdByActorId: "actor-finance-1", approvedByActorId: null, firstApprovedByActorId: null, finalApprovedByActorId: null,
+      exportedByActorId: null, sentByActorId: null, paidByActorId: null, failedByActorId: null, cancelledByActorId: null, reconciledByActorId: null,
+      approvedAt: null, firstApprovedAt: null, finalApprovedAt: null, exportReadyAt: null, sentAt: null, paidAt: null, failedAt: null, cancelledAt: null, reconciledAt: null,
+      exportChecksum: null, exportLineCount: null, exportReference: null, externalReference: null, proofReference: null,
+      failureCode: null, failureReason: null, retryCount: 0, cancelReason: null, reconciliationReference: null,
+      paymentMethod: paymentMethod ? { id: paymentMethod.id, status: paymentMethod.status, version: paymentMethod.version, destinationMasked: paymentMethod.destinationMasked } : null,
+      lines: (body.obligationIds ?? []).map((obligationId) => ({ id: `payout-line-${randomUUID()}`, recipientId: body.counterpartyId, orderId: "order-1", financialObligationId: obligationId, paymentMethodId: body.paymentMethodId, paymentMethodVersion: paymentMethod?.version ?? 1, destinationMasked: paymentMethod?.destinationMasked ?? "—", amount: obligations.get(obligationId)?.remainingAmount ?? "0.00", status: "PROPOSED", settledAt: null, createdAt: now() })),
+      holds: [], approvals: [], attempts: [], paymentProofs: [], createdAt: now(), updatedAt: now(),
+    };
+    record.totalAmount = record.lines.reduce((sum, line) => (Number(sum) + Number(line.amount)).toFixed(2), "0.00");
+    payouts.set(id, record);
+    logAudit("finance.payout.prepare", "PayoutBatch", id, { status: "PROPOSED" });
+    return send(res, 201, record);
+  }
+
+  const payoutDetailMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)$/);
+  if (method === "GET" && payoutDetailMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutDetailMatch[1]);
+    if (!found) return notFound(res);
+    return send(res, 200, found);
+  }
+
+  const payoutHoldMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/holds$/);
+  if (method === "POST" && payoutHoldMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutHoldMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    const hold = { id: `hold-${randomUUID()}`, financialObligationId: body.obligationId ?? null, type: body.type, status: "ACTIVE", reason: body.reason, createdByActorId: "actor-finance-1", releasedByActorId: null, releasedAt: null, releaseReason: null, createdAt: now() };
+    found.holds.push(hold);
+    found.status = "ON_HOLD";
+    logAudit("finance.payout.hold", "PayoutHold", hold.id, { type: body.type });
+    return send(res, 201, found);
+  }
+
+  const payoutReleaseHoldMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/holds\/([^/]+)\/release$/);
+  if (method === "POST" && payoutReleaseHoldMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutReleaseHoldMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    const hold = found.holds.find((h) => h.id === payoutReleaseHoldMatch[2]);
+    if (!hold) return notFound(res);
+    hold.status = "RELEASED";
+    hold.releasedByActorId = "actor-finance-1";
+    hold.releasedAt = now();
+    hold.releaseReason = body.reason;
+    if (found.holds.every((h) => h.status === "RELEASED")) {
+      found.status = "PROPOSED";
+    }
+    logAudit("finance.payout.hold.release", "PayoutHold", hold.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  const payoutFirstApproveMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/first-approve$/);
+  if (method === "POST" && payoutFirstApproveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutFirstApproveMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.approvals.push({ id: `approval-${randomUUID()}`, stage: "FIRST", decision: "APPROVED", actorId: "actor-finance-1", reason: body.reason ?? null, createdAt: now() });
+    found.firstApprovedByActorId = "actor-finance-1";
+    found.firstApprovedAt = now();
+    found.status = "PENDING_FINAL_APPROVAL";
+    logAudit("finance.payout.first_approve", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const payoutFinalApproveMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/final-approve$/);
+  if (method === "POST" && payoutFinalApproveMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutFinalApproveMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.approvals.push({ id: `approval-${randomUUID()}`, stage: "FINAL", decision: "APPROVED", actorId: "actor-finance-1", reason: body.reason ?? null, createdAt: now() });
+    found.finalApprovedByActorId = "actor-finance-1";
+    found.finalApprovedAt = now();
+    found.status = "APPROVED";
+    logAudit("finance.payout.final_approve", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const payoutExportMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/export$/);
+  if (method === "POST" && payoutExportMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutExportMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "EXPORT_READY";
+    found.exportReadyAt = now();
+    found.exportedByActorId = "actor-finance-1";
+    found.exportReference = body.exportReference ?? `export-${randomUUID()}`;
+    found.exportChecksum = createHash("sha256").update(found.id).digest("hex");
+    found.exportLineCount = found.lines.length;
+    logAudit("finance.payout.export", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const payoutSentMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/sent$/);
+  if (method === "POST" && payoutSentMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutSentMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "SENT";
+    found.sentAt = now();
+    found.sentByActorId = "actor-finance-1";
+    found.externalReference = body.externalReference ?? null;
+    found.attempts.push({ id: `attempt-${randomUUID()}`, attemptNumber: found.attempts.length + 1, status: "SENT", exportChecksum: found.exportChecksum, externalReference: found.externalReference, errorCode: null, reason: null, nextAttemptAt: null, createdByActorId: "actor-finance-1", createdAt: now() });
+    logAudit("finance.payout.mark_sent", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const payoutPaidMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/paid$/);
+  if (method === "POST" && payoutPaidMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutPaidMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "PAID";
+    found.paidAt = now();
+    found.paidByActorId = "actor-finance-1";
+    found.proofReference = body.proofReference;
+    found.paymentProofs.push({ id: `proof-${randomUUID()}`, proofReference: body.proofReference, checksum: body.checksum ?? null, mimeType: body.mimeType ?? null, size: body.size ?? null, active: true, createdByActorId: "actor-finance-1", createdAt: now() });
+    logAudit("finance.payout.mark_paid", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  const payoutFailedMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/failed$/);
+  if (method === "POST" && payoutFailedMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutFailedMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "FAILED";
+    found.failedAt = now();
+    found.failedByActorId = "actor-finance-1";
+    found.failureCode = body.errorCode;
+    found.failureReason = body.reason;
+    found.attempts.push({ id: `attempt-${randomUUID()}`, attemptNumber: found.attempts.length + 1, status: "FAILED", exportChecksum: found.exportChecksum, externalReference: body.externalReference ?? null, errorCode: body.errorCode, reason: body.reason, nextAttemptAt: body.nextAttemptAt ?? null, createdByActorId: "actor-finance-1", createdAt: now() });
+    logAudit("finance.payout.mark_failed", "PayoutBatch", found.id, { errorCode: body.errorCode });
+    return send(res, 200, found);
+  }
+
+  const payoutRetryMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/retry$/);
+  if (method === "POST" && payoutRetryMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutRetryMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "EXPORT_READY";
+    found.retryCount += 1;
+    found.failureCode = null;
+    found.failureReason = null;
+    if (body.paymentMethodId) found.paymentMethodId = body.paymentMethodId;
+    logAudit("finance.payout.retry", "PayoutBatch", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  const payoutCancelMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/cancel$/);
+  if (method === "POST" && payoutCancelMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutCancelMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "CANCELLED";
+    found.cancelledAt = now();
+    found.cancelledByActorId = "actor-finance-1";
+    found.cancelReason = body.reason;
+    logAudit("finance.payout.cancel", "PayoutBatch", found.id, { reason: body.reason });
+    return send(res, 200, found);
+  }
+
+  const payoutReconcileMatch = path.match(/^\/v1\/finance\/payouts\/([^/]+)\/reconcile$/);
+  if (method === "POST" && payoutReconcileMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const found = payouts.get(payoutReconcileMatch[1]);
+    if (!found) return notFound(res);
+    const body = await readBody(req);
+    found.status = "RECONCILED";
+    found.reconciledAt = now();
+    found.reconciledByActorId = "actor-finance-1";
+    found.reconciliationReference = body.reconciliationReference;
+    logAudit("finance.payout.reconcile", "PayoutBatch", found.id, {});
+    return send(res, 200, found);
+  }
+
+  // ---- Reports ---------------------------------------------------------------
+  const reportMatch = path.match(/^\/v1\/finance\/reports\/([^/]+)$/);
+  if (method === "GET" && reportMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const reportType = reportMatch[1];
+    const rows = reportRows(reportType);
+    if (rows === null) return send(res, 400, { statusCode: 400, code: "UNSUPPORTED_REPORT_TYPE", message: "Unsupported Finance report type", correlationId: randomUUID() });
+    const status = url.searchParams.get("status");
+    const filtered = status ? rows.filter((row) => row.status === status) : rows;
+    return send(res, 200, { reportType, items: filtered, total: filtered.length, page: 1, pageSize: 25, appliedFilters: { status: status ?? undefined }, generatedAt: now() });
+  }
+
+  const exportMatch = path.match(/^\/v1\/finance\/reports\/([^/]+)\/exports$/);
+  if (method === "POST" && exportMatch) {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const reportType = exportMatch[1];
+    const rows = reportRows(reportType);
+    if (rows === null) return send(res, 400, { statusCode: 400, code: "UNSUPPORTED_REPORT_TYPE", message: "Unsupported Finance report type", correlationId: randomUUID() });
+    const header = rows.length > 0 ? Object.keys(rows[0]) : [];
+    const csvLines = [header.join(","), ...rows.map((row) => header.map((key) => JSON.stringify(row[key] ?? "")).join(","))];
+    const content = csvLines.join("\n");
+    const filename = `finance-${reportType}-${now().slice(0, 10)}.csv`;
+    return send(res, 201, {
+      reportType,
+      format: "CSV",
+      mimeType: "text/csv; charset=utf-8",
+      filename,
+      checksum: createHash("sha256").update(content, "utf8").digest("hex"),
+      rowCount: rows.length,
+      maxRows: 1000,
+      content,
+      appliedFilters: {},
+    });
+  }
+
+  // ---- Audit -------------------------------------------------------------
+  if (method === "GET" && path === "/v1/finance/audit") {
+    if (!actorFromRequest(req)) return unauthorized(res);
+    const actorId = url.searchParams.get("actorId");
+    const action = url.searchParams.get("action");
+    const resourceType = url.searchParams.get("resourceType");
+    const resourceId = url.searchParams.get("resourceId");
+    const items = auditEntries.filter((entry) => {
+      if (actorId && entry.actorId !== actorId) return false;
+      if (action && !entry.action.includes(action)) return false;
+      if (resourceType && entry.resourceType !== resourceType) return false;
+      if (resourceId && entry.resourceId !== resourceId) return false;
+      return true;
+    });
+    return send(res, 200, { items, total: items.length, page: 1, pageSize: 25 });
   }
 
   return notFound(res);

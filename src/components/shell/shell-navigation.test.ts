@@ -27,9 +27,9 @@ describe("shell-navigation", () => {
     ]);
   });
 
-  it("marks exactly the first 6 items as implemented", () => {
+  it("marks all Phase 4B Finance items as implemented", () => {
     const implemented = SHELL_NAVIGATION.filter((item) => item.implemented).map((item) => item.key);
-    expect(implemented).toEqual(["dashboard", "cod", "cash-handovers", "cash-sessions", "cash-variances", "reconciliations"]);
+    expect(implemented).toEqual(SHELL_NAVIGATION.map((item) => item.key));
   });
 
   it("carries a real Finance-role permission code for every item", () => {

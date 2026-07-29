@@ -435,9 +435,739 @@
       "approve": "Approuver"
     }
   },
-  "comingSoon": {
-    "eyebrow": "Bientôt disponible",
-    "title": "Ce module arrive dans une prochaine livraison",
-    "description": "Cette page est planifiée pour la Phase 4B de NOKI Finance. Les actions correspondantes existent déjà côté NOKI API et seront reliées à cette interface."
+  "obligations": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Obligations financières",
+      "description": "Obligations financières réelles pour votre organisation, avec allocations et soldes serveur."
+    },
+    "table": {
+      "ariaLabel": "Liste des obligations financières"
+    },
+    "columns": {
+      "reference": "Référence",
+      "nature": "Nature",
+      "direction": "Sens",
+      "counterparty": "Contrepartie",
+      "source": "Source",
+      "original": "Montant initial",
+      "allocated": "Alloué",
+      "settled": "Réglé",
+      "remaining": "Restant",
+      "status": "Statut",
+      "effectiveAt": "Date d'effet",
+      "dueAt": "Échéance",
+      "hold": "Blocage",
+      "holdYes": "Bloqué",
+      "holdNo": "—"
+    },
+    "status": {
+      "OPEN": "Ouverte",
+      "PARTIALLY_ALLOCATED": "Partiellement allouée",
+      "ALLOCATED": "Allouée",
+      "ON_HOLD": "Bloquée",
+      "PARTIALLY_SETTLED": "Partiellement réglée",
+      "SETTLED": "Réglée",
+      "CANCELLED": "Annulée",
+      "REVERSED": "Contre-passée"
+    },
+    "nature": {
+      "COD_PROCEEDS": "Encaissement COD",
+      "SERVICE_FEE": "Frais de service",
+      "COMMISSION": "Commission",
+      "EXPENSE": "Dépense",
+      "BONUS": "Prime",
+      "REFUND": "Remboursement",
+      "WITHHOLDING": "Retenue",
+      "PENALTY": "Pénalité",
+      "PAYOUT": "Versement",
+      "ADJUSTMENT": "Ajustement"
+    },
+    "direction": {
+      "PAYABLE": "À payer",
+      "RECEIVABLE": "À recevoir"
+    },
+    "empty": {
+      "title": "Aucune obligation",
+      "description": "Aucune obligation financière ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation Finance n'est disponible sur votre compte."
+    },
+    "detail": {
+      "eyebrow": "Obligation financière",
+      "title": "Détail de l'obligation",
+      "description": "Montants, statut et allocations serveur pour cette obligation.",
+      "summaryTitle": "Résumé",
+      "holdReason": "Motif du blocage",
+      "version": "Version",
+      "gapNotice": "Le détail de chaque allocation individuelle n'est pas exposé par l'API (seul le montant alloué agrégé l'est) ; seule la création d'une nouvelle allocation est possible.",
+      "auditLink": "Voir les événements d'audit liés"
+    },
+    "allocationType": {
+      "DOCUMENT_LINE": "Ligne de document",
+      "STATEMENT": "Relevé",
+      "PAYOUT": "Versement",
+      "REFUND": "Remboursement",
+      "WITHHOLDING": "Retenue",
+      "ADJUSTMENT": "Ajustement"
+    },
+    "allocate": {
+      "title": "Allouer cette obligation",
+      "allocationType": "Type d'allocation",
+      "referenceId": "Référence liée",
+      "referenceIdRequired": "La référence liée est obligatoire.",
+      "amount": "Montant",
+      "amountRequired": "Le montant est obligatoire.",
+      "submit": "Allouer"
+    }
+  },
+  "disputes": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Litiges financiers",
+      "description": "Rechercher un litige par identifiant ou en ouvrir un nouveau."
+    },
+    "gapNotice": "Les litiges ne disposent d'aucun point de terminaison de liste ou de rapport côté API ; seule la recherche par identifiant et la création sont disponibles.",
+    "lookup": {
+      "label": "Identifiant du litige",
+      "button": "Rechercher",
+      "notFoundHint": "Collez un identifiant de litige existant."
+    },
+    "status": {
+      "OPEN": "Ouvert",
+      "RESOLVED": "Résolu"
+    },
+    "resolution": {
+      "RELEASE": "Libération",
+      "ADJUSTMENT": "Ajustement"
+    },
+    "detail": {
+      "eyebrow": "Litige financier",
+      "title": "Détail du litige",
+      "description": "Effets, statut et résolution de ce litige.",
+      "summaryTitle": "Résumé",
+      "obligationLink": "Voir l'obligation liée",
+      "adjustmentLink": "Voir l'ajustement résultant",
+      "heldNotice": "L'obligation liée est actuellement bloquée tant que ce litige est ouvert.",
+      "releasedNotice": "Le blocage sur l'obligation liée a été levé lors de la résolution.",
+      "notAvailable": "Non disponible"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Ouvrir un litige",
+      "description": "Ouvrir un litige sur une obligation existante bloque automatiquement cette obligation.",
+      "holdNotice": "L'ouverture de ce litige bloquera l'obligation liée jusqu'à sa résolution.",
+      "obligationId": "Identifiant de l'obligation",
+      "reasonCode": "Code motif",
+      "reason": "Motif",
+      "submit": "Ouvrir le litige"
+    },
+    "resolve": {
+      "resolution": "Résolution",
+      "reason": "Motif",
+      "continue": "Continuer",
+      "confirmTitle": "Confirmer la résolution",
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "adjustmentIdLabel": "Identifiant de l'ajustement",
+      "adjustmentIdRequired": "L'identifiant de l'ajustement est requis pour une résolution par ajustement."
+    }
+  },
+  "paymentMethods": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Méthodes de paiement",
+      "description": "Méthodes de paiement gouvernées pour vos contreparties.",
+      "createAction": "Nouvelle méthode"
+    },
+    "table": {
+      "ariaLabel": "Liste des méthodes de paiement"
+    },
+    "columns": {
+      "type": "Type",
+      "provider": "Fournisseur",
+      "label": "Libellé",
+      "destination": "Destination",
+      "status": "Statut",
+      "version": "Version",
+      "counterparty": "Contrepartie",
+      "createdAt": "Créée le"
+    },
+    "status": {
+      "PENDING_VERIFICATION": "En attente de vérification",
+      "ACTIVE": "Active",
+      "SUSPENDED": "Suspendue",
+      "REVOKED": "Révoquée"
+    },
+    "type": {
+      "BANK_ACCOUNT": "Compte bancaire",
+      "MOBILE_MONEY": "Mobile Money"
+    },
+    "detail": {
+      "eyebrow": "Méthode de paiement",
+      "title": "Détail de la méthode de paiement",
+      "description": "Statut, version et actions disponibles pour cette méthode.",
+      "summaryTitle": "Résumé",
+      "approvedAt": "Approuvée le",
+      "suspendedAt": "Suspendue le",
+      "revokedAt": "Révoquée le"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Nouvelle méthode de paiement",
+      "description": "Créer une nouvelle version de méthode de paiement à partir d'une référence opaque déjà vaultée.",
+      "counterpartyType": "Type de contrepartie",
+      "counterpartyId": "Identifiant de la contrepartie",
+      "type": "Type",
+      "providerCode": "Code fournisseur",
+      "displayLabel": "Libellé affiché",
+      "destinationMasked": "Destination masquée",
+      "destinationMaskedHint": "Doit déjà être une chaîne masquée (ex. **** 4242) — jamais un IBAN ou un numéro brut.",
+      "sensitiveReference": "Référence sensible opaque",
+      "sensitiveReferenceHint": "Doit être une référence opaque du type vault:..., token:... ou pmref:... — jamais un IBAN, RIB ou numéro de téléphone brut.",
+      "submit": "Créer"
+    },
+    "actions": {
+      "approve": "Approuver",
+      "suspend": "Suspendre",
+      "revoke": "Révoquer",
+      "reasonLabel": "Motif",
+      "reasonRequired": "Le motif est obligatoire.",
+      "confirm": "Confirmer",
+      "dismiss": "Fermer"
+    },
+    "sensitive": {
+      "reveal": "Révéler la référence sensible",
+      "revealedLabel": "Accès confirmé par le serveur ; la référence brute n'est pas affichée.",
+      "hide": "Masquer"
+    },
+    "empty": {
+      "title": "Aucune méthode de paiement",
+      "description": "Aucune méthode de paiement ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation Finance n'est disponible sur votre compte."
+    }
+  },
+  "fees": {
+    "gapNotice": "Les règles de frais peuvent être créées et consultées par identifiant ; l'API n'expose pas de liste des règles.",
+    "empty": {
+      "title": "Aucun frais",
+      "description": "Aucune évaluation de frais ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "rules": {
+      "list": {
+        "eyebrow": "Finance",
+        "title": "Règles de frais",
+        "description": "Créer une règle de frais ou consulter une règle existante par identifiant."
+      },
+      "lookup": {
+        "label": "Identifiant de règle",
+        "button": "Rechercher",
+        "notFoundHint": "Collez un identifiant de règle existante."
+      },
+      "create": {
+        "eyebrow": "Finance",
+        "title": "Nouvelle règle de frais",
+        "description": "Créer un brouillon de règle avec les seuls champs serveur supportés.",
+        "submit": "Créer la règle"
+      },
+      "detail": {
+        "eyebrow": "Règle de frais",
+        "title": "Détail de la règle",
+        "description": "Périmètre, calcul, statut et version de la règle.",
+        "summaryTitle": "Résumé"
+      },
+      "columns": {
+        "type": "Type",
+        "scopeType": "Périmètre",
+        "calculationType": "Calcul",
+        "sourceDomain": "Source",
+        "counterpartyType": "Type de contrepartie",
+        "serviceCode": "Service",
+        "sellerId": "Vendeur",
+        "cityId": "Ville",
+        "zoneId": "Zone",
+        "subZoneId": "Sous-zone",
+        "fixedAmount": "Montant fixe",
+        "percentageRate": "Taux",
+        "percentageBase": "Base",
+        "minimumAmount": "Minimum",
+        "maximumAmount": "Maximum",
+        "priority": "Priorité",
+        "validFrom": "Valide du",
+        "validTo": "Valide au",
+        "workflowStatus": "Statut workflow"
+      },
+      "workflowStatus": {
+        "DRAFT": "Brouillon",
+        "PENDING_APPROVAL": "En attente d'approbation",
+        "APPROVED": "Approuvée",
+        "REJECTED": "Rejetée",
+        "SUSPENDED": "Suspendue"
+      }
+    },
+    "assessments": {
+      "list": {
+        "eyebrow": "Finance",
+        "title": "Évaluations de frais",
+        "description": "Frais évalués depuis le vrai endpoint de rapports Finance.",
+        "missingReportCapability": "La liste des évaluations requiert la permission de lecture des rapports.",
+        "missingFeeCapability": "Vous pouvez prévisualiser les lignes, mais pas ouvrir le détail sans permission de lecture des frais."
+      },
+      "table": {
+        "ariaLabel": "Liste des évaluations de frais"
+      },
+      "create": {
+        "eyebrow": "Finance",
+        "title": "Évaluer un frais",
+        "description": "Évaluer un frais sur une obligation financière existante.",
+        "type": "Type d'évaluation",
+        "obligationId": "Identifiant d'obligation",
+        "obligationIdRequired": "L'identifiant d'obligation est requis.",
+        "submit": "Évaluer le frais"
+      },
+      "detail": {
+        "eyebrow": "Évaluation de frais",
+        "title": "Détail de l'évaluation",
+        "description": "Champs de calcul serveur et obligation liée.",
+        "summaryTitle": "Résumé",
+        "calculationExplanation": "Explication du calcul",
+        "sourceFeeRuleId": "Règle source",
+        "ruleVersion": "Version de règle"
+      },
+      "columns": {
+        "reference": "Référence",
+        "obligationId": "Obligation",
+        "type": "Type",
+        "amount": "Montant",
+        "sourceDomain": "Source",
+        "counterparty": "Contrepartie",
+        "status": "Statut",
+        "effectiveAt": "Date d'effet"
+      },
+      "status": {
+        "ASSESSED": "Évalué",
+        "VOIDED": "Annulé"
+      }
+    }
+  },
+  "documents": {
+    "gapNotice": "L'API expose le rapport des factures et la consultation directe des statements et credit notes ; cette page n'invente pas de liste tous documents.",
+    "statementNotice": "Ce document est un relevé de règlement, pas une nouvelle facture.",
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Documents financiers",
+      "description": "Factures depuis le vrai endpoint de rapports, avec recherche directe pour relevés et avoirs."
+    },
+    "lookup": {
+      "label": "Identifiant du document",
+      "button": "Rechercher"
+    },
+    "table": {
+      "ariaLabel": "Liste des documents financiers"
+    },
+    "empty": {
+      "title": "Aucun document",
+      "description": "Aucun document ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "type": {
+      "INVOICE": "Facture",
+      "STATEMENT": "Relevé",
+      "CREDIT_NOTE": "Avoir"
+    },
+    "status": {
+      "DRAFT": "Brouillon",
+      "GENERATED": "Généré",
+      "SUBMITTED": "Soumis",
+      "APPROVED": "Approuvé",
+      "VOIDED": "Annulé"
+    },
+    "columns": {
+      "documentNumber": "Numéro",
+      "documentType": "Type",
+      "counterparty": "Contrepartie",
+      "period": "Période",
+      "currency": "Devise",
+      "gross": "Brut",
+      "fees": "Frais",
+      "expenses": "Dépenses",
+      "bonuses": "Primes",
+      "refunds": "Remboursements",
+      "withholdings": "Retenues",
+      "net": "Net",
+      "paid": "Payé",
+      "remaining": "Restant",
+      "status": "Statut",
+      "approvedAt": "Approuvé le"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Générer un document",
+      "description": "Générer une facture, un relevé ou un avoir depuis les critères autorisés par l'API.",
+      "documentType": "Type de document",
+      "counterpartyType": "Type de contrepartie",
+      "counterpartyId": "Identifiant de contrepartie",
+      "periodStart": "Début de période",
+      "periodEnd": "Fin de période",
+      "submit": "Générer"
+    },
+    "detail": {
+      "eyebrow": "Document financier",
+      "title": "Détail du document",
+      "description": "Résumé, lignes, allocations et totaux serveur du document.",
+      "summaryTitle": "Résumé",
+      "linesTitle": "Lignes",
+      "voidReason": "Motif d'annulation",
+      "voidedAt": "Annulé le"
+    },
+    "actions": {
+      "approve": "Approuver",
+      "void": "Annuler",
+      "voidReasonLabel": "Motif d'annulation",
+      "voidReasonRequired": "Le motif d'annulation est requis.",
+      "confirm": "Confirmer",
+      "dismiss": "Fermer"
+    }
+  },
+  "adjustments": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Ajustements financiers",
+      "description": "Créer un ajustement ou ouvrir un ajustement existant par identifiant."
+    },
+    "lookup": {
+      "label": "Identifiant d'ajustement",
+      "button": "Rechercher"
+    },
+    "empty": {
+      "title": "Aucun workflow d'ajustement",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte.",
+      "createForbiddenDescription": "Vous pouvez consulter un ajustement existant, mais vous n'avez pas la permission d'en créer un."
+    },
+    "type": {
+      "EXPENSE": "Dépense",
+      "BONUS": "Prime",
+      "REFUND": "Remboursement",
+      "WITHHOLDING": "Retenue",
+      "PENALTY": "Pénalité",
+      "DISPUTE_ADJUSTMENT": "Ajustement de litige",
+      "MANUAL_ADJUSTMENT": "Ajustement manuel"
+    },
+    "create": {
+      "counterpartyType": "Type de contrepartie",
+      "counterpartyId": "Identifiant de contrepartie",
+      "sourceDomain": "Source",
+      "sourceReferenceType": "Type de référence source",
+      "sourceReferenceId": "Identifiant de référence source",
+      "type": "Type",
+      "amount": "Montant",
+      "reasonCode": "Code motif",
+      "reason": "Motif",
+      "attachmentReference": "Référence de pièce jointe",
+      "submit": "Créer l'ajustement"
+    },
+    "detail": {
+      "eyebrow": "Ajustement financier",
+      "title": "Détail de l'ajustement",
+      "description": "Auteur, statut d'approbation, motif et obligation résultante si exposée par l'API.",
+      "summaryTitle": "Résumé",
+      "author": "Auteur",
+      "submitter": "Soumis par",
+      "approver": "Approbateur",
+      "appliedObligation": "Obligation créée"
+    },
+    "actions": {
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "apply": "Appliquer",
+      "reasonLabel": "Motif",
+      "reasonRequired": "Le motif est requis.",
+      "confirm": "Confirmer",
+      "dismiss": "Fermer"
+    }
+  },
+  "approvals": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "File d'approbation",
+      "description": "Approbations Finance en attente, composées depuis les endpoints existants."
+    },
+    "empty": {
+      "title": "Aucune approbation",
+      "description": "Aucun élément n'attend dans cette section.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "columns": {
+      "resourceType": "Ressource",
+      "reference": "Référence",
+      "amount": "Montant",
+      "requester": "Demandeur",
+      "date": "Date",
+      "stage": "Étape",
+      "action": "Action"
+    },
+    "sections": {
+      "payoutFirstApprove": "Payouts : première approbation",
+      "payoutFinalApprove": "Payouts : approbation finale",
+      "paymentMethods": "Méthodes de paiement à vérifier",
+      "invoices": "Documents en attente d'approbation",
+      "adjustmentsGapNotice": "Les ajustements n'exposent pas de liste dans l'API actuelle ; utilisez la recherche d'ajustement pour approuver un élément connu."
+    },
+    "blockedReasons": {
+      "samePreparer": "Bloqué si l'acteur est le préparateur.",
+      "sameFirstApprover": "Bloqué si l'acteur a déjà donné la première approbation.",
+      "modifiedPaymentMethod": "Bloqué si l'acteur a modifié la méthode de paiement.",
+      "missingPermission": "Bloqué si une permission requise manque.",
+      "activeHold": "Bloqué tant qu'un hold est actif.",
+      "incompatibleStatus": "Bloqué si le statut de la ressource n'est pas approvable."
+    },
+    "viewLink": "Ouvrir"
+  },
+  "payouts": {
+    "makerCheckerNote": "Les règles maker/checker sont imposées par l'API ; cet écran explique seulement le motif retourné par le serveur.",
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Payouts",
+      "description": "Lots de paiement de la proposition au rapprochement.",
+      "createAction": "Nouveau payout",
+      "dateFrom": "Du",
+      "dateTo": "Au"
+    },
+    "table": {
+      "ariaLabel": "Liste des payouts"
+    },
+    "empty": {
+      "title": "Aucun payout",
+      "description": "Aucun payout ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "columns": {
+      "reference": "Référence",
+      "counterparty": "Contrepartie",
+      "amount": "Montant",
+      "paymentMethod": "Méthode de paiement",
+      "status": "Statut",
+      "createdAt": "Créé le",
+      "updatedAt": "Mis à jour le"
+    },
+    "status": {
+      "DRAFT": "Brouillon",
+      "PROPOSED": "Proposé",
+      "ON_HOLD": "En hold",
+      "PENDING_FIRST_APPROVAL": "En attente 1ère approbation",
+      "PENDING_FINAL_APPROVAL": "En attente approbation finale",
+      "APPROVED": "Approuvé",
+      "EXPORT_READY": "Prêt pour export",
+      "SENT": "Envoyé",
+      "PAID": "Payé",
+      "FAILED": "Échoué",
+      "MARKED_PAID": "Marqué payé",
+      "CANCELLED": "Annulé",
+      "RECONCILED": "Rapproché"
+    },
+    "counterpartyType": {
+      "SELLER": "Vendeur",
+      "AFFILIATE": "Affilié",
+      "RESTAURANT": "Restaurant",
+      "DRIVER": "Chauffeur",
+      "COURIER": "Coursier",
+      "LOGISTICS_PARTNER": "Partenaire logistique",
+      "CUSTOMER": "Client",
+      "NOKI_PLATFORM": "Plateforme NOKI",
+      "OTHER": "Autre"
+    },
+    "holdType": {
+      "DISPUTE": "Litige",
+      "COMPLIANCE": "Conformité",
+      "PAYMENT_METHOD": "Méthode de paiement",
+      "MANUAL_REVIEW": "Revue manuelle",
+      "VARIANCE": "Écart",
+      "OTHER": "Autre"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Proposer un payout",
+      "description": "Créer une proposition de payout depuis des obligations existantes et une destination masquée.",
+      "counterpartyType": "Type de contrepartie",
+      "counterpartyId": "Identifiant de contrepartie",
+      "counterpartyIdRequired": "L'identifiant de contrepartie est requis.",
+      "paymentMethodId": "Identifiant de méthode de paiement",
+      "paymentMethodIdRequired": "L'identifiant de méthode de paiement est requis.",
+      "code": "Code",
+      "obligationIds": "Identifiants d'obligations",
+      "obligationIdsHint": "Un identifiant d'obligation par ligne.",
+      "obligationIdsRequired": "Au moins une obligation est requise.",
+      "submit": "Proposer le payout"
+    },
+    "actions": {
+      "hold": "Mettre en hold",
+      "releaseHold": "Lever le hold",
+      "firstApprove": "Première approbation",
+      "finalApprove": "Approbation finale",
+      "export": "Prêt pour export",
+      "markSent": "Marquer envoyé",
+      "markPaid": "Marquer payé",
+      "markFailed": "Marquer échoué",
+      "retry": "Réessayer",
+      "cancel": "Annuler",
+      "reconcile": "Rapprocher"
+    },
+    "dialogs": {
+      "amount": "Montant",
+      "currency": "Devise",
+      "destination": "Destination",
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "reasonLabel": "Motif",
+      "reasonRequired": "Ce champ est requis.",
+      "typeLabel": "Type",
+      "obligationId": "Obligation",
+      "exportReference": "Référence d'export",
+      "externalReference": "Référence externe",
+      "reference": "Référence",
+      "proofReference": "Référence de preuve",
+      "checksum": "Checksum",
+      "mimeType": "Type MIME",
+      "size": "Taille",
+      "errorCode": "Code erreur",
+      "reconciliationReference": "Référence de rapprochement"
+    },
+    "detail": {
+      "eyebrow": "Payout",
+      "title": "Détail du payout",
+      "description": "Obligations, holds, approbations, tentatives et preuves du payout.",
+      "summaryTitle": "Résumé",
+      "linesTitle": "Obligations",
+      "holdsTitle": "Holds",
+      "approvalsTitle": "Approbations",
+      "attemptsTitle": "Tentatives",
+      "proofsTitle": "Preuves",
+      "failureTitle": "Échec",
+      "failureCode": "Code d'échec",
+      "failureReason": "Motif d'échec",
+      "retryCount": "Réessais",
+      "nextAttempt": "Prochaine tentative",
+      "notAvailable": "Non disponible",
+      "code": "Code",
+      "currencyId": "Devise",
+      "paymentMethodStatus": "Statut de la méthode",
+      "paymentMethodVersion": "Version de méthode",
+      "noLines": "Aucune ligne d'obligation exposée.",
+      "noHolds": "Aucun hold actif ou enregistré.",
+      "noApprovals": "Aucune approbation enregistrée.",
+      "noAttempts": "Aucune tentative enregistrée.",
+      "noProofs": "Aucune preuve enregistrée.",
+      "lineColumns": {
+        "recipient": "Bénéficiaire",
+        "order": "Commande",
+        "obligation": "Obligation",
+        "settledAt": "Réglé le"
+      },
+      "holdColumns": {
+        "releasedAt": "Levé le",
+        "releaseReason": "Motif de levée"
+      },
+      "approvalColumns": {
+        "stage": "Étape",
+        "decision": "Décision",
+        "actor": "Acteur"
+      },
+      "attemptColumns": {
+        "attempt": "Tentative"
+      },
+      "proofColumns": {
+        "active": "Active"
+      }
+    }
+  },
+  "reports": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Rapports",
+      "description": "Catalogue, prévisualisation et exports CSV depuis les vrais endpoints de reporting Finance."
+    },
+    "empty": {
+      "title": "Aucun rapport",
+      "description": "Aucune ligne ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "filters": {
+      "country": "Pays",
+      "currency": "Devise",
+      "status": "Statut",
+      "counterpartyType": "Type de contrepartie",
+      "sourceDomain": "Source",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "search": "Recherche"
+    },
+    "catalogue": {
+      "typeLabel": "Type de rapport",
+      "cod": "Ancienneté COD",
+      "cashSessions": "Sessions de caisse",
+      "variances": "Écarts",
+      "reconciliations": "Rapprochements",
+      "fees": "Frais",
+      "invoices": "Factures",
+      "obligations": "Ancienneté des obligations",
+      "payouts": "Payouts",
+      "paymentMethodStatus": "Statut des méthodes de paiement",
+      "sellerSettlements": "Règlements vendeurs"
+    },
+    "preview": {
+      "ariaLabel": "Prévisualisation du rapport",
+      "empty": "Aucune ligne de prévisualisation"
+    },
+    "export": {
+      "button": "Exporter CSV",
+      "title": "Export CSV",
+      "rowCount": "Lignes",
+      "checksum": "Checksum",
+      "generatedAt": "Généré le",
+      "maxRows": "Nombre maximal de lignes",
+      "filename": "Fichier",
+      "downloadCsv": "Télécharger le CSV",
+      "generatingLabel": "Génération..."
+    }
+  },
+  "audit": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Audit",
+      "description": "Événements d'audit Finance filtrés par acteur, ressource et correlation ID."
+    },
+    "empty": {
+      "title": "Aucun événement d'audit",
+      "description": "Aucun événement d'audit ne correspond à ces critères.",
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
+    },
+    "filters": {
+      "actorId": "Acteur",
+      "action": "Action",
+      "resourceType": "Type de ressource",
+      "resourceId": "Identifiant de ressource",
+      "country": "Pays",
+      "correlationId": "Correlation ID",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "resultNotice": "Le filtrage par résultat est contrôlé par la réponse API."
+    },
+    "columns": {
+      "occurredAt": "Date",
+      "actor": "Acteur",
+      "action": "Action",
+      "resourceType": "Type de ressource",
+      "resourceId": "Identifiant de ressource",
+      "correlationId": "Correlation ID",
+      "metadata": "Métadonnées"
+    },
+    "row": {
+      "hiddenValue": "Masqué",
+      "expand": "Déplier",
+      "collapse": "Replier"
+    },
+    "table": {
+      "ariaLabel": "Événements d'audit Finance"
+    }
   }
 }

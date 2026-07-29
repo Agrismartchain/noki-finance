@@ -435,9 +435,739 @@
       "approve": "Approve"
     }
   },
-  "comingSoon": {
-    "eyebrow": "Coming soon",
-    "title": "This module is coming in a future release",
-    "description": "This page is planned for NOKI Finance Phase 4B. The corresponding actions already exist on NOKI API and will be wired to this interface."
+  "obligations": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Financial obligations",
+      "description": "Real financial obligations for your organization, with server-computed allocations and balances."
+    },
+    "table": {
+      "ariaLabel": "Financial obligations list"
+    },
+    "columns": {
+      "reference": "Reference",
+      "nature": "Nature",
+      "direction": "Direction",
+      "counterparty": "Counterparty",
+      "source": "Source",
+      "original": "Original amount",
+      "allocated": "Allocated",
+      "settled": "Settled",
+      "remaining": "Remaining",
+      "status": "Status",
+      "effectiveAt": "Effective date",
+      "dueAt": "Due date",
+      "hold": "Hold",
+      "holdYes": "On hold",
+      "holdNo": "—"
+    },
+    "status": {
+      "OPEN": "Open",
+      "PARTIALLY_ALLOCATED": "Partially allocated",
+      "ALLOCATED": "Allocated",
+      "ON_HOLD": "On hold",
+      "PARTIALLY_SETTLED": "Partially settled",
+      "SETTLED": "Settled",
+      "CANCELLED": "Cancelled",
+      "REVERSED": "Reversed"
+    },
+    "nature": {
+      "COD_PROCEEDS": "COD proceeds",
+      "SERVICE_FEE": "Service fee",
+      "COMMISSION": "Commission",
+      "EXPENSE": "Expense",
+      "BONUS": "Bonus",
+      "REFUND": "Refund",
+      "WITHHOLDING": "Withholding",
+      "PENALTY": "Penalty",
+      "PAYOUT": "Payout",
+      "ADJUSTMENT": "Adjustment"
+    },
+    "direction": {
+      "PAYABLE": "Payable",
+      "RECEIVABLE": "Receivable"
+    },
+    "empty": {
+      "title": "No obligations",
+      "description": "No financial obligation matches these criteria.",
+      "noScopeDescription": "No Finance organization scope is available on your account."
+    },
+    "detail": {
+      "eyebrow": "Financial obligation",
+      "title": "Obligation detail",
+      "description": "Amounts, status and server-side allocations for this obligation.",
+      "summaryTitle": "Summary",
+      "holdReason": "Hold reason",
+      "version": "Version",
+      "gapNotice": "Individual allocation records are not exposed by the API (only the aggregated allocated amount is) -- only creating a new allocation is possible.",
+      "auditLink": "View related audit events"
+    },
+    "allocationType": {
+      "DOCUMENT_LINE": "Document line",
+      "STATEMENT": "Statement",
+      "PAYOUT": "Payout",
+      "REFUND": "Refund",
+      "WITHHOLDING": "Withholding",
+      "ADJUSTMENT": "Adjustment"
+    },
+    "allocate": {
+      "title": "Allocate this obligation",
+      "allocationType": "Allocation type",
+      "referenceId": "Linked reference",
+      "referenceIdRequired": "The linked reference is required.",
+      "amount": "Amount",
+      "amountRequired": "The amount is required.",
+      "submit": "Allocate"
+    }
+  },
+  "disputes": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Financial disputes",
+      "description": "Look up a dispute by id, or open a new one."
+    },
+    "gapNotice": "Disputes have no list or report endpoint on the API -- only lookup by id and creation are available.",
+    "lookup": {
+      "label": "Dispute id",
+      "button": "Look up",
+      "notFoundHint": "Paste an existing dispute id."
+    },
+    "status": {
+      "OPEN": "Open",
+      "RESOLVED": "Resolved"
+    },
+    "resolution": {
+      "RELEASE": "Release",
+      "ADJUSTMENT": "Adjustment"
+    },
+    "detail": {
+      "eyebrow": "Financial dispute",
+      "title": "Dispute detail",
+      "description": "Effects, status and resolution for this dispute.",
+      "summaryTitle": "Summary",
+      "obligationLink": "View linked obligation",
+      "adjustmentLink": "View resulting adjustment",
+      "heldNotice": "The linked obligation is currently held while this dispute is open.",
+      "releasedNotice": "The hold on the linked obligation was released on resolution.",
+      "notAvailable": "Not available"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Open a dispute",
+      "description": "Opening a dispute on an existing obligation automatically holds that obligation.",
+      "holdNotice": "Opening this dispute will hold the linked obligation until it is resolved.",
+      "obligationId": "Obligation id",
+      "reasonCode": "Reason code",
+      "reason": "Reason",
+      "submit": "Open dispute"
+    },
+    "resolve": {
+      "resolution": "Resolution",
+      "reason": "Reason",
+      "continue": "Continue",
+      "confirmTitle": "Confirm resolution",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "adjustmentIdLabel": "Adjustment id",
+      "adjustmentIdRequired": "The adjustment id is required for an adjustment resolution."
+    }
+  },
+  "paymentMethods": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Payment methods",
+      "description": "Governed payment methods for your counterparties.",
+      "createAction": "New method"
+    },
+    "table": {
+      "ariaLabel": "Payment methods list"
+    },
+    "columns": {
+      "type": "Type",
+      "provider": "Provider",
+      "label": "Label",
+      "destination": "Destination",
+      "status": "Status",
+      "version": "Version",
+      "counterparty": "Counterparty",
+      "createdAt": "Created at"
+    },
+    "status": {
+      "PENDING_VERIFICATION": "Pending verification",
+      "ACTIVE": "Active",
+      "SUSPENDED": "Suspended",
+      "REVOKED": "Revoked"
+    },
+    "type": {
+      "BANK_ACCOUNT": "Bank account",
+      "MOBILE_MONEY": "Mobile money"
+    },
+    "detail": {
+      "eyebrow": "Payment method",
+      "title": "Payment method detail",
+      "description": "Status, version and available actions for this method.",
+      "summaryTitle": "Summary",
+      "approvedAt": "Approved at",
+      "suspendedAt": "Suspended at",
+      "revokedAt": "Revoked at"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "New payment method",
+      "description": "Create a new payment method version from an already-vaulted opaque reference.",
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty id",
+      "type": "Type",
+      "providerCode": "Provider code",
+      "displayLabel": "Display label",
+      "destinationMasked": "Masked destination",
+      "destinationMaskedHint": "Must already be a masked string (e.g. **** 4242) -- never a raw IBAN or account number.",
+      "sensitiveReference": "Opaque sensitive reference",
+      "sensitiveReferenceHint": "Must be an opaque reference like vault:..., token:... or pmref:... -- never a raw IBAN, bank account, or phone number.",
+      "submit": "Create"
+    },
+    "actions": {
+      "approve": "Approve",
+      "suspend": "Suspend",
+      "revoke": "Revoke",
+      "reasonLabel": "Reason",
+      "reasonRequired": "The reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Dismiss"
+    },
+    "sensitive": {
+      "reveal": "Reveal sensitive reference",
+      "revealedLabel": "Access confirmed by the server; the raw reference is not displayed.",
+      "hide": "Hide"
+    },
+    "empty": {
+      "title": "No payment methods",
+      "description": "No payment method matches these criteria.",
+      "noScopeDescription": "No Finance organization scope is available on your account."
+    }
+  },
+  "fees": {
+    "gapNotice": "Fee rules can be created and inspected by ID; the API does not expose a fee-rule list endpoint.",
+    "empty": {
+      "title": "No fees",
+      "description": "No fee assessment matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "rules": {
+      "list": {
+        "eyebrow": "Finance",
+        "title": "Fee rules",
+        "description": "Create a fee rule or look up an existing rule by identifier."
+      },
+      "lookup": {
+        "label": "Fee rule ID",
+        "button": "Search",
+        "notFoundHint": "Paste an existing fee rule identifier."
+      },
+      "create": {
+        "eyebrow": "Finance",
+        "title": "New fee rule",
+        "description": "Create a draft fee rule from server-supported fields only.",
+        "submit": "Create rule"
+      },
+      "detail": {
+        "eyebrow": "Fee rule",
+        "title": "Fee rule detail",
+        "description": "Rule scope, calculation fields, status and version.",
+        "summaryTitle": "Summary"
+      },
+      "columns": {
+        "type": "Type",
+        "scopeType": "Scope",
+        "calculationType": "Calculation",
+        "sourceDomain": "Source domain",
+        "counterpartyType": "Counterparty type",
+        "serviceCode": "Service",
+        "sellerId": "Seller",
+        "cityId": "City",
+        "zoneId": "Zone",
+        "subZoneId": "Sub-zone",
+        "fixedAmount": "Fixed amount",
+        "percentageRate": "Rate",
+        "percentageBase": "Percentage base",
+        "minimumAmount": "Minimum",
+        "maximumAmount": "Maximum",
+        "priority": "Priority",
+        "validFrom": "Valid from",
+        "validTo": "Valid to",
+        "workflowStatus": "Workflow status"
+      },
+      "workflowStatus": {
+        "DRAFT": "Draft",
+        "PENDING_APPROVAL": "Pending approval",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected",
+        "SUSPENDED": "Suspended"
+      }
+    },
+    "assessments": {
+      "list": {
+        "eyebrow": "Finance",
+        "title": "Fee assessments",
+        "description": "Assessed fees from the real Finance reports endpoint.",
+        "missingReportCapability": "Fee assessment listing requires report read permission.",
+        "missingFeeCapability": "You can preview rows but cannot open fee assessment details without fee read permission."
+      },
+      "table": {
+        "ariaLabel": "Fee assessment list"
+      },
+      "create": {
+        "eyebrow": "Finance",
+        "title": "Assess a fee",
+        "description": "Assess a fee against an existing financial obligation.",
+        "type": "Assessment type",
+        "obligationId": "Obligation ID",
+        "obligationIdRequired": "Obligation ID is required.",
+        "submit": "Assess fee"
+      },
+      "detail": {
+        "eyebrow": "Fee assessment",
+        "title": "Fee assessment detail",
+        "description": "Server-provided calculation fields and linked obligation.",
+        "summaryTitle": "Summary",
+        "calculationExplanation": "Calculation explanation",
+        "sourceFeeRuleId": "Source rule",
+        "ruleVersion": "Rule version"
+      },
+      "columns": {
+        "reference": "Reference",
+        "obligationId": "Obligation",
+        "type": "Type",
+        "amount": "Amount",
+        "sourceDomain": "Source domain",
+        "counterparty": "Counterparty",
+        "status": "Status",
+        "effectiveAt": "Effective date"
+      },
+      "status": {
+        "ASSESSED": "Assessed",
+        "VOIDED": "Voided"
+      }
+    }
+  },
+  "documents": {
+    "gapNotice": "The API exposes invoice reporting plus direct document lookup for statements and credit notes; this page does not invent an all-documents list.",
+    "statementNotice": "This document is a statement, a settlement record, not a new invoice.",
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Financial documents",
+      "description": "Invoices from the real reports endpoint, with direct lookup for statements and credit notes."
+    },
+    "lookup": {
+      "label": "Document ID",
+      "button": "Search"
+    },
+    "table": {
+      "ariaLabel": "Financial document list"
+    },
+    "empty": {
+      "title": "No documents",
+      "description": "No document matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "type": {
+      "INVOICE": "Invoice",
+      "STATEMENT": "Statement",
+      "CREDIT_NOTE": "Credit note"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "GENERATED": "Generated",
+      "SUBMITTED": "Submitted",
+      "APPROVED": "Approved",
+      "VOIDED": "Voided"
+    },
+    "columns": {
+      "documentNumber": "Number",
+      "documentType": "Type",
+      "counterparty": "Counterparty",
+      "period": "Period",
+      "currency": "Currency",
+      "gross": "Gross",
+      "fees": "Fees",
+      "expenses": "Expenses",
+      "bonuses": "Bonuses",
+      "refunds": "Refunds",
+      "withholdings": "Withholdings",
+      "net": "Net",
+      "paid": "Paid",
+      "remaining": "Remaining",
+      "status": "Status",
+      "approvedAt": "Approved at"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Generate document",
+      "description": "Generate an invoice, statement or credit note from API-authorized criteria only.",
+      "documentType": "Document type",
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "periodStart": "Period start",
+      "periodEnd": "Period end",
+      "submit": "Generate"
+    },
+    "detail": {
+      "eyebrow": "Financial document",
+      "title": "Document detail",
+      "description": "Summary, lines, allocations and server totals for this document.",
+      "summaryTitle": "Summary",
+      "linesTitle": "Lines",
+      "voidReason": "Void reason",
+      "voidedAt": "Voided at"
+    },
+    "actions": {
+      "approve": "Approve",
+      "void": "Void",
+      "voidReasonLabel": "Void reason",
+      "voidReasonRequired": "Void reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Close"
+    }
+  },
+  "adjustments": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Financial adjustments",
+      "description": "Create an adjustment or open an existing adjustment by identifier."
+    },
+    "lookup": {
+      "label": "Adjustment ID",
+      "button": "Search"
+    },
+    "empty": {
+      "title": "No adjustment workflow",
+      "noScopeDescription": "No Finance organization/country scope is available for your account.",
+      "createForbiddenDescription": "You can look up existing adjustments, but you do not have permission to create one."
+    },
+    "type": {
+      "EXPENSE": "Expense",
+      "BONUS": "Bonus",
+      "REFUND": "Refund",
+      "WITHHOLDING": "Withholding",
+      "PENALTY": "Penalty",
+      "DISPUTE_ADJUSTMENT": "Dispute adjustment",
+      "MANUAL_ADJUSTMENT": "Manual adjustment"
+    },
+    "create": {
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "sourceDomain": "Source domain",
+      "sourceReferenceType": "Source reference type",
+      "sourceReferenceId": "Source reference ID",
+      "type": "Type",
+      "amount": "Amount",
+      "reasonCode": "Reason code",
+      "reason": "Reason",
+      "attachmentReference": "Attachment reference",
+      "submit": "Create adjustment"
+    },
+    "detail": {
+      "eyebrow": "Financial adjustment",
+      "title": "Adjustment detail",
+      "description": "Author, approval state, reason and resulting obligation when exposed by the API.",
+      "summaryTitle": "Summary",
+      "author": "Author",
+      "submitter": "Submitter",
+      "approver": "Approver",
+      "appliedObligation": "Created obligation"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "apply": "Apply",
+      "reasonLabel": "Reason",
+      "reasonRequired": "Reason is required.",
+      "confirm": "Confirm",
+      "dismiss": "Close"
+    }
+  },
+  "approvals": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Approval queue",
+      "description": "Pending Finance approvals composed from existing resource endpoints."
+    },
+    "empty": {
+      "title": "No approvals",
+      "description": "No item is waiting in this section.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "columns": {
+      "resourceType": "Resource",
+      "reference": "Reference",
+      "amount": "Amount",
+      "requester": "Requester",
+      "date": "Date",
+      "stage": "Stage",
+      "action": "Action"
+    },
+    "sections": {
+      "payoutFirstApprove": "Payouts: first approval",
+      "payoutFinalApprove": "Payouts: final approval",
+      "paymentMethods": "Payment methods pending verification",
+      "invoices": "Documents pending approval",
+      "adjustmentsGapNotice": "Adjustments do not expose a list endpoint in the current API; use the adjustment lookup to approve a known item."
+    },
+    "blockedReasons": {
+      "samePreparer": "Blocked if the actor is the preparer.",
+      "sameFirstApprover": "Blocked if the actor already gave the first approval.",
+      "modifiedPaymentMethod": "Blocked if the actor modified the payment method.",
+      "missingPermission": "Blocked when a required permission is missing.",
+      "activeHold": "Blocked while a hold is active.",
+      "incompatibleStatus": "Blocked when the resource status is not approvable."
+    },
+    "viewLink": "Open"
+  },
+  "payouts": {
+    "makerCheckerNote": "Maker/checker rules are enforced by the API; this screen only explains the reason returned by the server.",
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Payouts",
+      "description": "Payout batches from proposal to reconciliation.",
+      "createAction": "New payout",
+      "dateFrom": "From",
+      "dateTo": "To"
+    },
+    "table": {
+      "ariaLabel": "Payout list"
+    },
+    "empty": {
+      "title": "No payouts",
+      "description": "No payout matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "columns": {
+      "reference": "Reference",
+      "counterparty": "Counterparty",
+      "amount": "Amount",
+      "paymentMethod": "Payment method",
+      "status": "Status",
+      "createdAt": "Created at",
+      "updatedAt": "Updated at"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "PROPOSED": "Proposed",
+      "ON_HOLD": "On hold",
+      "PENDING_FIRST_APPROVAL": "Pending first approval",
+      "PENDING_FINAL_APPROVAL": "Pending final approval",
+      "APPROVED": "Approved",
+      "EXPORT_READY": "Export ready",
+      "SENT": "Sent",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "MARKED_PAID": "Marked paid",
+      "CANCELLED": "Cancelled",
+      "RECONCILED": "Reconciled"
+    },
+    "counterpartyType": {
+      "SELLER": "Seller",
+      "AFFILIATE": "Affiliate",
+      "RESTAURANT": "Restaurant",
+      "DRIVER": "Driver",
+      "COURIER": "Courier",
+      "LOGISTICS_PARTNER": "Logistics partner",
+      "CUSTOMER": "Customer",
+      "NOKI_PLATFORM": "NOKI platform",
+      "OTHER": "Other"
+    },
+    "holdType": {
+      "DISPUTE": "Dispute",
+      "COMPLIANCE": "Compliance",
+      "PAYMENT_METHOD": "Payment method",
+      "MANUAL_REVIEW": "Manual review",
+      "VARIANCE": "Variance",
+      "OTHER": "Other"
+    },
+    "create": {
+      "eyebrow": "Finance",
+      "title": "Propose payout",
+      "description": "Create a payout proposal from existing obligations and a masked payment method.",
+      "counterpartyType": "Counterparty type",
+      "counterpartyId": "Counterparty ID",
+      "counterpartyIdRequired": "Counterparty ID is required.",
+      "paymentMethodId": "Payment method ID",
+      "paymentMethodIdRequired": "Payment method ID is required.",
+      "code": "Code",
+      "obligationIds": "Obligation IDs",
+      "obligationIdsHint": "One obligation ID per line.",
+      "obligationIdsRequired": "At least one obligation ID is required.",
+      "submit": "Propose payout"
+    },
+    "actions": {
+      "hold": "Hold",
+      "releaseHold": "Release hold",
+      "firstApprove": "First approval",
+      "finalApprove": "Final approval",
+      "export": "Export ready",
+      "markSent": "Mark sent",
+      "markPaid": "Mark paid",
+      "markFailed": "Mark failed",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "reconcile": "Reconcile"
+    },
+    "dialogs": {
+      "amount": "Amount",
+      "currency": "Currency",
+      "destination": "Destination",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "reasonLabel": "Reason",
+      "reasonRequired": "This field is required.",
+      "typeLabel": "Type",
+      "obligationId": "Obligation",
+      "exportReference": "Export reference",
+      "externalReference": "External reference",
+      "reference": "Reference",
+      "proofReference": "Proof reference",
+      "checksum": "Checksum",
+      "mimeType": "MIME type",
+      "size": "Size",
+      "errorCode": "Error code",
+      "reconciliationReference": "Reconciliation reference"
+    },
+    "detail": {
+      "eyebrow": "Payout",
+      "title": "Payout detail",
+      "description": "Obligations, holds, approvals, attempts and proof for this payout.",
+      "summaryTitle": "Summary",
+      "linesTitle": "Obligations",
+      "holdsTitle": "Holds",
+      "approvalsTitle": "Approvals",
+      "attemptsTitle": "Attempts",
+      "proofsTitle": "Proofs",
+      "failureTitle": "Failure",
+      "failureCode": "Failure code",
+      "failureReason": "Failure reason",
+      "retryCount": "Retries",
+      "nextAttempt": "Next attempt",
+      "notAvailable": "Not available",
+      "code": "Code",
+      "currencyId": "Currency",
+      "paymentMethodStatus": "Payment method status",
+      "paymentMethodVersion": "Payment method version",
+      "noLines": "No obligation line is exposed.",
+      "noHolds": "No hold is active or recorded.",
+      "noApprovals": "No approval is recorded.",
+      "noAttempts": "No attempt is recorded.",
+      "noProofs": "No proof is recorded.",
+      "lineColumns": {
+        "recipient": "Recipient",
+        "order": "Order",
+        "obligation": "Obligation",
+        "settledAt": "Settled at"
+      },
+      "holdColumns": {
+        "releasedAt": "Released at",
+        "releaseReason": "Release reason"
+      },
+      "approvalColumns": {
+        "stage": "Stage",
+        "decision": "Decision",
+        "actor": "Actor"
+      },
+      "attemptColumns": {
+        "attempt": "Attempt"
+      },
+      "proofColumns": {
+        "active": "Active"
+      }
+    }
+  },
+  "reports": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Reports",
+      "description": "Catalogue, preview and CSV exports from the real Finance reporting endpoints."
+    },
+    "empty": {
+      "title": "No reports",
+      "description": "No row matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "filters": {
+      "country": "Country",
+      "currency": "Currency",
+      "status": "Status",
+      "counterpartyType": "Counterparty type",
+      "sourceDomain": "Source domain",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "search": "Search"
+    },
+    "catalogue": {
+      "typeLabel": "Report type",
+      "cod": "COD aging",
+      "cashSessions": "Cash sessions",
+      "variances": "Variances",
+      "reconciliations": "Reconciliations",
+      "fees": "Fees",
+      "invoices": "Invoices",
+      "obligations": "Obligations aging",
+      "payouts": "Payouts",
+      "paymentMethodStatus": "Payment method status",
+      "sellerSettlements": "Seller settlements"
+    },
+    "preview": {
+      "ariaLabel": "Report preview",
+      "empty": "No preview rows"
+    },
+    "export": {
+      "button": "Export CSV",
+      "title": "CSV export",
+      "rowCount": "Rows",
+      "checksum": "Checksum",
+      "generatedAt": "Generated at",
+      "maxRows": "Maximum rows",
+      "filename": "Filename",
+      "downloadCsv": "Download CSV",
+      "generatingLabel": "Generating..."
+    }
+  },
+  "audit": {
+    "list": {
+      "eyebrow": "Finance",
+      "title": "Audit",
+      "description": "Finance audit events filtered by actor, resource and correlation ID."
+    },
+    "empty": {
+      "title": "No audit events",
+      "description": "No audit event matches these filters.",
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
+    },
+    "filters": {
+      "actorId": "Actor",
+      "action": "Action",
+      "resourceType": "Resource type",
+      "resourceId": "Resource ID",
+      "country": "Country",
+      "correlationId": "Correlation ID",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "resultNotice": "Result filtering is controlled by the API response."
+    },
+    "columns": {
+      "occurredAt": "Date",
+      "actor": "Actor",
+      "action": "Action",
+      "resourceType": "Resource type",
+      "resourceId": "Resource ID",
+      "correlationId": "Correlation ID",
+      "metadata": "Metadata"
+    },
+    "row": {
+      "hiddenValue": "Hidden",
+      "expand": "Expand",
+      "collapse": "Collapse"
+    },
+    "table": {
+      "ariaLabel": "Finance audit events"
+    }
   }
 }
