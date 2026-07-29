@@ -19,6 +19,7 @@
     "playwright": "playwright",
     "test:e2e": "playwright test",
     "test:e2e:recette": "playwright test -c playwright.recette.config.ts",
+    "test:e2e:real-local": "playwright test -c playwright.real-local.config.ts",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
