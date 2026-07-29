@@ -13,7 +13,7 @@ concurrency:
 
 env:
   DOCKER_PLATFORM: linux/amd64
-  IMAGE_REPOSITORY: ghcr.io/agrismartchain/noki-finance
+  IMAGE_REPOSITORY: ghcr.io/agrismartchain/noki-finance-runtime
 
 jobs:
   publish:
@@ -94,8 +94,8 @@ jobs:
             org.opencontainers.image.revision=${{ steps.source.outputs.source_commit }}
             org.opencontainers.image.version=${{ steps.source.outputs.source_commit }}
             org.opencontainers.image.created=${{ steps.created.outputs.value }}
-            org.opencontainers.image.title=noki-finance
-            org.opencontainers.image.description=Immutable NOKI Finance frontend image.
+            org.opencontainers.image.title=noki-finance-runtime
+            org.opencontainers.image.description=Immutable NOKI Finance runtime frontend image.
             org.opencontainers.image.licenses=UNLICENSED
           sbom: true
           provenance: mode=max
