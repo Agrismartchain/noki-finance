@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         default: false
+      delete_runtime_package_only:
+        description: Delete the noki-finance-runtime package and stop before publishing.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -69,7 +74,7 @@ jobs:
           } >> "${GITHUB_OUTPUT}"
 
       - name: Recreate runtime package when requested
-        if: ${{ inputs.recreate_runtime_package }}
+        if: ${{ inputs.recreate_runtime_package || inputs.delete_runtime_package_only }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -107,10 +112,12 @@ jobs:
           exit 1
 
       - name: Setup Docker Buildx
+        if: ${{ !inputs.delete_runtime_package_only }}
         # docker/setup-buildx-action v4.2.0
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c
 
       - name: Login to GHCR
+        if: ${{ !inputs.delete_runtime_package_only }}
         # docker/login-action v4.4.0
         uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0
         with:
@@ -119,11 +126,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Capture OCI created timestamp
+        if: ${{ !inputs.delete_runtime_package_only }}
         id: created
         shell: bash
         run: echo "value=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"
 
       - name: Publish Finance image
+        if: ${{ !inputs.delete_runtime_package_only }}
         id: publish
         # docker/build-push-action v7.3.0
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
@@ -144,6 +153,7 @@ jobs:
           provenance: mode=max
 
       - name: Verify published digest
+        if: ${{ !inputs.delete_runtime_package_only }}
         id: digest
         shell: bash
         env:
@@ -165,6 +175,7 @@ jobs:
           echo "Immutable reference: ${IMAGE_REPOSITORY}@${DIGEST}"
 
       - name: Verify runtime package is private
+        if: ${{ !inputs.delete_runtime_package_only }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -181,6 +192,7 @@ jobs:
           echo "Runtime package visibility: private"
 
       - name: Write publication summary
+        if: ${{ !inputs.delete_runtime_package_only }}
         shell: bash
         run: |
           set -Eeuo pipefail
