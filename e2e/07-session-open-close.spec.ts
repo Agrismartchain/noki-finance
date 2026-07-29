@@ -9,10 +9,11 @@ async function runCurrentPageServerAction(page: Page, action: () => Promise<void
   return responsePromise;
 }
 
-async function openCreatedSessionDetail(page: Page, responseText: string) {
-  const match = responseText.match(/"id":"(session-[^"]+)"/);
-  expect(match, "open session action should return the created session id").not.toBeNull();
-  await page.goto(`/fr/cash-sessions/${match?.[1]}`, { waitUntil: "networkidle" });
+async function openSessionAndWaitForDetail(page: Page) {
+  const detailNavigation = page.waitForURL(/\/fr\/cash-sessions\/session-/, { timeout: 10_000 });
+  await runCurrentPageServerAction(page, () => page.getByRole("button", { name: /ouvrir la session/i }).click());
+  await detailNavigation;
+  await page.waitForLoadState("networkidle");
 }
 
 test("opening a cash session and closing it only submits countedClosingAmount, with an indicative variance preview", async ({ page }) => {
@@ -20,8 +21,7 @@ test("opening a cash session and closing it only submits countedClosingAmount, w
   await page.goto("/fr/cash-sessions/new", { waitUntil: "networkidle" });
 
   await page.getByLabel(/fond de caisse initial/i).fill("100.00");
-  const openResponse = await runCurrentPageServerAction(page, () => page.getByRole("button", { name: /ouvrir la session/i }).click());
-  await openCreatedSessionDetail(page, await openResponse.text());
+  await openSessionAndWaitForDetail(page);
   await expect(page.getByText(/ouverte|open/i).first()).toBeVisible();
 
   await page.getByLabel(/montant compté/i).fill("95.00");

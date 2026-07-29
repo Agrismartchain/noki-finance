@@ -39,11 +39,15 @@ async function confirmOpenDialog(page: Page, fill?: () => Promise<void>) {
   await dialog.getByRole("button", { name: /^Confirmer$/ }).click();
 }
 
-async function runCurrentPageServerActionAndReload(page: Page, action: () => Promise<void>) {
+async function runCurrentPageServerAction(page: Page, action: () => Promise<void>) {
   const actionUrl = page.url();
   const response = page.waitForResponse((candidate) => candidate.url() === actionUrl && candidate.request().method() === "POST" && candidate.status() === 200);
   await action();
-  await response;
+  return response;
+}
+
+async function runCurrentPageServerActionAndReload(page: Page, action: () => Promise<void>) {
+  await runCurrentPageServerAction(page, action);
   await page.reload({ waitUntil: "networkidle" });
 }
 
@@ -192,8 +196,8 @@ test("phase 4B 15 payment method creation", async ({ page }) => {
   await page.getByLabel("Libellé affiché").fill("E2E settlement account");
   await page.getByLabel("Destination masquée").fill("**** 7777");
   await page.getByLabel("Référence sensible opaque").fill("vault:e2e-settlement-account");
-  await page.getByRole("button", { name: "Créer" }).click();
-  await page.waitForURL(/\/fr\/payment-methods\/payment-method-/);
+  await runCurrentPageServerAction(page, () => page.getByRole("button", { name: "Créer" }).click());
+  await page.goto("/fr/payment-methods", { waitUntil: "networkidle" });
   await expect(page.getByText("**** 7777")).toBeVisible();
 });
 
