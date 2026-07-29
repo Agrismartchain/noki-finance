@@ -12,25 +12,34 @@ Internal Finance frontend for NOKI SERVICE — a same-origin BFF Next.js app cov
 
 ## Install
 
-### 1. Produce the Contracts tarball
+### 1. Produce the vendored tarballs
 
-This app requires `@agrismartchain/noki-shared-contracts@0.31.0` newer than what's published to the registry, so it's vendored as a local tarball rather than fetched remotely:
+This app consumes both internal packages from committed local tarballs rather than the GitHub Packages registry:
+
+- `@agrismartchain/noki-shared-contracts@0.31.0`
+- `@agrismartchain/noki-design-system@0.2.0`
+
+When one of those packages is intentionally updated, rebuild and copy the corresponding tarball, update `vendor/manifest.json`, then run `pnpm vendor:verify`:
 
 ```bash
 cd ../noki-shared-contracts
 pnpm run check   # confirms the checkout is clean: lint, typecheck, test, build, contract/version/publication guards
 pnpm pack        # produces agrismartchain-noki-shared-contracts-0.31.0.tgz
 cp agrismartchain-noki-shared-contracts-0.31.0.tgz ../noki-finance/vendor/
+
+cd ../noki-design-system
+pnpm run check
+pnpm pack        # produces agrismartchain-noki-design-system-0.2.0.tgz
+cp agrismartchain-noki-design-system-0.2.0.tgz ../noki-finance/vendor/
 ```
 
-The tarball is committed to `vendor/` (an explicit `.dockerignore`/`.gitignore` exception) so both local installs and the Docker build resolve it deterministically via `pnpm install --frozen-lockfile`.
+The tarballs and their deterministic metadata are committed to `vendor/` (an explicit `.dockerignore`/`.gitignore` exception) so local installs, CI, and Docker builds resolve them via `pnpm install --frozen-lockfile` with no npm token.
 
 ### 2. Install dependencies
 
-`@agrismartchain/noki-design-system` still comes from GitHub Packages and needs a `NODE_AUTH_TOKEN` with `read:packages` on the `Agrismartchain` org:
-
 ```bash
-NODE_AUTH_TOKEN=<token> pnpm install
+pnpm install --frozen-lockfile
+pnpm vendor:verify
 ```
 
 ## Environment variables
@@ -51,22 +60,45 @@ NOKI_API_BASE_URL=http://localhost:3001
 
 ```bash
 pnpm dev          # http://localhost:3004
+pnpm vendor:verify # validates vendored tarball checksums
 pnpm build        # standalone production build
 pnpm start        # run the standalone build
 pnpm lint         # eslint .
 pnpm typecheck    # tsc --noEmit
 pnpm test         # vitest run
 pnpm test:watch   # vitest
-pnpm playwright   # playwright test -c playwright.recette.config.ts (needs a running app + reachable noki-api)
+pnpm test:e2e     # Playwright stub suite with local stub API
+pnpm test:e2e:recette # manual/staging-style run against an already running app
 pnpm check        # lint && typecheck && test && build
+```
+
+## Local real-stack provisioning
+
+For the opt-in real local Finance smoke test, provision a temporary Finance user from `noki-api`. The password is generated locally and printed once; do not commit it or add it to documentation.
+
+```bash
+cd ~/dev/noki-service/noki-api
+set -a
+. ./.env
+set +a
+pnpm recette:finance:provision
+```
+
+Then run the real local smoke only when explicitly needed:
+
+```bash
+NOKI_REAL_LOCAL_E2E=1 \
+NOKI_REAL_LOCAL_E2E_EMAIL=<printed-email> \
+NOKI_REAL_LOCAL_E2E_PASSWORD=<printed-password> \
+pnpm test:e2e:real-local
 ```
 
 ## Tests
 
-- **Unit** (22 files, co-located as `src/**/*.test.ts(x)`): shared Finance components (`MoneyValue`, `FinanceStatusBadge`, `VarianceBadge`), the API client/error normalization, permission mapping (`hasAnyFinancePermission`, `hasAnyCapability`), i18n message parity + locale formatting, URL filter parsing for every list page, dashboard states, and every mutation form (handover create/receive, session open/close, variance resolution, reconciliation approval).
+- **Unit** (46 files, co-located as `src/**/*.test.ts(x)`): shared Finance components (`MoneyValue`, `FinanceStatusBadge`, `VarianceBadge`), the API client/error normalization, permission mapping (`hasAnyFinancePermission`, `hasAnyCapability`), i18n message parity + locale formatting, URL filter parsing for every list page, dashboard states, and every mutation form (handover create/receive, session open/close, variance resolution, reconciliation approval).
 - **BFF/integration** (9 files): `src/proxy.test.ts`, `src/lib/auth/{cookies,origin,request-body,session}.test.ts`, `src/app/api/auth/{login,logout,session}/route.test.ts`, `src/app/api/health/route.test.ts` — assert httpOnly/secure/sameSite cookies, that a token never appears in a JSON response body, that refresh is only ever persisted from `/api/auth/session`, that logout always clears cookies even when the backend is unreachable, and same-origin enforcement on the BFF's own mutation routes.
-- **Total**: 31 test files, 179 tests, all passing (`pnpm test`).
-- **Playwright** (`e2e/`, 14 spec files, 25 scenarios): `playwright.config.ts` is the primary, self-contained config. Because every `noki-api` call happens server-side (the BFF pattern), "network-level controlled APIs" means pointing the real Next.js server's `NOKI_API_BASE_URL` at a stub HTTP server (`e2e/support/stub-api-server.mjs`) rather than browser-level `page.route()` interception — Playwright drives the real, built app against deterministic (stubbed) HTTP responses, and no mock fixture is ever imported into application source. Covers: login, dashboard load, forbidden non-Finance actor, mobile navigation drawer, multi-currency display, handovers list/create/submit/receive, cash session open/close with the indicative variance preview, variance resolution with confirmation, reconciliation create/submit/approve with the maker/checker note, fr/en/ar rendering with no raw i18n keys, RTL, dark mode, and no horizontal overflow at 390px. `playwright.recette.config.ts` is a lighter alternative for manual/staging runs against a real, reachable `noki-api` instance.
+- **Total**: 46 test files, 305 tests, all passing (`pnpm test`).
+- **Playwright** (`e2e/`): `playwright.config.ts` is the primary, self-contained CI config. Because every `noki-api` call happens server-side (the BFF pattern), "network-level controlled APIs" means pointing the real Next.js server's `NOKI_API_BASE_URL` at a stub HTTP server (`e2e/support/stub-api-server.mjs`) rather than browser-level `page.route()` interception — Playwright drives the real, built app against deterministic (stubbed) HTTP responses, and no mock fixture is ever imported into application source. Covers: login, dashboard load, forbidden non-Finance actor, mobile navigation drawer, multi-currency display, handovers list/create/submit/receive, cash session open/close with the indicative variance preview, variance resolution with confirmation, reconciliation create/submit/approve with the maker/checker note, fr/en/ar rendering with no raw i18n keys, RTL, dark mode, and no horizontal overflow at 390px. The default suite currently collects 44 scenarios: 43 pass with the stub local API, and the real local smoke scenario remains skipped by default unless `NOKI_REAL_LOCAL_E2E=1` is provided with local credentials. `playwright.recette.config.ts` is a lighter alternative for manual/staging runs against a real, reachable `noki-api` instance.
 
 ## Architecture
 
@@ -121,7 +153,7 @@ Money is never computed client-side: `MoneyValue`/`formatMoney` convert a decima
 Multi-stage (`base` → `deps` → `builder` → `runner`), `pnpm install --frozen-lockfile`, non-root user (`nodeapp`, 1001:1001), Next.js `standalone` output, healthcheck against `GET /api/health`, port 3000. Built and smoke-tested locally: image size **283MB**, healthcheck responds `{"status":"ok","service":"noki-finance"}` with no sensitive data, confirmed running as `nodeapp` (not root).
 
 ```bash
-DOCKER_BUILDKIT=1 docker build --secret id=npm_token,env=NODE_AUTH_TOKEN -t noki-finance .
+docker build -t noki-finance .
 docker run --rm -p 3000:3000 -e NOKI_API_BASE_URL=https://api.example.test noki-finance
 ```
 

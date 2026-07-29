@@ -1,0 +1,18 @@
+{
+  "packages": [
+    {
+      "name": "@agrismartchain/noki-design-system",
+      "version": "0.2.0",
+      "sourceCommit": "257e82d1cd3a0bfeeb2c25d22b85f15ed3e91a56",
+      "file": "agrismartchain-noki-design-system-0.2.0.tgz",
+      "sha256": "6a187aa994e57d776b5c7b9a47b2e109c708025cd45482fef10c0f30c1dcbce8"
+    },
+    {
+      "name": "@agrismartchain/noki-shared-contracts",
+      "version": "0.31.0",
+      "sourceCommit": "2189b2f05a4b6b64dcd3aaaef466ce7f59a4eca9",
+      "file": "agrismartchain-noki-shared-contracts-0.31.0.tgz",
+      "sha256": "71ede80e255cb366ffc311b725f0c5bcdc9276a563461220f57264bd67f4a8ee"
+    }
+  ]
+}
