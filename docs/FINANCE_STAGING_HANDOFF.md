@@ -13,7 +13,7 @@
 | Docker | `docker build --no-cache -t noki-finance:release-candidate .` |
 | Recette reelle | realisee localement seulement apres provisionnement depuis `noki-api`; hors CI standard |
 | CI API | `https://github.com/Agrismartchain/noki-api/actions/runs/30450541363` |
-| CI Finance | `https://github.com/Agrismartchain/noki-finance/actions/runs/30453519817` |
+| CI Finance source image | `https://github.com/Agrismartchain/noki-finance/actions/runs/30453519817` |
 | Publication GHCR Finance | `https://github.com/Agrismartchain/noki-finance/actions/runs/30453858932` |
 | Lock infra Finance | `noki-infra/images/noki-finance.lock.json` au commit `cbedb8cde0c7e675e058838b4e71cf08664d493a` |
 
@@ -60,9 +60,9 @@ Aucune variable secrete n'est requise au build Finance. Les cookies d'authentifi
 | Champ | Valeur |
 | --- | --- |
 | Service frontend | `TO_BE_CONFIRMED` |
-| URL publique frontend | `TO_BE_CONFIRMED` |
+| `STAGING_PUBLIC_URL` | `TO_BE_CONFIRMED` |
 | URL API publique observee | `https://api-staging.noki-services.com` |
-| URL API interne cible | `TO_BE_CONFIRMED` |
+| `STAGING_INTERNAL_API_URL` | `TO_BE_CONFIRMED` |
 | Reseau Docker/Coolify | non modifie pendant cette phase |
 | Origine autorisee API | `TO_BE_CONFIRMED` apres choix de l'URL publique Finance |
 | Proxy headers | a conserver via Coolify/Caddy; aucune valeur secrete |
