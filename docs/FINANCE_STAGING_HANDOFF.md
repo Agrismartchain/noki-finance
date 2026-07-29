@@ -5,22 +5,28 @@
 | Element | Valeur |
 | --- | --- |
 | API commit | `ab491688bc87f36e679febcf3276d3f3fd1aeef1` |
-| Finance commit de base | `6ebc734541c407e4391063cd45fdc959d98c4935` |
+| Finance commit image publiee | `811b0e23aa6c2980ee7e86a215e55c0fca78f7b6` |
 | Contracts | `@agrismartchain/noki-shared-contracts@0.31.0` |
 | Design System | `@agrismartchain/noki-design-system@0.2.0` |
 | Tests attendus | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm test:e2e` |
 | Playwright | stub local via `e2e/support/stub-api-server.mjs`; real-local opt-in uniquement avec `NOKI_REAL_LOCAL_E2E=1` |
 | Docker | `docker build --no-cache -t noki-finance:release-candidate .` |
 | Recette reelle | realisee localement seulement apres provisionnement depuis `noki-api`; hors CI standard |
+| CI API | `https://github.com/Agrismartchain/noki-api/actions/runs/30450541363` |
+| CI Finance | `https://github.com/Agrismartchain/noki-finance/actions/runs/30453519817` |
+| Publication GHCR Finance | `https://github.com/Agrismartchain/noki-finance/actions/runs/30453858932` |
+| Lock infra Finance | `noki-infra/images/noki-finance.lock.json` au commit `cbedb8cde0c7e675e058838b4e71cf08664d493a` |
 
 ## Artefact attendu
 
 | Champ | Valeur |
 | --- | --- |
-| Image | `ghcr.io/agrismartchain/noki-finance` a confirmer avant publication GHCR |
-| Tag commit | commit Finance publie |
-| Tag staging | `staging`, uniquement comme canal humain; le deploiement doit retenir un digest |
-| Digest | `TO_BE_FILLED_AFTER_PUBLICATION` |
+| Image | `ghcr.io/agrismartchain/noki-finance` |
+| Tag commit | `811b0e23aa6c2980ee7e86a215e55c0fca78f7b6` |
+| Tag staging | non cree ; aucun alias mutable `staging` ou `latest` |
+| Digest | `sha256:37ef8b70a7db9e782cc7e85e247649db6b9847f50c21f208e3dcae28e438951e` |
+| Reference immutable | `ghcr.io/agrismartchain/noki-finance@sha256:37ef8b70a7db9e782cc7e85e247649db6b9847f50c21f208e3dcae28e438951e` |
+| Visibilite package GHCR | `public` |
 | Dockerfile | `Dockerfile` |
 | Context | `.` |
 | Platform | `linux/amd64` |
@@ -57,11 +63,22 @@ Aucune variable secrete n'est requise au build Finance. Les cookies d'authentifi
 | URL publique frontend | `TO_BE_CONFIRMED` |
 | URL API publique observee | `https://api-staging.noki-services.com` |
 | URL API interne cible | `TO_BE_CONFIRMED` |
-| Reseau Docker/Coolify | `coolify` observe pour le deploiement API existant |
+| Reseau Docker/Coolify | non modifie pendant cette phase |
 | Origine autorisee API | `TO_BE_CONFIRMED` apres choix de l'URL publique Finance |
 | Proxy headers | a conserver via Coolify/Caddy; aucune valeur secrete |
 
 Ne pas utiliser `localhost` dans les variables staging.
+
+## Realise dans cette phase
+
+- `noki-api` publie et CI distante verte sur `main`.
+- `noki-finance` publie et CI distante verte sur `main`.
+- Image Finance publiee sur GHCR sans tag `latest`, sans alias `staging`, avec tag SHA complet et digest OCI.
+- Package GHCR Finance verifie en visibilite `public`.
+- Lock Finance ajoute dans `noki-infra/images/noki-finance.lock.json`.
+- Validateur `scripts/validate-finance-image-lock.py` ajoute et execute dans la CI infra.
+- CI infra et smoke des images publiees verts apres ajout du lock.
+- Aucun deploiement staging/production, aucune connexion Coolify, aucune commande SSH, aucune modification DNS et aucune migration.
 
 ## Preconditions
 
@@ -74,19 +91,15 @@ Ne pas utiliser `localhost` dans les variables staging.
 - `CORS_ORIGINS` API configure avec l'origine publique Finance staging.
 - Cookies emis en production avec `secure=true` et `sameSite=lax`.
 
-## Procedure apres publication
+## Procedure restante apres publication
 
-1. Pousser `noki-api` si les commits API locaux sont retenus.
-2. Pousser `noki-finance`.
-3. Attendre CI verte.
-4. Publier l'image Finance sans tag `latest`.
-5. Recuperer le digest OCI publie.
-6. Ajouter un lock image Finance dans `noki-infra` selon le modele `images/noki-api.lock.json`.
-7. Mettre a jour les templates staging avec la reference `repository@sha256:...`.
-8. Verifier le backup staging hors workflow, puis fournir son uuid au gate de deploiement.
-9. Deployer staging via le mecanisme d'orchestration approuve.
-10. Executer les healthchecks et smoke tests.
-11. Rollback sur l'ancien digest si une gate echoue.
+1. Decider l'URL publique Finance staging, l'URL API interne cible, le routage et le reseau d'orchestration.
+2. Configurer `CORS_ORIGINS` API avec l'origine publique Finance retenue.
+3. Raccorder explicitement le service Finance dans l'infra staging avec la reference immutable `repository@sha256:...`.
+4. Verifier le backup staging hors workflow, puis fournir son uuid au gate de deploiement.
+5. Deployer staging via le mecanisme d'orchestration approuve.
+6. Executer les healthchecks et smoke tests.
+7. Rollback sur l'ancien digest si une gate echoue.
 
 ## Smoke tests
 
