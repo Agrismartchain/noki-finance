@@ -2,6 +2,12 @@ name: Publish Staging Image
 
 on:
   workflow_dispatch:
+    inputs:
+      recreate_runtime_package:
+        description: Delete and recreate the noki-finance-runtime package before publishing.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -62,6 +68,44 @@ jobs:
             echo "tag=${IMAGE_REPOSITORY}:${source_commit}"
           } >> "${GITHUB_OUTPUT}"
 
+      - name: Recreate runtime package when requested
+        if: ${{ inputs.recreate_runtime_package }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_NAME: noki-finance-runtime
+        run: |
+          set -Eeuo pipefail
+
+          package_visibility="$(gh api "/user/packages/container/${PACKAGE_NAME}" --jq '.visibility' 2>/dev/null || true)"
+          if [[ -z "${package_visibility}" ]]; then
+            echo "Runtime package does not exist yet; nothing to recreate."
+            exit 0
+          fi
+
+          if [[ "${package_visibility}" == "private" ]]; then
+            echo "Runtime package is already private; keeping existing package."
+            exit 0
+          fi
+
+          if [[ "${package_visibility}" != "public" ]]; then
+            echo "Refusing to recreate package with unexpected visibility: ${package_visibility}" >&2
+            exit 1
+          fi
+
+          gh api -X DELETE "/user/packages/container/${PACKAGE_NAME}"
+
+          for attempt in {1..20}; do
+            if ! gh api "/user/packages/container/${PACKAGE_NAME}" >/dev/null 2>&1; then
+              echo "Runtime package deleted for private recreation."
+              exit 0
+            fi
+            sleep 3
+          done
+
+          echo "Runtime package still exists after deletion request." >&2
+          exit 1
+
       - name: Setup Docker Buildx
         # docker/setup-buildx-action v4.2.0
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c
@@ -90,7 +134,6 @@ jobs:
           platforms: ${{ env.DOCKER_PLATFORM }}
           tags: ${{ steps.source.outputs.tag }}
           labels: |
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ steps.source.outputs.source_commit }}
             org.opencontainers.image.version=${{ steps.source.outputs.source_commit }}
             org.opencontainers.image.created=${{ steps.created.outputs.value }}
@@ -120,6 +163,22 @@ jobs:
 
           echo "Published digest: ${DIGEST}"
           echo "Immutable reference: ${IMAGE_REPOSITORY}@${DIGEST}"
+
+      - name: Verify runtime package is private
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_NAME: noki-finance-runtime
+        run: |
+          set -Eeuo pipefail
+
+          visibility="$(gh api "/user/packages/container/${PACKAGE_NAME}" --jq '.visibility')"
+          if [[ "${visibility}" != "private" ]]; then
+            echo "Runtime package visibility must be private; got ${visibility}." >&2
+            exit 1
+          fi
+
+          echo "Runtime package visibility: private"
 
       - name: Write publication summary
         shell: bash
