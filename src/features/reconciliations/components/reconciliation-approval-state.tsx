@@ -35,12 +35,13 @@ export function ReconciliationApprovalState({ reconciliation, canSubmit, canAppr
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<{ kind: string; correlationId?: string } | null>(null);
-  const [idempotencyKey] = useState(() => generateIdempotencyKey());
+  const [submitIdempotencyKey] = useState(() => generateIdempotencyKey());
+  const [approveIdempotencyKey] = useState(() => generateIdempotencyKey());
 
   async function handleSubmit() {
     setPending(true);
     setError(null);
-    const result = await submitReconciliationAction(reconciliation.id, idempotencyKey);
+    const result = await submitReconciliationAction(reconciliation.id, submitIdempotencyKey);
     setPending(false);
     if (!result.ok) {
       setError({ kind: result.kind, correlationId: result.correlationId });
@@ -52,7 +53,7 @@ export function ReconciliationApprovalState({ reconciliation, canSubmit, canAppr
   async function handleApprove() {
     setPending(true);
     setError(null);
-    const result = await approveReconciliationAction(reconciliation.id, idempotencyKey);
+    const result = await approveReconciliationAction(reconciliation.id, approveIdempotencyKey);
     setPending(false);
     if (!result.ok) {
       setError({ kind: result.kind, correlationId: result.correlationId });

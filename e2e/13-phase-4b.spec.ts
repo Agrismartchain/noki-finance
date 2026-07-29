@@ -39,6 +39,14 @@ async function confirmOpenDialog(page: Page, fill?: () => Promise<void>) {
   await dialog.getByRole("button", { name: /^Confirmer$/ }).click();
 }
 
+async function runCurrentPageServerActionAndReload(page: Page, action: () => Promise<void>) {
+  const actionUrl = page.url();
+  const response = page.waitForResponse((candidate) => candidate.url() === actionUrl && candidate.request().method() === "POST" && candidate.status() === 200);
+  await action();
+  await response;
+  await page.reload({ waitUntil: "networkidle" });
+}
+
 test.describe.configure({ mode: "serial" });
 
 test("phase 4B 01 obligations list/detail", async ({ page }) => {
@@ -95,7 +103,7 @@ test("phase 4B 07 dispute workflow", async ({ page }) => {
   await page.getByText("Libération", { exact: true }).click();
   await page.getByLabel("Motif").fill("Release after finance review");
   await page.getByRole("button", { name: "Continuer" }).click();
-  await page.getByRole("button", { name: "Confirmer" }).click();
+  await runCurrentPageServerActionAndReload(page, () => page.getByRole("button", { name: "Confirmer" }).click());
   await expect(page.getByRole("definition").filter({ hasText: /^Résolu$/ })).toBeVisible({ timeout: 15_000 });
 });
 

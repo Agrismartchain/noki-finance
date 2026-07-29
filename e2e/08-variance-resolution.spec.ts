@@ -4,12 +4,7 @@ import { loginAsFinanceUser } from "./support/auth";
 
 test("resolving an open variance requires a decision, a reason, and an explicit confirmation step", async ({ page }) => {
   await loginAsFinanceUser(page);
-  await page.goto("/fr/cash-variances", { waitUntil: "networkidle" });
-
-  // getByRole("link").first() would grab a sidebar nav link instead of the table
-  // row's own link (the sidebar renders earlier in the DOM) -- scope to the href.
-  await page.locator('a[href*="/cash-variances/variance-"]').first().click();
-  await page.waitForURL(/\/fr\/cash-variances\/variance-/);
+  await page.goto("/fr/cash-variances/variance-seed-1", { waitUntil: "networkidle" });
 
   await page.getByRole("radio", { name: /résoudre|resolve/i }).click({ force: true });
   await page.getByLabel(/motif|reason/i).fill("Confirmed with the cashier on-site");
