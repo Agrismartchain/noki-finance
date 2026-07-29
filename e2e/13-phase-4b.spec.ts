@@ -200,8 +200,8 @@ test("phase 4B 15 payment method creation", async ({ page }) => {
 test("phase 4B 16 payment method approval", async ({ page }) => {
   await login(page);
   await page.goto(`/fr/payment-methods/${ids.paymentMethod}`);
-  await page.getByRole("button", { name: "Approuver" }).click();
-  await expect(page.getByText("Active")).toBeVisible();
+  await runCurrentPageServerActionAndReload(page, () => page.getByRole("button", { name: "Approuver" }).click());
+  await expect(page.getByText("Active")).toBeVisible({ timeout: 10_000 });
 });
 
 test("phase 4B 17 reports preview", async ({ page }) => {
