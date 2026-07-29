@@ -1,0 +1,141 @@
+name: Publish Staging Image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: finance-publish-staging-image-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOCKER_PLATFORM: linux/amd64
+  IMAGE_REPOSITORY: ghcr.io/agrismartchain/noki-finance
+
+jobs:
+  publish:
+    name: Publish Finance Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout requested commit
+        # actions/checkout v6.0.3
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify source commit is origin/main
+        id: source
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git fetch origin main --prune
+
+          source_commit="$(git rev-parse HEAD)"
+          origin_main="$(git rev-parse origin/main)"
+
+          if [[ "${source_commit}" != "${GITHUB_SHA}" ]]; then
+            echo "Checked out commit does not match GITHUB_SHA." >&2
+            exit 1
+          fi
+
+          if [[ "${source_commit}" != "${origin_main}" ]]; then
+            echo "Refusing to publish: checked out commit is not origin/main." >&2
+            echo "source_commit=${source_commit}" >&2
+            echo "origin_main=${origin_main}" >&2
+            exit 1
+          fi
+
+          if [[ "${IMAGE_REPOSITORY}" == *:latest* ]]; then
+            echo "Refusing to publish a latest tag." >&2
+            exit 1
+          fi
+
+          {
+            echo "source_commit=${source_commit}"
+            echo "tag=${IMAGE_REPOSITORY}:${source_commit}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Setup Docker Buildx
+        # docker/setup-buildx-action v4.2.0
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c
+
+      - name: Login to GHCR
+        # docker/login-action v4.4.0
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Capture OCI created timestamp
+        id: created
+        shell: bash
+        run: echo "value=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"
+
+      - name: Publish Finance image
+        id: publish
+        # docker/build-push-action v7.3.0
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: ${{ env.DOCKER_PLATFORM }}
+          tags: ${{ steps.source.outputs.tag }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ steps.source.outputs.source_commit }}
+            org.opencontainers.image.version=${{ steps.source.outputs.source_commit }}
+            org.opencontainers.image.created=${{ steps.created.outputs.value }}
+            org.opencontainers.image.title=noki-finance
+            org.opencontainers.image.description=Immutable NOKI Finance frontend image.
+            org.opencontainers.image.licenses=UNLICENSED
+          sbom: true
+          provenance: mode=max
+
+      - name: Verify published digest
+        id: digest
+        shell: bash
+        env:
+          DIGEST: ${{ steps.publish.outputs.digest }}
+        run: |
+          set -Eeuo pipefail
+
+          if [[ ! "${DIGEST}" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "Invalid published digest." >&2
+            exit 1
+          fi
+
+          {
+            echo "digest=${DIGEST}"
+            echo "reference=${IMAGE_REPOSITORY}@${DIGEST}"
+          } >> "${GITHUB_OUTPUT}"
+
+          echo "Published digest: ${DIGEST}"
+          echo "Immutable reference: ${IMAGE_REPOSITORY}@${DIGEST}"
+
+      - name: Write publication summary
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          {
+            echo "## Finance image publication"
+            echo
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Repository | \`${IMAGE_REPOSITORY}\` |"
+            echo "| Source commit | \`${{ steps.source.outputs.source_commit }}\` |"
+            echo "| SHA tag | \`${{ steps.source.outputs.tag }}\` |"
+            echo "| Digest | \`${{ steps.digest.outputs.digest }}\` |"
+            echo "| Immutable reference | \`${{ steps.digest.outputs.reference }}\` |"
+            echo "| Platform | \`${DOCKER_PLATFORM}\` |"
+            echo "| Staging alias tag | not published |"
+          } >> "${GITHUB_STEP_SUMMARY}"

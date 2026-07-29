@@ -18,6 +18,7 @@ export default defineConfig({
   testDir: "./e2e",
   timeout: 45_000,
   fullyParallel: false,
+  workers: 1,
   retries: 0,
   reporter: [["list"]],
   use: {
@@ -30,13 +31,13 @@ export default defineConfig({
     {
       command: `node e2e/support/stub-api-server.mjs ${API_PORT}`,
       url: `${apiUrl}/health`,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       timeout: 30_000,
     },
     {
       command: `rm -rf .next/standalone/.next/static && cp -R .next/static .next/standalone/.next/static && NODE_ENV=production NOKI_API_BASE_URL=${apiUrl} HOSTNAME=0.0.0.0 PORT=${APP_PORT} node .next/standalone/server.js`,
       url: `${appUrl}/fr/login`,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       timeout: 60_000,
     },
   ],
