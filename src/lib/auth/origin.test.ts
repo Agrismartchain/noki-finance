@@ -77,4 +77,74 @@ describe("isSameOriginRequest", () => {
     });
     expect(isSameOriginRequest(request)).toBe(false);
   });
+
+  it("accepts a proxied request when Origin matches the forwarded host/proto", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+      "x-forwarded-proto": "https",
+    });
+    expect(isSameOriginRequest(request)).toBe(true);
+  });
+
+  it("accepts a proxied request when Referer matches the forwarded host/proto", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      referer: "https://finance-staging.noki-services.com/fr/login",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+      "x-forwarded-proto": "https",
+    });
+    expect(isSameOriginRequest(request)).toBe(true);
+  });
+
+  it("rejects a hostile Origin that differs from the forwarded host", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://evil.example",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+      "x-forwarded-proto": "https",
+    });
+    expect(isSameOriginRequest(request)).toBe(false);
+  });
+
+  it("rejects when the forwarded host matches but the forwarded proto differs from Origin", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+      "x-forwarded-proto": "http",
+    });
+    expect(isSameOriginRequest(request)).toBe(false);
+  });
+
+  it("fails safe when only x-forwarded-host is present", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+    });
+    expect(isSameOriginRequest(request)).toBe(false);
+  });
+
+  it("fails safe when only x-forwarded-proto is present", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-proto": "https",
+    });
+    expect(isSameOriginRequest(request)).toBe(false);
+  });
+
+  it("fails safe when the forwarded proto is not http or https", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-host": "finance-staging.noki-services.com",
+      "x-forwarded-proto": "ftp",
+    });
+    expect(isSameOriginRequest(request)).toBe(false);
+  });
+
+  it("uses only the first value of comma-separated forwarded headers", () => {
+    const request = makeRequest("http://localhost:3000/api/auth/login", {
+      origin: "https://finance-staging.noki-services.com",
+      "x-forwarded-host": "finance-staging.noki-services.com, evil.example",
+      "x-forwarded-proto": "https, http",
+    });
+    expect(isSameOriginRequest(request)).toBe(true);
+  });
 });

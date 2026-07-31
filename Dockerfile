@@ -25,10 +25,12 @@ ENV NODE_ENV=production \
   HOSTNAME=0.0.0.0 \
   PORT=3000
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/*
 RUN groupadd --gid 1001 nodeapp && useradd --uid 1001 --gid nodeapp --shell /usr/sbin/nologin --create-home nodeapp
 COPY --from=builder --chown=nodeapp:nodeapp /app/.next/standalone ./
 COPY --from=builder --chown=nodeapp:nodeapp /app/.next/static ./.next/static
 USER 1001:1001
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 CMD ["node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD curl -fsS http://127.0.0.1:3000/api/health
 CMD ["node", "server.js"]
