@@ -13,12 +13,11 @@ export type PaymentMethodCounterpartyType = (typeof PAYMENT_METHOD_COUNTERPARTY_
 
 /**
  * FinancePhase2PageQueryDto (the real query DTO bound to GET
- * /v1/finance/payment-methods) only accepts organizationId/countryId/status/
- * page/pageSize server-side. There is no reliable countryId source this app
- * can resolve from a session (Membership.countryScopes only exposes
- * countryCode, not Country.id -- the same documented gap as obligations), so
- * this module intentionally only exposes `status` as a client filter and
- * scopes the list request to organizationId alone.
+ * /v1/finance/payment-methods) accepts organizationId/countryId/status/page/
+ * pageSize server-side. countryId is resolved server-side (see
+ * resolveScopeCountryId in finance-shared/scope.ts) from the session's
+ * countryCode against master-data countries, so this module only needs to
+ * expose `status` as a client-driven filter.
  */
 export interface PaymentMethodListFilters {
   status: PaymentMethodStatus | "";

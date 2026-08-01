@@ -5,7 +5,8 @@ import { ForbiddenView } from "@/components/auth/forbidden-view";
 import { PageStack, SectionHeader } from "@/components/layout/page-shell";
 import { FinanceEmptyState } from "@/features/finance-shared/components/finance-empty-state";
 import { FinanceErrorState } from "@/features/finance-shared/components/finance-error-state";
-import { resolveCashScopeOptions } from "@/features/finance-shared/scope";
+import { listCountries } from "@/features/finance-shared/server/master-data";
+import { resolveCashScopeOptions, resolveScopeCountryId } from "@/features/finance-shared/scope";
 import { PaymentMethodFiltersBar } from "@/features/payment-methods/components/payment-method-filters-bar";
 import { PaymentMethodTable } from "@/features/payment-methods/components/payment-method-table";
 import { listPaymentMethods, type PaymentMethodDto, type PaymentMethodListResponse } from "@/features/payment-methods/server/client";
@@ -24,19 +25,30 @@ type PageProps = {
 type PaymentMethodListResult = { status: "ok"; paymentMethods: PaymentMethodListResponse } | { status: "no-scope" } | { status: "error"; correlationId?: string };
 
 /**
- * FinancePhase2PageQueryDto accepts organizationId as an optional filter but
- * has no reliable countryId source this app can resolve (Membership.
- * countryScopes only exposes countryCode, not Country.id) -- the same
- * documented gap as obligations. Scoping to organizationId only, matching
- * the "gap documented, not faked" pattern used across this app.
+ * FinancePhase2PageQueryDto requires both organizationId AND countryId.
+ * countryId must be the real Country.id, resolved via resolveScopeCountryId
+ * against listCountries(context) -- Membership.countryScopes only exposes
+ * countryCode, never a usable Country.id, and organizationCountryId is a
+ * different association entirely (never a valid substitute).
  */
-async function fetchPaymentMethodListData(
-  organizationId: string,
+export async function fetchPaymentMethodListData(
+  scope: { organizationId: string; countryCode: string } | undefined,
   filters: ReturnType<typeof parsePaymentMethodListFilters>,
   context: { accessToken?: string; locale: string },
 ): Promise<PaymentMethodListResult> {
+  if (!scope) {
+    return { status: "no-scope" };
+  }
   try {
-    const paymentMethods = await listPaymentMethods({ organizationId, status: filters.status || undefined, page: filters.page, pageSize: filters.pageSize }, context);
+    const countries = await listCountries(context);
+    const resolved = resolveScopeCountryId(scope, countries);
+    if (!resolved) {
+      return { status: "no-scope" };
+    }
+    const paymentMethods = await listPaymentMethods(
+      { organizationId: resolved.organizationId, countryId: resolved.countryId, status: filters.status || undefined, page: filters.page, pageSize: filters.pageSize },
+      context,
+    );
     return { status: "ok", paymentMethods };
   } catch (error) {
     return { status: "error", correlationId: error instanceof NokiApiError ? error.correlationId : undefined };
@@ -61,7 +73,7 @@ export default async function PaymentMethodsListPage({ params, searchParams }: P
   const scopeOptions = resolveCashScopeOptions(session.actor);
   const scope = scopeOptions[0];
 
-  const result = scope ? await fetchPaymentMethodListData(scope.organizationId, filters, context) : { status: "no-scope" as const };
+  const result = await fetchPaymentMethodListData(scope, filters, context);
   const statusLabels = Object.fromEntries(PAYMENT_METHOD_STATUSES.map((status) => [status, t(`paymentMethods.status.${status}`)])) as Record<(typeof PAYMENT_METHOD_STATUSES)[number], string>;
   const typeLabels: Record<PaymentMethodDto["type"], string> = { BANK_ACCOUNT: t("paymentMethods.type.BANK_ACCOUNT"), MOBILE_MONEY: t("paymentMethods.type.MOBILE_MONEY") };
 

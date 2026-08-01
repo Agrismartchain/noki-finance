@@ -19,7 +19,8 @@
       "all": "الكل",
       "clearAll": "مسح الفلاتر",
       "toggle": "الفلاتر"
-    }
+    },
+    "notAvailable": "غير متاح"
   },
   "locale": {
     "switcherLabel": "اللغة"

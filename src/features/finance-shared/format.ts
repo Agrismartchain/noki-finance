@@ -34,6 +34,20 @@ export function formatMoney(locale: Locale, amount: string, currencyCode: string
   }
 }
 
+/**
+ * Renders the first 8 characters of an identifier for compact table display.
+ * Real staging data has confirmed-nullable reference fields (e.g. a fee
+ * assessment's financialObligationId, a payout's paymentMethodId) -- this
+ * never throws on null/undefined/empty and never fabricates an id, it falls
+ * back to the caller-supplied translated label instead.
+ */
+export function formatShortReference(value: string | null | undefined, fallback: string): string {
+  if (!value) {
+    return fallback;
+  }
+  return value.slice(0, 8);
+}
+
 export type VarianceSign = "negative" | "zero" | "positive";
 
 /**

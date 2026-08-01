@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { FinanceStatusBadge } from "@/features/finance-shared/components/finance-status-badge";
 import { MoneyValue } from "@/features/finance-shared/components/money-value";
+import { formatShortReference } from "@/features/finance-shared/format";
 import { feeAssessmentStatusTone } from "@/features/finance-shared/status-maps";
 import type { Locale } from "@/i18n/locales";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -36,6 +37,7 @@ export interface FeeAssessmentTableProps {
   previousLabel: string;
   nextLabel: string;
   paginationAriaLabel: string;
+  notAvailableLabel: string;
 }
 
 export function FeeAssessmentTable(props: FeeAssessmentTableProps) {
@@ -50,7 +52,7 @@ export function FeeAssessmentTable(props: FeeAssessmentTableProps) {
       header: props.columnLabels.reference,
       cell: ({ row }) => (props.canReadDetail ? <Link href={`/fees/assessments/${row.original.id}`}>{row.original.id.slice(0, 8)}</Link> : row.original.id.slice(0, 8)),
     },
-    { id: "obligationId", header: props.columnLabels.obligationId, cell: ({ row }) => row.original.financialObligationId.slice(0, 8) },
+    { id: "obligationId", header: props.columnLabels.obligationId, cell: ({ row }) => formatShortReference(row.original.financialObligationId, props.notAvailableLabel) },
     { id: "type", header: props.columnLabels.type, cell: ({ row }) => row.original.type },
     {
       id: "amount",
@@ -59,7 +61,11 @@ export function FeeAssessmentTable(props: FeeAssessmentTableProps) {
       meta: { align: "end", numeric: true },
     },
     { id: "sourceDomain", header: props.columnLabels.sourceDomain, cell: ({ row }) => row.original.sourceDomain },
-    { id: "counterparty", header: props.columnLabels.counterparty, cell: ({ row }) => `${row.original.counterpartyType} · ${row.original.counterpartyId.slice(0, 8)}` },
+    {
+      id: "counterparty",
+      header: props.columnLabels.counterparty,
+      cell: ({ row }) => `${row.original.counterpartyType} · ${formatShortReference(row.original.counterpartyId, props.notAvailableLabel)}`,
+    },
     {
       accessorKey: "status",
       header: props.columnLabels.status,

@@ -131,14 +131,16 @@ export interface FeeAssessmentReportRow {
   countryId: string;
   currencyId: string;
   currencyCode: string;
-  financialObligationId: string;
+  /** Confirmed nullable in real staging data -- not every fee assessment has a linked obligation. */
+  financialObligationId: string | null;
   type: string;
   amount: string;
   sourceDomain: string;
   sourceReferenceType: string;
   sourceReferenceId: string;
   counterpartyType: string;
-  counterpartyId: string;
+  /** Confirmed nullable in real staging data on some rows. */
+  counterpartyId: string | null;
   status: string;
   effectiveAt: string;
   createdAt: string;

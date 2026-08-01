@@ -52,8 +52,10 @@ export interface PayoutReportRow {
   currencyId: string;
   currencyCode: string;
   counterpartyType: string;
-  counterpartyId: string;
-  paymentMethodId: string;
+  /** Confirmed nullable in real staging data on some rows. */
+  counterpartyId: string | null;
+  /** Confirmed nullable in real staging data on some rows. */
+  paymentMethodId: string | null;
   paymentMethodVersion: number;
   destinationMasked: string | null;
   code: string | null;

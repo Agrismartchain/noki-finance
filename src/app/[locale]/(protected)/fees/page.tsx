@@ -144,6 +144,7 @@ export default async function FeesPage({ params, searchParams }: PageProps) {
             previousLabel={t("common.pagination.previous")}
             nextLabel={t("common.pagination.next")}
             paginationAriaLabel={t("common.pagination.ariaLabel")}
+            notAvailableLabel={t("common.notAvailable")}
           />
         </>
       )}

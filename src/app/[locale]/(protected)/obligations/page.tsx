@@ -5,7 +5,8 @@ import { ForbiddenView } from "@/components/auth/forbidden-view";
 import { PageStack, SectionHeader } from "@/components/layout/page-shell";
 import { FinanceEmptyState } from "@/features/finance-shared/components/finance-empty-state";
 import { FinanceErrorState } from "@/features/finance-shared/components/finance-error-state";
-import { resolveCashScopeOptions } from "@/features/finance-shared/scope";
+import { listCountries } from "@/features/finance-shared/server/master-data";
+import { resolveCashScopeOptions, resolveScopeCountryId } from "@/features/finance-shared/scope";
 import { ObligationFiltersBar } from "@/features/obligations/components/obligation-filters-bar";
 import { ObligationTable } from "@/features/obligations/components/obligation-table";
 import { listObligations, type FinancialObligationListResponse } from "@/features/obligations/server/client";
@@ -24,19 +25,30 @@ type PageProps = {
 type ObligationListResult = { status: "ok"; obligations: FinancialObligationListResponse } | { status: "no-scope" } | { status: "error"; correlationId?: string };
 
 /**
- * FinancePhase2PageQueryDto (the real query DTO) accepts organizationId as an
- * optional filter but has no countryId source this app can resolve reliably
- * (Membership.countryScopes only exposes countryCode, not a Country.id) --
- * scoping to organizationId only, matching the "gap documented, not faked"
- * pattern used for other unavailable filters on this page.
+ * FinancePhase2PageQueryDto requires both organizationId AND countryId.
+ * countryId must be the real Country.id, resolved via resolveScopeCountryId
+ * against listCountries(context) -- Membership.countryScopes only exposes
+ * countryCode, never a usable Country.id, and organizationCountryId is a
+ * different association entirely (never a valid substitute).
  */
-async function fetchObligationListData(
-  organizationId: string,
+export async function fetchObligationListData(
+  scope: { organizationId: string; countryCode: string } | undefined,
   filters: ReturnType<typeof parseObligationListFilters>,
   context: { accessToken?: string; locale: string },
 ): Promise<ObligationListResult> {
+  if (!scope) {
+    return { status: "no-scope" };
+  }
   try {
-    const obligations = await listObligations({ organizationId, status: filters.status || undefined, page: filters.page, pageSize: filters.pageSize }, context);
+    const countries = await listCountries(context);
+    const resolved = resolveScopeCountryId(scope, countries);
+    if (!resolved) {
+      return { status: "no-scope" };
+    }
+    const obligations = await listObligations(
+      { organizationId: resolved.organizationId, countryId: resolved.countryId, status: filters.status || undefined, page: filters.page, pageSize: filters.pageSize },
+      context,
+    );
     return { status: "ok", obligations };
   } catch (error) {
     return { status: "error", correlationId: error instanceof NokiApiError ? error.correlationId : undefined };
@@ -61,7 +73,7 @@ export default async function ObligationsListPage({ params, searchParams }: Page
   const scopeOptions = resolveCashScopeOptions(session.actor);
   const scope = scopeOptions[0];
 
-  const result = scope ? await fetchObligationListData(scope.organizationId, filters, context) : { status: "no-scope" as const };
+  const result = await fetchObligationListData(scope, filters, context);
   const statusLabels = Object.fromEntries(OBLIGATION_STATUSES.map((status) => [status, t(`obligations.status.${status}`)])) as Record<(typeof OBLIGATION_STATUSES)[number], string>;
   const natureLabels = {
     COD_PROCEEDS: t("obligations.nature.COD_PROCEEDS"),

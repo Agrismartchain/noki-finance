@@ -19,7 +19,8 @@
       "all": "Tous",
       "clearAll": "Effacer les filtres",
       "toggle": "Filtres"
-    }
+    },
+    "notAvailable": "Non disponible"
   },
   "locale": {
     "switcherLabel": "Langue"

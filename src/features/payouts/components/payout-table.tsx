@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { FinanceStatusBadge } from "@/features/finance-shared/components/finance-status-badge";
 import { MoneyValue } from "@/features/finance-shared/components/money-value";
+import { formatShortReference } from "@/features/finance-shared/format";
 import { payoutStatusTone } from "@/features/finance-shared/status-maps";
 import type { Locale } from "@/i18n/locales";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -33,6 +34,7 @@ export interface PayoutTableProps {
   previousLabel: string;
   nextLabel: string;
   paginationAriaLabel: string;
+  notAvailableLabel: string;
 }
 
 /**
@@ -52,14 +54,18 @@ export function PayoutTable(props: PayoutTableProps) {
       header: props.columnLabels.reference,
       cell: ({ row }) => <Link href={`/payouts/${row.original.id}`}>{row.original.code ?? row.original.id.slice(0, 8)}</Link>,
     },
-    { id: "counterparty", header: props.columnLabels.counterparty, cell: ({ row }) => `${row.original.counterpartyType} · ${row.original.counterpartyId.slice(0, 8)}` },
+    {
+      id: "counterparty",
+      header: props.columnLabels.counterparty,
+      cell: ({ row }) => `${row.original.counterpartyType} · ${formatShortReference(row.original.counterpartyId, props.notAvailableLabel)}`,
+    },
     {
       id: "amount",
       header: props.columnLabels.amount,
       cell: ({ row }) => <MoneyValue amount={row.original.totalAmount} currencyCode={row.original.currencyCode} locale={props.locale} />,
       meta: { align: "end", numeric: true },
     },
-    { id: "paymentMethod", header: props.columnLabels.paymentMethod, cell: ({ row }) => row.original.paymentMethodId.slice(0, 8) },
+    { id: "paymentMethod", header: props.columnLabels.paymentMethod, cell: ({ row }) => formatShortReference(row.original.paymentMethodId, props.notAvailableLabel) },
     {
       accessorKey: "status",
       header: props.columnLabels.status,
