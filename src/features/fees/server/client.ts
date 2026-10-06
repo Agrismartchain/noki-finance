@@ -237,3 +237,25 @@ export async function createFeeAssessment(body: CreateFeeAssessmentInput, idempo
   });
   return unwrap(result) as unknown as FeeAssessmentDto;
 }
+
+export interface ListFeeRulesQuery {
+  organizationId: string;
+  countryId: string;
+  status?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface FeeRuleListResponse {
+  items: FeeRuleDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** GET /v1/finance/fee-rules -- requires finance.fee_rule.read; scoped server-side to one organization + country. `status` filters the workflow status. */
+export async function listFeeRules(query: ListFeeRulesQuery, context: NokiRequestContext): Promise<FeeRuleListResponse> {
+  const { client } = createServerNokiClient(context);
+  const result = await client.GET("/v1/finance/fee-rules", { params: { query } });
+  return unwrap(result) as unknown as FeeRuleListResponse;
+}

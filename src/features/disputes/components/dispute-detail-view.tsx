@@ -12,7 +12,7 @@ import { DisputeResolutionForm, type DisputeResolutionFormProps } from "./disput
 export interface DisputeDetailViewProps {
   dispute: FinancialDisputeDto;
   canResolve: boolean;
-  statusLabels: Record<"OPEN" | "RESOLVED", string>;
+  statusLabels: Record<"OPEN" | "RESOLVED" | "WITHDRAWN", string>;
   resolutionLabels: Record<"RELEASE" | "ADJUSTMENT", string>;
   resolveLabels: DisputeResolutionFormProps["labels"];
   labels: {

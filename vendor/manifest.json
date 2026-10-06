@@ -9,10 +9,10 @@
     },
     {
       "name": "@agrismartchain/noki-shared-contracts",
-      "version": "0.31.0",
-      "sourceCommit": "2189b2f05a4b6b64dcd3aaaef466ce7f59a4eca9",
-      "file": "agrismartchain-noki-shared-contracts-0.31.0.tgz",
-      "sha256": "71ede80e255cb366ffc311b725f0c5bcdc9276a563461220f57264bd67f4a8ee"
+      "version": "0.96.0",
+      "sourceCommit": "94d7eb1144528c3c35d599da5d741008a9ea6490",
+      "file": "agrismartchain-noki-shared-contracts-0.96.0.tgz",
+      "sha256": "ccfe162598789c2717b486f8f9ceb64ecad4a1799f99dac4d2add59cd444d7eb"
     }
   ]
 }

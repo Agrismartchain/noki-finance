@@ -4,22 +4,26 @@ import { getTranslations } from "next-intl/server";
 import { ForbiddenView } from "@/components/auth/forbidden-view";
 import { PageStack, SectionHeader } from "@/components/layout/page-shell";
 import { DisputeLookup } from "@/features/disputes/components/dispute-lookup";
+import { listDisputes } from "@/features/disputes/server/client";
+import { FinanceListSection } from "@/features/finance-shared/components/finance-list-section";
+import { FinanceStatusBadge } from "@/features/finance-shared/components/finance-status-badge";
+import { fetchResourceList, parseResourceListFilters } from "@/features/finance-shared/server/resource-list";
+import { disputeStatusTone } from "@/features/finance-shared/status-maps";
 import { Link } from "@/i18n/navigation";
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "@/lib/auth/cookies";
 import { hasCapability } from "@/lib/auth/session";
 import { getServerSessionResolution } from "@/lib/auth/server-session";
 
-type PageProps = { params: Promise<{ locale: string }> };
+type PageProps = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
+};
 
-/**
- * Disputes have no list or report endpoint (verified against
- * finance-phase2.controller.ts) -- a dispute is only reachable by a known
- * id. This page documents that gap with an Alert (same "gap documented, not
- * faked" pattern as obligations' gapNotice) and offers only an id lookup
- * plus a link to create a new dispute.
- */
-export default async function DisputesPage({ params }: PageProps) {
+const DISPUTE_STATUSES = ["OPEN", "RESOLVED", "WITHDRAWN"] as const;
+
+export default async function DisputesPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
+  const rawSearchParams = await searchParams;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
   const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
@@ -30,6 +34,9 @@ export default async function DisputesPage({ params }: PageProps) {
   }
 
   const t = await getTranslations();
+  const context = { accessToken, locale };
+  const filters = parseResourceListFilters(new URLSearchParams(rawSearchParams as Record<string, string>), DISPUTE_STATUSES);
+  const result = await fetchResourceList(session.actor, filters, context, (query) => listDisputes(query, context));
 
   return (
     <PageStack>
@@ -45,12 +52,28 @@ export default async function DisputesPage({ params }: PageProps) {
 
       {hasCapability(session.actor, "finance.dispute.manage") ? <Link href="/disputes/new">{t("disputes.create.title")}</Link> : null}
 
+      <FinanceListSection
+        result={result}
+        namespace="disputes"
+        columnKeys={["id", "obligation", "status", "reasonCode", "openedAt"]}
+        statuses={DISPUTE_STATUSES.map((value) => ({ value, label: t(`disputes.status.${value}`) }))}
+        toRow={(dispute) => ({
+          id: dispute.id,
+          cells: {
+            id: <Link href={`/disputes/${dispute.id}`}>{dispute.id.slice(0, 8)}</Link>,
+            obligation: <Link href={`/obligations/${dispute.obligationId}`}>{dispute.obligationId.slice(0, 8)}</Link>,
+            status: <FinanceStatusBadge label={t(`disputes.status.${dispute.status}`)} tone={disputeStatusTone(dispute.status)} />,
+            reasonCode: dispute.reasonCode,
+            openedAt: dispute.openedAt,
+          },
+        })}
+      />
+
       <DisputeLookup
         labels={{
           label: t("disputes.lookup.label"),
           button: t("disputes.lookup.button"),
           notFoundHint: t("disputes.lookup.notFoundHint"),
-          gapNotice: t("disputes.gapNotice"),
         }}
       />
     </PageStack>

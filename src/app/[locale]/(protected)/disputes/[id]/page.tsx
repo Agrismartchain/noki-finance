@@ -56,7 +56,7 @@ export default async function DisputeDetailPage({ params }: PageProps) {
         <DisputeDetailView
           dispute={result.dispute}
           canResolve={hasCapability(session.actor, "finance.dispute.manage")}
-          statusLabels={{ OPEN: t("disputes.status.OPEN"), RESOLVED: t("disputes.status.RESOLVED") }}
+          statusLabels={{ OPEN: t("disputes.status.OPEN"), RESOLVED: t("disputes.status.RESOLVED"), WITHDRAWN: t("disputes.status.WITHDRAWN") }}
           resolutionLabels={{ RELEASE: t("disputes.resolution.RELEASE"), ADJUSTMENT: t("disputes.resolution.ADJUSTMENT") }}
           resolveLabels={{
             resolution: t("disputes.resolve.resolution"),

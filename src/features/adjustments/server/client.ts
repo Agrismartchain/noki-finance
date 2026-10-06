@@ -154,3 +154,25 @@ export async function applyAdjustment(id: string, idempotencyKey: string, contex
   });
   return unwrap(result) as unknown as FinancialAdjustmentDto;
 }
+
+export interface ListAdjustmentsQuery {
+  organizationId: string;
+  countryId: string;
+  status?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AdjustmentListResponse {
+  items: FinancialAdjustmentDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** GET /v1/finance/adjustments -- requires finance.adjustment.read; scoped server-side to one organization + country. */
+export async function listAdjustments(query: ListAdjustmentsQuery, context: NokiRequestContext): Promise<AdjustmentListResponse> {
+  const { client } = createServerNokiClient(context);
+  const result = await client.GET("/v1/finance/adjustments", { params: { query } });
+  return unwrap(result) as unknown as AdjustmentListResponse;
+}

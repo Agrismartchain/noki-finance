@@ -525,9 +525,30 @@
     "list": {
       "eyebrow": "Finance",
       "title": "Litiges financiers",
-      "description": "Rechercher un litige par identifiant ou en ouvrir un nouveau."
+      "description": "Litiges de votre organisation et de votre pays. Vous pouvez aussi en rechercher un par identifiant ou en ouvrir un nouveau.",
+      "table": {
+        "ariaLabel": "Liste des litiges financiers"
+      },
+      "empty": {
+        "title": "Aucun litige financier ne correspond à ces filtres.",
+        "description": "Aucun litige financier ne correspond à ces filtres."
+      },
+      "columns": {
+        "id": "Référence",
+        "status": "Statut",
+        "obligation": "Obligation",
+        "reasonCode": "Code motif",
+        "openedAt": "Ouvert le",
+        "type": "Type",
+        "counterparty": "Contrepartie",
+        "amount": "Montant",
+        "createdAt": "Créé le",
+        "serviceCode": "Service",
+        "calculationType": "Calcul",
+        "priority": "Priorité",
+        "workflowStatus": "Statut du workflow"
+      }
     },
-    "gapNotice": "Les litiges ne disposent d'aucun point de terminaison de liste ou de rapport côté API ; seule la recherche par identifiant et la création sont disponibles.",
     "lookup": {
       "label": "Identifiant du litige",
       "button": "Rechercher",
@@ -535,7 +556,8 @@
     },
     "status": {
       "OPEN": "Ouvert",
-      "RESOLVED": "Résolu"
+      "RESOLVED": "Résolu",
+      "WITHDRAWN": "Retiré"
     },
     "resolution": {
       "RELEASE": "Libération",
@@ -648,7 +670,6 @@
     }
   },
   "fees": {
-    "gapNotice": "Les règles de frais peuvent être créées et consultées par identifiant ; l'API n'expose pas de liste des règles.",
     "empty": {
       "title": "Aucun frais",
       "description": "Aucune évaluation de frais ne correspond à ces critères.",
@@ -658,7 +679,29 @@
       "list": {
         "eyebrow": "Finance",
         "title": "Règles de frais",
-        "description": "Créer une règle de frais ou consulter une règle existante par identifiant."
+        "description": "Règles de frais de votre organisation et de votre pays. Créez-en une ou recherchez une règle par identifiant.",
+        "table": {
+          "ariaLabel": "Liste des règles de frais"
+        },
+        "empty": {
+          "title": "Aucune règle de frais ne correspond à ces filtres.",
+          "description": "Aucune règle de frais ne correspond à ces filtres."
+        },
+        "columns": {
+          "id": "Référence",
+          "status": "Statut",
+          "obligation": "Obligation",
+          "reasonCode": "Code motif",
+          "openedAt": "Ouvert le",
+          "type": "Type",
+          "counterparty": "Contrepartie",
+          "amount": "Montant",
+          "createdAt": "Créé le",
+          "serviceCode": "Service",
+          "calculationType": "Calcul",
+          "priority": "Priorité",
+          "workflowStatus": "Statut du workflow"
+        }
       },
       "lookup": {
         "label": "Identifiant de règle",
@@ -834,7 +877,29 @@
     "list": {
       "eyebrow": "Finance",
       "title": "Ajustements financiers",
-      "description": "Créer un ajustement ou ouvrir un ajustement existant par identifiant."
+      "description": "Ajustements de votre organisation et de votre pays. Créez-en un ou ouvrez un ajustement existant par identifiant.",
+      "table": {
+        "ariaLabel": "Liste des ajustements financiers"
+      },
+      "empty": {
+        "title": "Aucun ajustement ne correspond à ces filtres.",
+        "description": "Aucun ajustement ne correspond à ces filtres."
+      },
+      "columns": {
+        "id": "Référence",
+        "status": "Statut",
+        "obligation": "Obligation",
+        "reasonCode": "Code motif",
+        "openedAt": "Ouvert le",
+        "type": "Type",
+        "counterparty": "Contrepartie",
+        "amount": "Montant",
+        "createdAt": "Créé le",
+        "serviceCode": "Service",
+        "calculationType": "Calcul",
+        "priority": "Priorité",
+        "workflowStatus": "Statut du workflow"
+      }
     },
     "lookup": {
       "label": "Identifiant d'ajustement",
@@ -885,6 +950,14 @@
       "reasonRequired": "Le motif est requis.",
       "confirm": "Confirmer",
       "dismiss": "Fermer"
+    },
+    "status": {
+      "DRAFT": "Brouillon",
+      "SUBMITTED": "Soumis",
+      "APPROVED": "Approuvé",
+      "REJECTED": "Rejeté",
+      "APPLIED": "Appliqué",
+      "REVERSED": "Annulé"
     }
   },
   "approvals": {
@@ -1169,6 +1242,11 @@
     },
     "table": {
       "ariaLabel": "Événements d'audit Finance"
+    }
+  },
+  "finance": {
+    "list": {
+      "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
     }
   }
 }

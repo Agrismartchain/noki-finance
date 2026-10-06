@@ -525,9 +525,30 @@
     "list": {
       "eyebrow": "Finance",
       "title": "Financial disputes",
-      "description": "Look up a dispute by id, or open a new one."
+      "description": "Disputes in your organization and country. You can also look one up by id, or open a new one.",
+      "table": {
+        "ariaLabel": "Financial disputes list"
+      },
+      "empty": {
+        "title": "No financial dispute matches these filters.",
+        "description": "Open a dispute from an obligation, or look one up by id."
+      },
+      "columns": {
+        "id": "Reference",
+        "status": "Status",
+        "obligation": "Obligation",
+        "reasonCode": "Reason code",
+        "openedAt": "Opened",
+        "type": "Type",
+        "counterparty": "Counterparty",
+        "amount": "Amount",
+        "createdAt": "Created",
+        "serviceCode": "Service",
+        "calculationType": "Calculation",
+        "priority": "Priority",
+        "workflowStatus": "Workflow status"
+      }
     },
-    "gapNotice": "Disputes have no list or report endpoint on the API -- only lookup by id and creation are available.",
     "lookup": {
       "label": "Dispute id",
       "button": "Look up",
@@ -535,7 +556,8 @@
     },
     "status": {
       "OPEN": "Open",
-      "RESOLVED": "Resolved"
+      "RESOLVED": "Resolved",
+      "WITHDRAWN": "Withdrawn"
     },
     "resolution": {
       "RELEASE": "Release",
@@ -648,7 +670,6 @@
     }
   },
   "fees": {
-    "gapNotice": "Fee rules can be created and inspected by ID; the API does not expose a fee-rule list endpoint.",
     "empty": {
       "title": "No fees",
       "description": "No fee assessment matches these filters.",
@@ -658,7 +679,29 @@
       "list": {
         "eyebrow": "Finance",
         "title": "Fee rules",
-        "description": "Create a fee rule or look up an existing rule by identifier."
+        "description": "Fee rules in your organization and country. Create one, or look up a rule by identifier.",
+        "table": {
+          "ariaLabel": "Fee rules list"
+        },
+        "empty": {
+          "title": "No fee rule matches these filters.",
+          "description": "No fee rule matches these filters."
+        },
+        "columns": {
+          "id": "Reference",
+          "status": "Status",
+          "obligation": "Obligation",
+          "reasonCode": "Reason code",
+          "openedAt": "Opened",
+          "type": "Type",
+          "counterparty": "Counterparty",
+          "amount": "Amount",
+          "createdAt": "Created",
+          "serviceCode": "Service",
+          "calculationType": "Calculation",
+          "priority": "Priority",
+          "workflowStatus": "Workflow status"
+        }
       },
       "lookup": {
         "label": "Fee rule ID",
@@ -834,7 +877,29 @@
     "list": {
       "eyebrow": "Finance",
       "title": "Financial adjustments",
-      "description": "Create an adjustment or open an existing adjustment by identifier."
+      "description": "Adjustments in your organization and country. Create one, or open an existing adjustment by identifier.",
+      "table": {
+        "ariaLabel": "Financial adjustments list"
+      },
+      "empty": {
+        "title": "No adjustment matches these filters.",
+        "description": "No adjustment matches these filters."
+      },
+      "columns": {
+        "id": "Reference",
+        "status": "Status",
+        "obligation": "Obligation",
+        "reasonCode": "Reason code",
+        "openedAt": "Opened",
+        "type": "Type",
+        "counterparty": "Counterparty",
+        "amount": "Amount",
+        "createdAt": "Created",
+        "serviceCode": "Service",
+        "calculationType": "Calculation",
+        "priority": "Priority",
+        "workflowStatus": "Workflow status"
+      }
     },
     "lookup": {
       "label": "Adjustment ID",
@@ -885,6 +950,14 @@
       "reasonRequired": "Reason is required.",
       "confirm": "Confirm",
       "dismiss": "Close"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Submitted",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "APPLIED": "Applied",
+      "REVERSED": "Reversed"
     }
   },
   "approvals": {
@@ -1169,6 +1242,11 @@
     },
     "table": {
       "ariaLabel": "Finance audit events"
+    }
+  },
+  "finance": {
+    "list": {
+      "noScopeDescription": "No Finance organization/country scope is available for your account."
     }
   }
 }

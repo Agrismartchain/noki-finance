@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button, Field, Inline, Input, Stack } from "@agrismartchain/noki-design-system";
+import { Button, Field, Inline, Input, Stack } from "@agrismartchain/noki-design-system";
 import { useState } from "react";
 
 import { useRouter } from "@/i18n/navigation";
@@ -10,7 +10,6 @@ export interface DisputeLookupProps {
     label: string;
     button: string;
     notFoundHint: string;
-    gapNotice: string;
   };
 }
 
@@ -36,7 +35,6 @@ export function DisputeLookup({ labels }: DisputeLookupProps) {
 
   return (
     <Stack gap="md">
-      <Alert tone="info">{labels.gapNotice}</Alert>
       <form onSubmit={handleSubmit} noValidate>
         <Stack gap="sm">
           <Inline gap="sm">

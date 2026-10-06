@@ -25,7 +25,7 @@ try {
 
   const expected = new Map([
     ["@agrismartchain/noki-design-system", "0.2.1"],
-    ["@agrismartchain/noki-shared-contracts", "0.31.0"],
+    ["@agrismartchain/noki-shared-contracts", "0.96.0"],
   ]);
 
   for (const entry of packages) {

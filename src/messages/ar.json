@@ -525,9 +525,30 @@
     "list": {
       "eyebrow": "المالية",
       "title": "النزاعات المالية",
-      "description": "ابحث عن نزاع بواسطة المعرف أو افتح نزاعًا جديدًا."
+      "description": "نزاعات مؤسستك ودولتك. يمكنك أيضًا البحث عن نزاع بمعرّفه أو فتح نزاع جديد.",
+      "table": {
+        "ariaLabel": "قائمة النزاعات المالية"
+      },
+      "empty": {
+        "title": "لا يوجد نزاع مالي يطابق هذه المرشحات.",
+        "description": "لا يوجد نزاع مالي يطابق هذه المرشحات."
+      },
+      "columns": {
+        "id": "المرجع",
+        "status": "الحالة",
+        "obligation": "الالتزام",
+        "reasonCode": "رمز السبب",
+        "openedAt": "تاريخ الفتح",
+        "type": "النوع",
+        "counterparty": "الطرف المقابل",
+        "amount": "المبلغ",
+        "createdAt": "تاريخ الإنشاء",
+        "serviceCode": "الخدمة",
+        "calculationType": "طريقة الاحتساب",
+        "priority": "الأولوية",
+        "workflowStatus": "حالة سير العمل"
+      }
     },
-    "gapNotice": "لا تتوفر واجهة برمجة للقائمة أو التقرير الخاص بالنزاعات — يتوفر فقط البحث بالمعرف والإنشاء.",
     "lookup": {
       "label": "معرف النزاع",
       "button": "بحث",
@@ -535,7 +556,8 @@
     },
     "status": {
       "OPEN": "مفتوح",
-      "RESOLVED": "محلول"
+      "RESOLVED": "محلول",
+      "WITHDRAWN": "مسحوب"
     },
     "resolution": {
       "RELEASE": "تحرير",
@@ -648,7 +670,6 @@
     }
   },
   "fees": {
-    "gapNotice": "يمكن إنشاء قواعد الرسوم وفتحها بالمعرف؛ لا تعرض API قائمة قواعد.",
     "empty": {
       "title": "لا توجد رسوم",
       "description": "لا توجد تقييمات رسوم تطابق هذه المرشحات.",
@@ -658,7 +679,29 @@
       "list": {
         "eyebrow": "المالية",
         "title": "قواعد الرسوم",
-        "description": "إنشاء قاعدة رسوم أو فتح قاعدة موجودة بالمعرف."
+        "description": "قواعد الرسوم لمؤسستك ودولتك. أنشئ قاعدة أو ابحث عن قاعدة بمعرّفها.",
+        "table": {
+          "ariaLabel": "قائمة قواعد الرسوم"
+        },
+        "empty": {
+          "title": "لا توجد قاعدة رسوم تطابق هذه المرشحات.",
+          "description": "لا توجد قاعدة رسوم تطابق هذه المرشحات."
+        },
+        "columns": {
+          "id": "المرجع",
+          "status": "الحالة",
+          "obligation": "الالتزام",
+          "reasonCode": "رمز السبب",
+          "openedAt": "تاريخ الفتح",
+          "type": "النوع",
+          "counterparty": "الطرف المقابل",
+          "amount": "المبلغ",
+          "createdAt": "تاريخ الإنشاء",
+          "serviceCode": "الخدمة",
+          "calculationType": "طريقة الاحتساب",
+          "priority": "الأولوية",
+          "workflowStatus": "حالة سير العمل"
+        }
       },
       "lookup": {
         "label": "معرف قاعدة الرسوم",
@@ -834,7 +877,29 @@
     "list": {
       "eyebrow": "المالية",
       "title": "التعديلات المالية",
-      "description": "إنشاء تعديل أو فتح تعديل موجود بالمعرف."
+      "description": "تسويات مؤسستك ودولتك. أنشئ تسوية أو افتح تسوية موجودة عبر معرّفها.",
+      "table": {
+        "ariaLabel": "قائمة التسويات المالية"
+      },
+      "empty": {
+        "title": "لا توجد تسوية تطابق هذه المرشحات.",
+        "description": "لا توجد تسوية تطابق هذه المرشحات."
+      },
+      "columns": {
+        "id": "المرجع",
+        "status": "الحالة",
+        "obligation": "الالتزام",
+        "reasonCode": "رمز السبب",
+        "openedAt": "تاريخ الفتح",
+        "type": "النوع",
+        "counterparty": "الطرف المقابل",
+        "amount": "المبلغ",
+        "createdAt": "تاريخ الإنشاء",
+        "serviceCode": "الخدمة",
+        "calculationType": "طريقة الاحتساب",
+        "priority": "الأولوية",
+        "workflowStatus": "حالة سير العمل"
+      }
     },
     "lookup": {
       "label": "معرف التعديل",
@@ -885,6 +950,14 @@
       "reasonRequired": "Reason is required.",
       "confirm": "Confirm",
       "dismiss": "Close"
+    },
+    "status": {
+      "DRAFT": "مسودة",
+      "SUBMITTED": "مُقدَّمة",
+      "APPROVED": "موافق عليها",
+      "REJECTED": "مرفوضة",
+      "APPLIED": "مُطبَّقة",
+      "REVERSED": "مُعكوسة"
     }
   },
   "approvals": {
@@ -1169,6 +1242,11 @@
     },
     "table": {
       "ariaLabel": "Finance audit events"
+    }
+  },
+  "finance": {
+    "list": {
+      "noScopeDescription": "لا يتوفر نطاق مؤسسة/دولة مالي لحسابك."
     }
   }
 }

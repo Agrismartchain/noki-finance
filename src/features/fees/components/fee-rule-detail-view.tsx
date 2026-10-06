@@ -8,7 +8,6 @@ import { feeRuleWorkflowStatusTone } from "@/features/finance-shared/status-maps
 import type { Locale } from "@/i18n/locales";
 
 import type { FeeRuleDto, FeeRuleWorkflowStatus } from "../server/client";
-import { FeesNotice } from "./fees-notice";
 
 export interface FeeRuleDetailViewProps {
   feeRule: FeeRuleDto;
@@ -37,7 +36,6 @@ export interface FeeRuleDetailViewProps {
     workflowStatus: string;
     version: string;
     notAvailable: string;
-    gapNotice: string;
   };
 }
 
@@ -82,7 +80,6 @@ export function FeeRuleDetailView({ feeRule, locale, workflowStatusLabels, label
         </CardContent>
       </Card>
 
-      <FeesNotice tone="info" message={labels.gapNotice} />
     </Stack>
   );
 }

@@ -82,7 +82,6 @@ export default async function FeeRuleDetailPage({ params }: PageProps) {
             workflowStatus: t("fees.rules.columns.workflowStatus"),
             version: t("obligations.detail.version"),
             notAvailable: t("cashHandovers.detail.notAvailable"),
-            gapNotice: t("fees.gapNotice"),
           }}
         />
       )}

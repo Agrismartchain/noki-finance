@@ -17,7 +17,7 @@ export interface FinancialDisputeDto {
   organizationId: string;
   countryId: string;
   obligationId: string;
-  status: "OPEN" | "RESOLVED";
+  status: "OPEN" | "RESOLVED" | "WITHDRAWN";
   reasonCode: string;
   reason: string;
   openedByActorId: string;
@@ -92,4 +92,26 @@ export async function resolveDispute(id: string, body: ResolveDisputeInput, idem
     body: body as never,
   });
   return unwrap(result) as unknown as FinancialDisputeDto;
+}
+
+export interface ListDisputesQuery {
+  organizationId: string;
+  countryId: string;
+  status?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface DisputeListResponse {
+  items: FinancialDisputeDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** GET /v1/finance/disputes -- requires finance.dispute.read; scoped server-side to one organization + country. */
+export async function listDisputes(query: ListDisputesQuery, context: NokiRequestContext): Promise<DisputeListResponse> {
+  const { client } = createServerNokiClient(context);
+  const result = await client.GET("/v1/finance/disputes", { params: { query } });
+  return unwrap(result) as unknown as DisputeListResponse;
 }
