@@ -1248,5 +1248,19 @@
     "list": {
       "noScopeDescription": "No Finance organization/country scope is available for your account."
     }
+  },
+  "providerBalances": {
+    "title": "External operator balances (MTN MoMo, Airtel Money)",
+    "note": "These amounts are the balance held at each operator. They are not the NOKI ledger balance, which remains the only financial source of truth; they are never added together.",
+    "externalLabel": "EXTERNAL PROVIDER BALANCE",
+    "asOf": "Read at the operator on {date}",
+    "notRead": "Not read from the operator yet",
+    "empty": "No payment operator is configured.",
+    "unavailable": "Operator balances are unavailable right now.",
+    "environment": {
+      "SANDBOX": "SANDBOX (test)",
+      "PRODUCTION": "PRODUCTION"
+    },
+    "ledgerTitle": "NOKI ledger (financial source of truth)"
   }
 }

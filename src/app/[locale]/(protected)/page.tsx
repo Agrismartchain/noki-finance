@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenView } from "@/components/auth/forbidden-view";
 import { PageStack, SectionHeader } from "@/components/layout/page-shell";
+import { ExternalProviderBalances, type ProviderBalancesResult } from "@/features/provider-balances/components/external-provider-balances";
+import { getProviderBalances } from "@/features/provider-balances/server/client";
 import { DashboardView, type SettledResult } from "@/features/dashboard/components/dashboard-view";
 import { getDashboard, getDashboardAging, getDashboardCashflow } from "@/features/dashboard/server/client";
 import type { Locale } from "@/i18n/locales";
@@ -40,6 +42,7 @@ export default async function DashboardPage({ params }: PageProps) {
     settle(getDashboardCashflow({}, context)),
   ]);
 
+  const providerBalances: ProviderBalancesResult = await getProviderBalances(context).then((value) => ({ status: "ok" as const, value }), () => ({ status: "error" as const }));
   const t = await getTranslations();
 
   return (
@@ -53,7 +56,9 @@ export default async function DashboardPage({ params }: PageProps) {
         title={t("dashboard.title")}
         description={t("dashboard.description")}
       />
+      <h2 data-testid="noki-ledger-heading">{t("providerBalances.ledgerTitle")}</h2>
       <DashboardView locale={locale as Locale} dashboard={dashboard} aging={aging} cashflow={cashflow} />
+      <ExternalProviderBalances result={providerBalances} locale={locale as Locale} />
     </PageStack>
   );
 }

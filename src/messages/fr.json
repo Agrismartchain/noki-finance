@@ -1248,5 +1248,19 @@
     "list": {
       "noScopeDescription": "Aucun périmètre organisation/pays Finance n'est disponible sur votre compte."
     }
+  },
+  "providerBalances": {
+    "title": "Soldes externes des opérateurs (MTN MoMo, Airtel Money)",
+    "note": "Ces montants sont le solde détenu chez chaque opérateur. Ce n'est pas le solde du grand livre NOKI, qui reste la seule source de vérité financière ; ils ne s'additionnent jamais.",
+    "externalLabel": "SOLDE EXTERNE FOURNISSEUR",
+    "asOf": "Lu chez l'opérateur le {date}",
+    "notRead": "Pas encore lu chez l'opérateur",
+    "empty": "Aucun opérateur de paiement n'est configuré.",
+    "unavailable": "Soldes opérateurs indisponibles pour le moment.",
+    "environment": {
+      "SANDBOX": "SANDBOX (test)",
+      "PRODUCTION": "PRODUCTION"
+    },
+    "ledgerTitle": "Grand livre NOKI (source de vérité financière)"
   }
 }
