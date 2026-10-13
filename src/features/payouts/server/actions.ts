@@ -32,7 +32,7 @@ import {
   type RetryPayoutInput,
 } from "./client";
 
-export type PayoutActionResult = { ok: true; payout: PayoutDetailDto } | { ok: false; kind: string; correlationId?: string };
+export type PayoutActionResult = { ok: true; payout: PayoutDetailDto } | { ok: false; kind: string; correlationId?: string; apiCode?: string };
 
 async function actionContext(): Promise<{ accessToken?: string; locale?: string }> {
   const cookieStore = await cookies();
@@ -42,7 +42,7 @@ async function actionContext(): Promise<{ accessToken?: string; locale?: string 
 
 function toResult(error: unknown): PayoutActionResult {
   if (error instanceof NokiApiError) {
-    return { ok: false, kind: error.kind, correlationId: error.correlationId };
+    return { ok: false, kind: error.kind, correlationId: error.correlationId, apiCode: error.apiCode };
   }
   return { ok: false, kind: "unexpected" };
 }

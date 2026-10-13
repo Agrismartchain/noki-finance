@@ -3,6 +3,7 @@
 import { Alert, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Field, Stack, Textarea } from "@agrismartchain/noki-design-system";
 import { useState } from "react";
 
+import { StepUpPrompt } from "@/components/auth/step-up-prompt";
 import { MaskedDestination } from "@/features/finance-shared/components/masked-destination";
 import { MoneyValue } from "@/features/finance-shared/components/money-value";
 import type { Locale } from "@/i18n/locales";
@@ -46,7 +47,7 @@ export function PayoutApproveDialog({ stage, payoutId, amount, currencyCode, des
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<{ kind: string; correlationId?: string } | null>(null);
+  const [error, setError] = useState<{ kind: string; correlationId?: string; apiCode?: string } | null>(null);
   const [idempotencyKey] = useState(() => generateIdempotencyKey());
 
   async function handleConfirm() {
@@ -60,7 +61,7 @@ export function PayoutApproveDialog({ stage, payoutId, amount, currencyCode, des
     setPending(false);
 
     if (!result.ok) {
-      setError({ kind: result.kind, correlationId: result.correlationId });
+      setError({ kind: result.kind, correlationId: result.correlationId, apiCode: result.apiCode });
       return;
     }
 
@@ -94,7 +95,9 @@ export function PayoutApproveDialog({ stage, payoutId, amount, currencyCode, des
               <Textarea value={reason} onChange={(event) => setReason(event.target.value)} disabled={pending} />
             </Field>
 
-            {error ? (
+            {error?.apiCode === "STEP_UP_REQUIRED" ? (
+              <StepUpPrompt />
+            ) : error ? (
               <Alert tone="danger">
                 {labels.genericError}
                 {error.correlationId ? ` — ${labels.correlationLabel}: ${error.correlationId}` : ""}

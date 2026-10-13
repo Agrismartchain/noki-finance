@@ -7,6 +7,7 @@ const loginWithBackend = vi.fn();
 
 vi.mock("@/lib/auth/backend", () => ({
   loginWithBackend: (...args: unknown[]) => loginWithBackend(...args),
+  isMfaChallenge: (value: object) => "mfaStatus" in value,
 }));
 
 const { POST } = await import("./route");

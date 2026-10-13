@@ -3,6 +3,7 @@
 import { Alert, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Field, Input, Stack } from "@agrismartchain/noki-design-system";
 import { useState } from "react";
 
+import { StepUpPrompt } from "@/components/auth/step-up-prompt";
 import { MaskedDestination } from "@/features/finance-shared/components/masked-destination";
 import { MoneyValue } from "@/features/finance-shared/components/money-value";
 import type { Locale } from "@/i18n/locales";
@@ -55,7 +56,7 @@ export function PayoutMarkPaidDialog({ payoutId, reference, amount, currencyCode
   const [size, setSize] = useState("");
   const [pending, setPending] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [error, setError] = useState<{ kind: string; correlationId?: string } | null>(null);
+  const [error, setError] = useState<{ kind: string; correlationId?: string; apiCode?: string } | null>(null);
   const [idempotencyKey] = useState(() => generateIdempotencyKey());
 
   async function handleConfirm() {
@@ -83,7 +84,7 @@ export function PayoutMarkPaidDialog({ payoutId, reference, amount, currencyCode
     setPending(false);
 
     if (!result.ok) {
-      setError({ kind: result.kind, correlationId: result.correlationId });
+      setError({ kind: result.kind, correlationId: result.correlationId, apiCode: result.apiCode });
       return;
     }
 
@@ -132,7 +133,9 @@ export function PayoutMarkPaidDialog({ payoutId, reference, amount, currencyCode
               <Input inputMode="numeric" value={size} onChange={(event) => setSize(event.target.value)} disabled={pending} />
             </Field>
 
-            {error ? (
+            {error?.apiCode === "STEP_UP_REQUIRED" ? (
+              <StepUpPrompt />
+            ) : error ? (
               <Alert tone="danger">
                 {labels.genericError}
                 {error.correlationId ? ` — ${labels.correlationLabel}: ${error.correlationId}` : ""}
